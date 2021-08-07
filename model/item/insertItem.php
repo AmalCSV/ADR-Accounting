@@ -83,15 +83,10 @@
 			} else {
 				// Item does not exist, therefore, you can add it to DB as a new item
 				// Start the insert process
-				// $insertItemSql = 'INSERT INTO item(itemNumber, itemName, unitOfMeasure, stock, buyingPrice, sellingPrice, warningQty, rackNo, status, description) VALUES(:itemNumber, :itemName, :unitOfMeasure, :stock, :buyingPrice, :sellingPrice, :warningQty, :rackNo, :status, :description)';
-				// $insertItemStatement = $conn->prepare($insertItemSql);
-				//  $insertItemStatement->execute(['itemNumber' => $itemNumber, 'itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'stock' => $initialQty, 'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQuantity' => $warningQuantity,  'rackNo' => $itemitemRackNo, 'status' => $status, 'description' => $description]);
-				
 
-				 $insertItemSql = 'INSERT INTO item(itemNumber, itemName, unitOfMeasure, stock,  buyingPrice, sellingPrice, warningQty , rackNo, status, description) VALUES(:itemNumber, :itemName, :unitOfMeasure, :stock,  :buyingPrice, :sellingPrice, :warningQty,:rackNo,  :status, :description)';
+				$insertItemSql = 'INSERT INTO item(itemNumber, itemName, unitOfMeasure, stock,  buyingPrice, sellingPrice, warningQty , rackNo, status, description) VALUES(:itemNumber, :itemName, :unitOfMeasure, :stock,  :buyingPrice, :sellingPrice, :warningQty,:rackNo,  :status, :description)';
 				$insertItemStatement = $conn->prepare($insertItemSql);
-				 $insertItemStatement->execute(['itemNumber' => $itemNumber, 'itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'stock' => $initialQty,'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemitemRackNo,  'status' => $status, 'description' => $description]);
-
+				$insertItemStatement->execute(['itemNumber' => $itemNumber, 'itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'stock' => $initialQty,'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemitemRackNo,  'status' => $status, 'description' => $description]);
 				
 				echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Item added to database.</div>';
 				exit();
