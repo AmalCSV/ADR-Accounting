@@ -46,25 +46,25 @@
                </div>
             </div>
             <div class="form-row">
-               <div class="form-group col-md-3">
+               <div class="form-group col-md-4">
                   <label for="itemDetailsBuyingPrice">Buying price</label><span class="requiredIcon">*</span></label>
                   <input type="text" class="form-control" value="0" name="itemDetailsBuyingPrice" id="itemDetailsBuyingPrice">
                </div>
-               <div class="form-group col-md-3">
+               <div class="form-group col-md-4">
                   <label for="itemDetailsSellingPrice">Selling Price<span class="requiredIcon">*</span></label>
                   <input type="text" class="form-control" value="0" name="itemDetailsSellingPrice" id="itemDetailsSellingPrice">
                </div>
-               <div class="form-group col-md-3" id="initialQtySec">
+               <div class="form-group col-md-4" id="initialQtySec">
                   <label for="itemDetailsInitialQty">Initial Quantity</label>
                   <input type="number" class="form-control" value="0" name="itemDetailsInitialQty" id="itemDetailsInitialQty">
                </div>
             </div>
             <div class="form-row">
-               <div class="form-group col-md-3">
+               <div class="form-group col-md-4">
                   <label for="itemDetailsWarningQty">Warning Quantity</label>
                   <input type="number" class="form-control" value="0" name="itemDetailsWarningQty" id="itemDetailsWarningQty">
                </div>
-               <div class="form-group col-md-3">
+               <div class="form-group col-md-4">
                   <label for="itemRaitemDetailsRackNockNo">Rack No</label>
                   <input type="text" class="form-control" name="itemDetailsRackNo" id="itemDetailsRackNo">
                </div>
