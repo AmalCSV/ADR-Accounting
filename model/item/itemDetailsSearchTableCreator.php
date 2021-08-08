@@ -12,9 +12,9 @@
 						<th>Product ID</th>
 						<th>Item Number</th>
 						<th>Item Name</th>
-						<th>Discount %</th>
 						<th>Stock</th>
-						<th>Unit Price</th>
+						<th>Selling Price</th>
+						<th>Buying Price</th>
 						<th>Status</th>
 						<th>Description</th>
 					</tr>
@@ -28,9 +28,9 @@
 						'<td>' . $row['productID'] . '</td>' .
 						'<td>' . $row['itemNumber'] . '</td>' .
 						'<td><a href="#" class="itemDetailsHover" data-toggle="popover" id="' . $row['productID'] . '">' . $row['itemName'] . '</a></td>' .
-						'<td>' . $row['discount'] . '</td>' .
 						'<td>' . $row['stock'] . '</td>' .
-						'<td>' . $row['unitPrice'] . '</td>' .
+						'<td>' . $row['sellingPrice'] . '</td>' .
+						'<td>' . $row['BuyingPrice'] . '</td>' .
 						'<td>' . $row['status'] . '</td>' .
 						'<td>' . $row['description'] . '</td>' .
 					'</tr>';
@@ -41,14 +41,14 @@
 	$output .= '</tbody>
 					<tfoot>
 						<tr>
-							<th>Product ID</th>
-							<th>Item Number</th>
-							<th>Item Name</th>
-							<th>Discount %</th>
-							<th>Stock</th>
-							<th>Unit Price</th>
-							<th>Status</th>
-							<th>Description</th>
+						<th>Product ID</th>
+						<th>Item Number</th>
+						<th>Item Name</th>
+						<th>Stock</th>
+						<th>Selling Price</th>
+						<th>Buying Price</th>
+						<th>Status</th>
+						<th>Description</th>
 						</tr>
 					</tfoot>
 				</table>';

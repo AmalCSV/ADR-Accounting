@@ -37,7 +37,10 @@
 				  <div class="card-body">
 					<ul class="nav nav-tabs" role="tablist">
 						<li class="nav-item">
-							<a class="nav-link active" data-toggle="tab" href="#itemDetailsTab">Item</a>
+							<a class="nav-link" data-toggle="tab" href="#itemListTab">Item List</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" data-toggle="tab" href="#itemDetailsTab">Add/Edit Item</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" data-toggle="tab" href="#itemImageTab">Upload Image</a>
@@ -46,99 +49,7 @@
 					
 					<!-- Tab panes for item details and image sections -->
 					<div class="tab-content">
-						<div id="itemDetailsTab" class="container-fluid tab-pane active">
-							<br>
-							<!-- Div to show the ajax message from validations/db submission -->
-							<div id="itemDetailsMessage"></div>
-							<form>
-							  <div class="form-row">
-								<div class="form-group col-md-3" style="display:inline-block">
-								  <label for="itemDetailsItemNumber">Item Number<span class="requiredIcon">*</span></label>
-								  <input type="text" class="form-control" name="itemDetailsItemNumber" id="itemDetailsItemNumber" autocomplete="off">
-								  <div id="itemDetailsItemNumberSuggestionsDiv" class="customListDivWidth"></div>
-								</div>
-								<div class="form-group col-md-3">
-								  <label for="itemDetailsProductID">Product ID</label>
-								  <input class="form-control invTooltip" type="number" readonly  id="itemDetailsProductID" name="itemDetailsProductID" title="This will be auto-generated when you add a new item">
-								</div>
-							  </div>
-							  <div class="form-row">
-								  <div class="form-group col-md-6">
-									<label for="itemDetailsItemName">Item Name<span class="requiredIcon">*</span></label>
-									<input type="text" class="form-control" name="itemDetailsItemName" id="itemDetailsItemName" autocomplete="off">
-									<div id="itemDetailsItemNameSuggestionsDiv" class="customListDivWidth"></div>
-								  </div>
-								  <div class="form-group col-md-2">
-									<label for="itemDetailsStatus">Status</label>
-									<select id="itemDetailsStatus" name="itemDetailsStatus" class="form-control chosenSelect">
-										<?php include('inc/statusList.html'); ?>
-									</select>
-								  </div>
-							  </div>
-							  <div class="form-row">
-								<div class="form-group col-md-6" style="display:inline-block">
-								  <!-- <label for="itemDetailsDescription">Description</label> -->
-								  <textarea rows="4" class="form-control" placeholder="Description" name="itemDetailsDescription" id="itemDetailsDescription"></textarea>
-								</div>
-							  </div>
-							  <div class="form-row">
-								<div class="form-group col-md-3">
-								  <label for="itemDetailsDiscount">Discount %</label>
-								  <input type="text" class="form-control" value="0" name="itemDetailsDiscount" id="itemDetailsDiscount">
-								</div>
-								<div class="form-group col-md-3">
-								  <label for="itemDetailsQuantity">Quantity<span class="requiredIcon">*</span></label>
-								  <input type="number" class="form-control" value="0" name="itemDetailsQuantity" id="itemDetailsQuantity">
-								</div>
-								<div class="form-group col-md-3">
-								  <label for="itemDetailsUnitPrice">Unit Price<span class="requiredIcon">*</span></label>
-								  <input type="text" class="form-control" value="0" name="itemDetailsUnitPrice" id="itemDetailsUnitPrice">
-								</div>
-								<div class="form-group col-md-3">
-								  <label for="itemDetailsTotalStock">Total Stock</label>
-								  <input type="text" class="form-control" name="itemDetailsTotalStock" id="itemDetailsTotalStock" readonly>
-								</div>
-								<div class="form-group col-md-3">
-									<div id="imageContainer"></div>
-								</div>
-							  </div>
-							  <button type="button" id="addItem" class="btn btn-success">Add Item</button>
-							  <button type="button" id="updateItemDetailsButton" class="btn btn-primary">Update</button>
-							  <button type="button" id="deleteItem" class="btn btn-danger">Delete</button>
-							  <button type="reset" class="btn" id="itemClear">Clear</button>
-							</form>
-						</div>
-						<div id="itemImageTab" class="container-fluid tab-pane fade">
-							<br>
-							<div id="itemImageMessage"></div>
-							<p>You can upload an image for a particular item using this section.</p> 
-							<p>Please make sure the item is already added to database before uploading the image.</p>
-							<br>							
-							<form name="imageForm" id="imageForm" method="post">
-							  <div class="form-row">
-								<div class="form-group col-md-3" style="display:inline-block">
-								  <label for="itemImageItemNumber">Item Number<span class="requiredIcon">*</span></label>
-								  <input type="text" class="form-control" name="itemImageItemNumber" id="itemImageItemNumber" autocomplete="off">
-								  <div id="itemImageItemNumberSuggestionsDiv" class="customListDivWidth"></div>
-								</div>
-								<div class="form-group col-md-4">
-									<label for="itemImageItemName">Item Name</label>
-									<input type="text" class="form-control" name="itemImageItemName" id="itemImageItemName" readonly>
-								</div>
-							  </div>
-							  <br>
-							  <div class="form-row">
-								  <div class="form-group col-md-7">
-									<label for="itemImageFile">Select Image ( <span class="blueText">jpg</span>, <span class="blueText">jpeg</span>, <span class="blueText">gif</span>, <span class="blueText">png</span> only )</label>
-									<input type="file" class="form-control-file btn btn-dark" id="itemImageFile" name="itemImageFile">
-								  </div>
-							  </div>
-							  <br>
-							  <button type="button" id="updateImageButton" class="btn btn-primary">Upload Image</button>
-							  <button type="button" id="deleteImageButton" class="btn btn-danger">Delete Image</button>
-							  <button type="reset" class="btn">Clear</button>
-							</form>
-						</div>
+					<?php include 'item.php';?>
 					</div>
 				  </div> 
 				</div>
@@ -493,64 +404,7 @@
 						</li>
 					</ul>
   
-					<!-- Tab panes for reports sections -->
-					<div class="tab-content">
-						<div id="itemReportsTab" class="container-fluid tab-pane active">
-							<br>
-							<p>Use the grid below to get reports for items</p>
-							<div class="table-responsive" id="itemReportsTableDiv"></div>
-						</div>
-						<div id="customerReportsTab" class="container-fluid tab-pane fade">
-							<br>
-							<p>Use the grid below to get reports for customers</p>
-							<div class="table-responsive" id="customerReportsTableDiv"></div>
-						</div>
-						<div id="saleReportsTab" class="container-fluid tab-pane fade">
-							<br>
-							<!-- <p>Use the grid below to get reports for sales</p> -->
-							<form> 
-							  <div class="form-row">
-								  <div class="form-group col-md-3">
-									<label for="saleReportStartDate">Start Date</label>
-									<input type="text" class="form-control datepicker" id="saleReportStartDate" value="2018-05-24" name="saleReportStartDate" readonly>
-								  </div>
-								  <div class="form-group col-md-3">
-									<label for="saleReportEndDate">End Date</label>
-									<input type="text" class="form-control datepicker" id="saleReportEndDate" value="2018-05-24" name="saleReportEndDate" readonly>
-								  </div>
-							  </div>
-							  <button type="button" id="showSaleReport" class="btn btn-dark">Show Report</button>
-							  <button type="reset" id="saleFilterClear" class="btn">Clear</button>
-							</form>
-							<br><br>
-							<div class="table-responsive" id="saleReportsTableDiv"></div>
-						</div>
-						<div id="purchaseReportsTab" class="container-fluid tab-pane fade">
-							<br>
-							<!-- <p>Use the grid below to get reports for purchases</p> -->
-							<form> 
-							  <div class="form-row">
-								  <div class="form-group col-md-3">
-									<label for="purchaseReportStartDate">Start Date</label>
-									<input type="text" class="form-control datepicker" id="purchaseReportStartDate" value="2018-05-24" name="purchaseReportStartDate" readonly>
-								  </div>
-								  <div class="form-group col-md-3">
-									<label for="purchaseReportEndDate">End Date</label>
-									<input type="text" class="form-control datepicker" id="purchaseReportEndDate" value="2018-05-24" name="purchaseReportEndDate" readonly>
-								  </div>
-							  </div>
-							  <button type="button" id="showPurchaseReport" class="btn btn-dark">Show Report</button>
-							  <button type="reset" id="purchaseFilterClear" class="btn">Clear</button>
-							</form>
-							<br><br>
-							<div class="table-responsive" id="purchaseReportsTableDiv"></div>
-						</div>
-						<div id="vendorReportsTab" class="container-fluid tab-pane fade">
-							<br>
-							<p>Use the grid below to get reports for vendors</p>
-							<div class="table-responsive" id="vendorReportsTableDiv"></div>
-						</div>
-					</div>
+					
 				  </div> 
 				</div>
 			  </div>
