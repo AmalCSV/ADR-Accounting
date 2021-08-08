@@ -123,6 +123,7 @@ $(document).ready(function(){
 		addVendor();
 	});
 	
+	
 	// Listen to purchase add button
 	$('#addPurchase').on('click', function(){
 		addPurchase();
@@ -1283,7 +1284,6 @@ function getPurchaseDetailsToPopulate(){
 	});
 }
 
-
 // Function to send saleID so that sale details can be pulled from db
 // to be displayed on sale details tab
 function getSaleDetailsToPopulate(){
@@ -1314,48 +1314,6 @@ function getSaleDetailsToPopulate(){
 		}
 	});
 }
-
-// Function to call the upateCustomerDetails.php script to UPDATE customer data in db
-function updateCustomer() {
-	var customerDetailsCustomerID = $('#customerDetailsCustomerID').val();
-	var customerDetailsCustomerFullName = $('#customerDetailsCustomerFullName').val();
-	var customerDetailsCustomerMobile = $('#customerDetailsCustomerMobile').val();
-	var customerDetailsCustomerPhone2 = $('#customerDetailsCustomerPhone2').val();
-	var customerDetailsCustomerAddress = $('#customerDetailsCustomerAddress').val();
-	var customerDetailsCustomerEmail = $('#customerDetailsCustomerEmail').val();
-	var customerDetailsCustomerAddress2 = $('#customerDetailsCustomerAddress2').val();
-	var customerDetailsCustomerCity = $('#customerDetailsCustomerCity').val();
-	var customerDetailsCustomerDistrict = $('#customerDetailsCustomerDistrict').val();
-	var customerDetailsStatus = $('#customerDetailsStatus option:selected').text();
-	
-	$.ajax({
-		url: 'model/customer/updateCustomerDetails.php',
-		method: 'POST',
-		data: {
-			customerDetailsCustomerID:customerDetailsCustomerID,
-			customerDetailsCustomerFullName:customerDetailsCustomerFullName,
-			customerDetailsCustomerMobile:customerDetailsCustomerMobile,
-			customerDetailsCustomerPhone2:customerDetailsCustomerPhone2,
-			customerDetailsCustomerAddress:customerDetailsCustomerAddress,
-			customerDetailsCustomerEmail:customerDetailsCustomerEmail,
-			customerDetailsCustomerAddress2:customerDetailsCustomerAddress2,
-			customerDetailsCustomerCity:customerDetailsCustomerCity,
-			customerDetailsCustomerDistrict:customerDetailsCustomerDistrict,
-			customerDetailsStatus:customerDetailsStatus,
-		},
-		success: function(data){
-			$('#customerDetailsMessage').fadeIn();
-			$('#customerDetailsMessage').html(data);
-		},
-		complete: function(){
-			searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
-			reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
-			searchTableCreator('saleDetailsTableDiv', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
-			reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
-		}
-	});
-}
-
 
 // Function to call the upateVendorDetails.php script to UPDATE vendor data in db
 function updateVendor() {
