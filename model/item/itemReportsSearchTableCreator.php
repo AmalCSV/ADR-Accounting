@@ -29,7 +29,7 @@
 		'<td><a href="#" class="itemDetailsHover" data-toggle="popover" id="' . $row['productID'] . '">' . $row['itemName'] . '</a></td>' .
 		'<td>' . $row['stock'] . '</td>' .
 		'<td>' . $row['sellingPrice'] . '</td>' .
-		'<td>' . $row['BuyingPrice'] . '</td>' .
+		'<td>' . $row['buyingPrice'] . '</td>' .
 		'<td>' . $row['status'] . '</td>' .
 		'<td>' . $row['description'] . '</td>' .
 					'</tr>';
