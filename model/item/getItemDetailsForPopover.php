@@ -24,9 +24,10 @@
 			}
 						
 			$output .= '<span><strong>Name:</strong> ' . $row['itemName'] . '</span><br>';
-			$output .= '<span><strong>Price:</strong> ' . $row['unitPrice'] . '</span><br>';
-			$output .= '<span><strong>Discount:</strong> ' . $row['discount'] . ' %</span><br>';
+			$output .= '<span><strong>Selling Price:</strong> ' . $row['sellingPrice'] . '</span><br>';
+			$output .= '<span><strong>Buying Price:</strong> ' . $row['buyingPrice'] . '</span><br>';
 			$output .= '<span><strong>Stock:</strong> ' . $row['stock'] . '</span><br>';
+			$output .= '<span><strong>Warning Stock:</strong> ' . $row['warningQty'] . '</span><br>';
 		}
 		
 		echo $output;

@@ -407,41 +407,6 @@ $(document).ready(function(){
 });
 
 
-// Function to fetch data to show in popovers
-function fetchData(){
-	var fetch_data = '';
-	var element = $(this);
-	var id = element.attr('id');
-	
-	$.ajax({
-		url: 'model/item/getItemDetailsForPopover.php',
-		method: 'POST',
-		async: false,
-		data: {id:id},
-		success: function(data){
-			fetch_data = data;
-		}
-	});
-	return fetch_data;
-}
-
-
-// Function to call the script that process imageURL in DB
-function processImage(imageFormID, scriptPath, messageDivID){
-	var form = $('#' + imageFormID)[0];
-	var formData = new FormData(form);
-	$.ajax({
-		url: scriptPath,
-		method: 'POST',
-		data: formData,
-		contentType: false,
-		processData: false,
-		success: function(data){
-			$('#' + messageDivID).html(data);
-		}
-	});
-}
-
 // Function to create searchable datatables for customer, item, purchase, sale
 function searchTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
 	var tableContainerDivID = '#' + tableContainerDiv;
