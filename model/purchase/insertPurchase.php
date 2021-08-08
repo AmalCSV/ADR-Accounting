@@ -10,6 +10,7 @@
 		$purchaseDetailsQuantity = htmlentities($_POST['purchaseDetailsQuantity']);
 		$purchaseDetailsUnitPrice = htmlentities($_POST['purchaseDetailsUnitPrice']);
 		$purchaseDetailsVendorName = htmlentities($_POST['purchaseDetailsVendorName']);
+		$purchaseOrderID = htmlentities($_POST['purchaseOrderID']);
 		
 		$initialStock = 0;
 		$newStock = 0;
@@ -77,9 +78,10 @@
 				$vendorID = $row['vendorID'];
 				
 				// Item exits in the item table, therefore, start the inserting data to purchase table
-				$insertPurchaseSql = 'INSERT INTO purchase(itemNumber, purchaseDate, itemName, unitPrice, quantity, vendorName, vendorID) VALUES(:itemNumber, :purchaseDate, :itemName, :unitPrice, :quantity, :vendorName, :vendorID)';
+				$insertPurchaseSql = 'INSERT INTO purchaseItem(itemNumber, purchaseDate, itemName, unitPrice, quantity, vendorName, vendorID, purchaseOrderID) VALUES(:itemNumber, :purchaseDate, :itemName, :unitPrice, :quantity, :vendorName, :vendorID, purchaseOrderID)';
 				$insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
-				$insertPurchaseStatement->execute(['itemNumber' => $purchaseDetailsItemNumber, 'purchaseDate' => $purchaseDetailsPurchaseDate, 'itemName' => $purchaseDetailsItemName, 'unitPrice' => $purchaseDetailsUnitPrice, 'quantity' => $purchaseDetailsQuantity, 'vendorName' => $purchaseDetailsVendorName, 'vendorID' => $vendorID]);
+				$insertPurchaseStatement->execute(['itemNumber' => $purchaseDetailsItemNumber, 'purchaseDate' => $purchaseDetailsPurchaseDate, 'itemName' => $purchaseDetailsItemName, 
+				'unitPrice' => $purchaseDetailsUnitPrice, 'quantity' => $purchaseDetailsQuantity, 'vendorName' => $purchaseDetailsVendorName, 'vendorID' => $vendorID, 'purchaseOrderID' => $purchaseOrderID]);
 				
 				// Calculate the new stock value using the existing stock in item table
 				$row = $stockStatement->fetch(PDO::FETCH_ASSOC);

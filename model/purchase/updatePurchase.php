@@ -64,7 +64,7 @@
 			}
 			
 			// Get the quantity and itemNumber in original purchase order
-			$orginalPurchaseQuantitySql = 'SELECT * FROM purchase WHERE purchaseID = :purchaseID';
+			$orginalPurchaseQuantitySql = 'SELECT * FROM purchaseOrder WHERE purchaseID = :purchaseID';
 			$originalPurchaseQuantityStatement = $conn->prepare($orginalPurchaseQuantitySql);
 			$originalPurchaseQuantityStatement->execute(['purchaseID' => $purchaseDetailsPurchaseID]);
 			
