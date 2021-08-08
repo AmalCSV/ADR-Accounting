@@ -3,78 +3,81 @@
 	require_once('../../inc/config/db.php');
 	
 	// Check if the POST query is received
-	if(isset($_POST['itemNumber'])) {
+	if(isset($_POST['itemDetailsItemNumber'])) {
 		
-		$itemNumber = htmlentities($_POST['itemNumber']);
+		$itemNumber = htmlentities($_POST['itemDetailsItemNumber']);
 		$itemName = htmlentities($_POST['itemDetailsItemName']);
-		$discount = htmlentities($_POST['itemDetailsDiscount']);
-		$itemDetailsQuantity = htmlentities($_POST['itemDetailsQuantity']);
-		$itemDetailsUnitPrice = htmlentities($_POST['itemDetailsUnitPrice']);
 		$status = htmlentities($_POST['itemDetailsStatus']);
 		$description = htmlentities($_POST['itemDetailsDescription']);
-		
+		$status = htmlentities($_POST['itemDetailsStatus']);
+		$unitOfMeasure = htmlentities($_POST['itemDetailsUnitMeasure']);
+		$buyingPrice = htmlentities($_POST['itemDetailsBuyingPrice']);
+		$sellingPrice = htmlentities($_POST['itemDetailsSellingPrice']);
+		$warningQuantity = htmlentities($_POST['itemDetailsWarningQty']);
+		$itemRackNo = htmlentities($_POST['itemDetailsRackNo']);
+
 		$initialStock = 0;
 		$newStock = 0;
 		
 		// Check if mandatory fields are not empty
-		if(!empty($itemNumber) && !empty($itemName) && isset($itemDetailsQuantity) && isset($itemDetailsUnitPrice)){
+		if(!empty($itemNumber) && !empty($itemName) && isset($sellingPrice) && isset($buyingPrice)){
 			
 			// Sanitize item number
 			$itemNumber = filter_var($itemNumber, FILTER_SANITIZE_STRING);
 			
-			// Validate item quantity. It has to be a number
-			if(filter_var($itemDetailsQuantity, FILTER_VALIDATE_INT) === 0 || filter_var($itemDetailsQuantity, FILTER_VALIDATE_INT)){
-				// Valid quantity
-			} else {
-				// Quantity is not a valid number
-				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for quantity</div>';
-				$data = ['alertMessage' => $errorAlert];
-				echo json_encode($data);
-				exit();
-			}
+			// // Validate item quantity. It has to be a number
+			// if(filter_var($itemDetailsQuantity, FILTER_VALIDATE_INT) === 0 || filter_var($itemDetailsQuantity, FILTER_VALIDATE_INT)){
+			// 	// Valid quantity
+			// } else {
+			// 	// Quantity is not a valid number
+			// 	$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for quantity</div>';
+			// 	$data = ['alertMessage' => $errorAlert];
+			// 	echo json_encode($data);
+			// 	exit();
+			// }
 			
 			// Validate unit price. It has to be a number or floating point value
-			if(filter_var($itemDetailsUnitPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($itemDetailsUnitPrice, FILTER_VALIDATE_FLOAT)){
+			if(filter_var($buyingPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($buyingPrice, FILTER_VALIDATE_FLOAT)){
 				// Valid unit price
 			} else {
 				// Unit price is not a valid number
-				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for unit price</div>';
+				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for buying price</div>';
 				$data = ['alertMessage' => $errorAlert];
 				echo json_encode($data);
 				exit();
 			}
-			
-			// Validate discount only if it's provided
-			if(!empty($discount)){
-				if(filter_var($discount, FILTER_VALIDATE_FLOAT) === false){
-					// Discount is not a valid floating point number
-					$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid discount amount</div>';
-					$data = ['alertMessage' => $errorAlert];
-					echo json_encode($data);
-					exit();
-				}
+
+			// Validate unit price. It has to be a number or floating point value
+			if(filter_var($sellingPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($sellingPrice, FILTER_VALIDATE_FLOAT)){
+				// Valid unit price
+			} else {
+				// Unit price is not a valid number
+				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for selling price</div>';
+				$data = ['alertMessage' => $errorAlert];
+				echo json_encode($data);
+				exit();
 			}
 			
 			// Calculate the stock
-			$stockSelectSql = 'SELECT stock FROM item WHERE itemNumber = :itemNumber';
-			$stockSelectStatement = $conn->prepare($stockSelectSql);
-			$stockSelectStatement->execute(['itemNumber' => $itemNumber]);
-			if($stockSelectStatement->rowCount() > 0) {
-				$row = $stockSelectStatement->fetch(PDO::FETCH_ASSOC);
-				$initialStock = $row['stock'];
-				$newStock = $initialStock + $itemDetailsQuantity;
-			} else {
-				// Item is not in DB. Therefore, stop the update and quit
-				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Item Number does not exist in DB. Therefore, update not possible.</div>';
-				$data = ['alertMessage' => $errorAlert];
-				echo json_encode($data);
-				exit();
-			}
-		
+			// $stockSelectSql = 'SELECT stock FROM item WHERE itemNumber = :itemNumber';
+			// $stockSelectStatement = $conn->prepare($stockSelectSql);
+			// $stockSelectStatement->execute(['itemNumber' => $itemNumber]);
+			// if($stockSelectStatement->rowCount() > 0) {
+			// 	$row = $stockSelectStatement->fetch(PDO::FETCH_ASSOC);
+			// 	$initialStock = $row['stock'];
+			// 	$newStock = $initialStock + $itemDetailsQuantity;
+			// } else {
+			// 	// Item is not in DB. Therefore, stop the update and quit
+			// 	$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Item Number does not exist in DB. Therefore, update not possible.</div>';
+			// 	$data = ['alertMessage' => $errorAlert];
+			// 	echo json_encode($data);
+			// 	exit();
+			// }
+
 			// Construct the UPDATE query
-			$updateItemDetailsSql = 'UPDATE item SET itemName = :itemName, discount = :discount, stock = :stock, unitPrice = :unitPrice, status = :status, description = :description WHERE itemNumber = :itemNumber';
+			$updateItemDetailsSql = 'UPDATE item SET itemName = :itemName, unitOfMeasure = :unitOfMeasure, buyingPrice = :buyingPrice,  sellingPrice = :sellingPrice, warningQty = :warningQty, rackNo = :rackNo, status = :status, description = :description WHERE itemNumber = :itemNumber';
 			$updateItemDetailsStatement = $conn->prepare($updateItemDetailsSql);
-			$updateItemDetailsStatement->execute(['itemName' => $itemName, 'discount' => $discount, 'stock' => $newStock, 'unitPrice' => $itemDetailsUnitPrice, 'status' => $status, 'description' => $description, 'itemNumber' => $itemNumber]);
+			$updateItemDetailsStatement->execute(['itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemRackNo, 'status' => $status, 'description' => $description, 'itemNumber' => $itemNumber]);
 			
 			// UPDATE item name in sale table
 			$updateItemInSaleTableSql = 'UPDATE sale SET itemName = :itemName WHERE itemNumber = :itemNumber';
