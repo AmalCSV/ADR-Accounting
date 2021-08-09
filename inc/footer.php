@@ -28,3 +28,4 @@
 	<script src="assets/js/login.js"></script>
 	<!-- New scripts -->
 	<script src="assets/js/item.js"></script>
+	<script src="assets/js/purchase-order.js"></script>
