@@ -28,3 +28,8 @@
 	<script src="assets/js/login.js"></script>
 	<!-- New scripts -->
 	<script src="assets/js/item.js"></script>
+
+	<script src="vendor/pdfmake/pdfmake.js"></script>
+	<script src="vendor/pdfmake/vfs_fonts.js"></script>
+
+	<script src="assets/js/pdfGenerator.js"></script>

@@ -37,10 +37,10 @@
 				  <div class="card-body">
 					<ul class="nav nav-tabs" role="tablist">
 						<li class="nav-item">
-							<a class="nav-link" data-toggle="tab" href="#itemListTab">Item List</a>
+							<a class="nav-link active" data-toggle="tab" href="#itemListTab">Item List</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link active" data-toggle="tab" href="#itemDetailsTab">Add/Edit Item</a>
+							<a class="nav-link" data-toggle="tab" href="#itemDetailsTab">Add/Edit Item</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" data-toggle="tab" href="#itemImageTab">Upload Image</a>
@@ -332,11 +332,9 @@
 				  <div class="card-header">Search Inventory<button id="searchTablesRefresh" name="searchTablesRefresh" class="btn btn-warning float-right btn-sm">Refresh</button></div>
 				  <div class="card-body">										
 					<ul class="nav nav-tabs" role="tablist">
+						
 						<li class="nav-item">
-							<a class="nav-link active" data-toggle="tab" href="#itemSearchTab">Item</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" data-toggle="tab" href="#customerSearchTab">Customer</a>
+							<a class="nav-link active" data-toggle="tab" href="#customerSearchTab">Customer</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" data-toggle="tab" href="#saleSearchTab">Sale</a>
@@ -351,13 +349,7 @@
   
 					<!-- Tab panes -->
 					<div class="tab-content">
-						<div id="itemSearchTab" class="container-fluid tab-pane active">
-						  <br>
-						  <p>Use the grid below to search all details of items</p>
-						  <!-- <a href="#" class="itemDetailsHover" data-toggle="popover" id="10">wwwee</a> -->
-							<div class="table-responsive" id="itemDetailsTableDiv"></div>
-						</div>
-						<div id="customerSearchTab" class="container-fluid tab-pane fade">
+						<div id="customerSearchTab" class="container-fluid tab-pane fade active show">
 						  <br>
 						  <p>Use the grid below to search all details of customers</p>
 							<div class="table-responsive" id="customerDetailsTableDiv"></div>
@@ -404,7 +396,64 @@
 						</li>
 					</ul>
   
-					
+					<!-- Tab panes for reports sections -->
+					<div class="tab-content">
+						<div id="itemReportsTab" class="container-fluid tab-pane active">
+							<br>
+							<p>Use the grid below to get reports for items</p>
+							<div class="table-responsive" id="itemReportsTableDiv"></div>
+						</div>
+						<div id="customerReportsTab" class="container-fluid tab-pane fade">
+							<br>
+							<p>Use the grid below to get reports for customers</p>
+							<div class="table-responsive" id="customerReportsTableDiv"></div>
+						</div>
+						<div id="saleReportsTab" class="container-fluid tab-pane fade">
+							<br>
+							<!-- <p>Use the grid below to get reports for sales</p> -->
+							<form> 
+							  <div class="form-row">
+								  <div class="form-group col-md-3">
+									<label for="saleReportStartDate">Start Date</label>
+									<input type="text" class="form-control datepicker" id="saleReportStartDate" value="2018-05-24" name="saleReportStartDate" readonly>
+								  </div>
+								  <div class="form-group col-md-3">
+									<label for="saleReportEndDate">End Date</label>
+									<input type="text" class="form-control datepicker" id="saleReportEndDate" value="2018-05-24" name="saleReportEndDate" readonly>
+								  </div>
+							  </div>
+							  <button type="button" id="showSaleReport" class="btn btn-dark">Show Report</button>
+							  <button type="reset" id="saleFilterClear" class="btn">Clear</button>
+							</form>
+							<br><br>
+							<div class="table-responsive" id="saleReportsTableDiv"></div>
+						</div>
+						<div id="purchaseReportsTab" class="container-fluid tab-pane fade">
+							<br>
+							<!-- <p>Use the grid below to get reports for purchases</p> -->
+							<form> 
+							  <div class="form-row">
+								  <div class="form-group col-md-3">
+									<label for="purchaseReportStartDate">Start Date</label>
+									<input type="text" class="form-control datepicker" id="purchaseReportStartDate" value="2018-05-24" name="purchaseReportStartDate" readonly>
+								  </div>
+								  <div class="form-group col-md-3">
+									<label for="purchaseReportEndDate">End Date</label>
+									<input type="text" class="form-control datepicker" id="purchaseReportEndDate" value="2018-05-24" name="purchaseReportEndDate" readonly>
+								  </div>
+							  </div>
+							  <button type="button" id="showPurchaseReport" class="btn btn-dark">Show Report</button>
+							  <button type="reset" id="purchaseFilterClear" class="btn">Clear</button>
+							</form>
+							<br><br>
+							<div class="table-responsive" id="purchaseReportsTableDiv"></div>
+						</div>
+						<div id="vendorReportsTab" class="container-fluid tab-pane fade">
+							<br>
+							<p>Use the grid below to get reports for vendors</p>
+							<div class="table-responsive" id="vendorReportsTableDiv"></div>
+						</div>
+					</div>
 				  </div> 
 				</div>
 			  </div>
