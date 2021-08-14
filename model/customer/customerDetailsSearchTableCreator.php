@@ -10,7 +10,8 @@
 				<thead>
 					<tr>
 						<th>Customer ID</th>
-						<th>Full Name</th>
+						<th>Company Name</th>
+						<th>Contact Person</th>
 						<th>Email</th>
 						<th>Mobile</th>
 						<th>Phone 2</th>
@@ -27,7 +28,8 @@
 	while($row = $customerDetailsSearchStatement->fetch(PDO::FETCH_ASSOC)){
 		$output .= '<tr>' .
 						'<td>' . $row['customerID'] . '</td>' .
-						'<td>' . $row['fullName'] . '</td>' .
+						'<td>' . $row['companyName'] . '</td>' .
+						'<td>' . $row['contactPerson'] . '</td>' .
 						'<td>' . $row['email'] . '</td>' .
 						'<td>' . $row['mobile'] . '</td>' .
 						'<td>' . $row['phone2'] . '</td>' .
@@ -45,7 +47,8 @@
 					<tfoot>
 						<tr>
 							<th>Customer ID</th>
-							<th>Full Name</th>
+							<th>Company Name</th>
+							<th>Contact Person</th>
 							<th>Email</th>
 							<th>Mobile</th>
 							<th>Phone 2</th>

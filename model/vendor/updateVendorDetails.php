@@ -7,6 +7,7 @@
 		
 		$vendorDetailsVendorID = htmlentities($_POST['vendorDetailsVendorID']);
 		$vendorDetailsVendorFullName = htmlentities($_POST['vendorDetailsVendorFullName']);
+		$vendorCompanyName = htmlentities($_POST['vendorCompanyName']);
 		$vendorDetailsVendorMobile = htmlentities($_POST['vendorDetailsVendorMobile']);
 		$vendorDetailsVendorPhone2 = htmlentities($_POST['vendorDetailsVendorPhone2']);
 		$vendorDetailsVendorEmail = htmlentities($_POST['vendorDetailsVendorEmail']);
@@ -23,7 +24,7 @@
 			if(!empty($vendorDetailsVendorFullName) && !empty($vendorDetailsVendorMobile) && !empty($vendorDetailsVendorAddress)) {
 				
 				// Validate mobile number
-				if(filter_var($vendorDetailsVendorMobile, FILTER_VALIDATE_INT) === 0 || filter_var($vendorDetailsVendorMobile, FILTER_VALIDATE_INT)) {
+				if(preg_match('/^\d{10}$/', $vendorDetailsVendorMobile) && strlen($vendorDetailsVendorMobile) == 10) {
 					// Mobile number is valid
 				} else {
 					// Mobile number is not valid
@@ -40,7 +41,7 @@
 				
 				// Validate second phone number only if it's provided by user
 				if(isset($vendorDetailsVendorPhone2)){
-					if(filter_var($vendorDetailsVendorPhone2, FILTER_VALIDATE_INT) === 0 || filter_var($vendorDetailsVendorPhone2, FILTER_VALIDATE_INT)) {
+					if(preg_match('/^\d{10}$/', $vendorDetailsVendorPhone2) && strlen($vendorDetailsVendorPhone2) == 10) {
 						// Phone number 2 is valid
 					} else {
 						// Phone number 2 is not valid
@@ -73,9 +74,9 @@
 					$purchaseVendorNameStatement->execute(['vendorName' => $vendorDetailsVendorFullName, 'vendorID' => $vendorDetailsVendorID]);
 					
 					// Construct the UPDATE query
-					$updateVendorDetailsSql = 'UPDATE vendor SET fullName = :fullName, email = :email, mobile = :mobile, phone2 = :phone2, address = :address, address2 = :address2, city = :city, district = :district, status = :status WHERE vendorID = :vendorID';
+					$updateVendorDetailsSql = 'UPDATE vendor SET companyName = :companyName, contactPerson = :contactPerson, email = :email, mobile = :mobile, phone2 = :phone2, address = :address, address2 = :address2, city = :city, district = :district, status = :status WHERE vendorID = :vendorID';
 					$updateVendorDetailsStatement = $conn->prepare($updateVendorDetailsSql);
-					$updateVendorDetailsStatement->execute(['fullName' => $vendorDetailsVendorFullName, 'email' => $vendorDetailsVendorEmail, 'mobile' => $vendorDetailsVendorMobile, 'phone2' => $vendorDetailsVendorPhone2, 'address' => $vendorDetailsVendorAddress, 'address2' => $vendorDetailsVendorAddress2, 'city' => $vendorDetailsVendorCity, 'district' => $vendorDetailsVendorDistrict, 'vendorID' => $vendorDetailsVendorID, 'status' => $vendorDetailsStatus]);
+					$updateVendorDetailsStatement->execute(['companyName' => $vendorCompanyName, 'contactPerson' => $vendorDetailsVendorFullName, 'email' => $vendorDetailsVendorEmail, 'mobile' => $vendorDetailsVendorMobile, 'phone2' => $vendorDetailsVendorPhone2, 'address' => $vendorDetailsVendorAddress, 'address2' => $vendorDetailsVendorAddress2, 'city' => $vendorDetailsVendorCity, 'district' => $vendorDetailsVendorDistrict, 'vendorID' => $vendorDetailsVendorID, 'status' => $vendorDetailsStatus]);
 					
 					// UPDATE vendor name in purchase table too
 					$updateVendorInPurchaseTableSql = 'UPDATE purchase SET vendorName = :vendorName WHERE vendorID = :vendorID';
