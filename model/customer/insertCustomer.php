@@ -5,6 +5,7 @@
 	if(isset($_POST['customerDetailsCustomerFullName'])){
 		
 		$fullName = htmlentities($_POST['customerDetailsCustomerFullName']);
+		$companyName = htmlentities($_POST['customerDetailsCustomerCompanyName']);
 		$email = htmlentities($_POST['customerDetailsCustomerEmail']);
 		$mobile = htmlentities($_POST['customerDetailsCustomerMobile']);
 		$phone2 = htmlentities($_POST['customerDetailsCustomerPhone2']);
@@ -16,7 +17,7 @@
 		
 		if(isset($fullName) && isset($mobile) && isset($address)) {
 			// Validate mobile number
-			if(filter_var($mobile, FILTER_VALIDATE_INT) === 0 || filter_var($mobile, FILTER_VALIDATE_INT)) {
+			if( preg_match('/^\d{10}$/', $mobile) && strlen($mobile) == 10) {
 				// Valid mobile number
 			} else {
 				// Mobile is wrong
@@ -26,7 +27,7 @@
 			
 			// Validate second phone number only if it's provided by user
 			if(!empty($phone2)){
-				if(filter_var($phone2, FILTER_VALIDATE_INT) === false) {
+				if(!(preg_match('/^\d{10}$/', $phone2) && strlen($phone2) == 10)) {
 					// Phone number 2 is not valid
 					echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid mobile number 2</div>';
 					exit();
@@ -49,17 +50,17 @@
 				exit();
 			}
 			
-			// Check if Full name is empty or not
-			if($fullName == ''){
+			// Check if Company name is empty or not
+			if($companyName == ''){
 				// Full Name is empty
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter Full Name.</div>';
+				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter Company Name.</div>';
 				exit();
 			}
 			
 			// Start the insert process
-			$sql = 'INSERT INTO customer(fullName, email, mobile, phone2, address, address2, city, district, status) VALUES(:fullName, :email, :mobile, :phone2, :address, :address2, :city, :district, :status)';
+			$sql = 'INSERT INTO customer(companyName, contactPerson, email, mobile, phone2, address, address2, city, district, status) VALUES(:companyName, :contactPerson, :email, :mobile, :phone2, :address, :address2, :city, :district, :status)';
 			$stmt = $conn->prepare($sql);
-			$stmt->execute(['fullName' => $fullName, 'email' => $email, 'mobile' => $mobile, 'phone2' => $phone2, 'address' => $address, 'address2' => $address2, 'city' => $city, 'district' => $district, 'status' => $status]);
+			$stmt->execute(['companyName' => $companyName, 'contactPerson' => $fullName, 'email' => $email, 'mobile' => $mobile, 'phone2' => $phone2, 'address' => $address, 'address2' => $address2, 'city' => $city, 'district' => $district, 'status' => $status]);
 			echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Customer added to database</div>';
 		} else {
 			// One or more fields are empty

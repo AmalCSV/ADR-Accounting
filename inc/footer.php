@@ -33,3 +33,6 @@
 	<script src="vendor/pdfmake/vfs_fonts.js"></script>
 
 	<script src="assets/js/pdfGenerator.js"></script>
+	
+	<script src="assets/js/customer.js"></script>
+	<script src="assets/js/vendor.js"></script>
