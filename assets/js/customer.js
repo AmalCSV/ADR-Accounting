@@ -1,4 +1,21 @@
 
+$(document).ready(function () {
+	// Listen to update button in customer details tab
+	$('#updateCustomerDetailsButton').on('click', function(){
+		updateCustomer();
+	});
+	
+	// Listen to delete button in customer details tab
+	$('#deleteCustomerButton').on('click', function(){
+		// Confirm before deleting
+		bootbox.confirm('Are you sure you want to delete?', function(result){
+			if(result){
+				deleteCustomer();
+			}
+		});
+	});
+});
+
 // Function to call the insertCustomer.php script to insert customer data to db
 function addCustomer() {
 	var customerDetailsCustomerFullName = $('#customerDetailsCustomerFullName').val();
