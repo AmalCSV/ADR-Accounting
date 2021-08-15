@@ -7,7 +7,6 @@
          <div class="form-group col-md-3" style="display:inline-block">
             <label for="itemDetailsItemNumber">Item Number<span class="requiredIcon">*</span></label>
             <input type="text" class="form-control" name="itemDetailsItemNumber" id="itemDetailsItemNumber" autocomplete="off">
-            <div id="itemDetailsItemNumberSuggestionsDiv" class="customListDivWidth"></div>
          </div>
          <div class="form-group col-md-3">
             <label for="itemDetailsUnitMeasure" >Unit of Measure</label>
@@ -30,7 +29,6 @@
          <div class="form-group col-md-6">
             <label for="itemDetailsItemName">Item Name<span class="requiredIcon">*</span></label>
             <input type="text" class="form-control" name="itemDetailsItemName" id="itemDetailsItemName" autocomplete="off">
-            <div id="itemDetailsItemNameSuggestionsDiv" class="customListDivWidth"></div>
          </div>
          <div class="form-group col-md-3">
             <label for="itemDetailsTotalStock">Total Stock</label>
@@ -94,12 +92,13 @@
       <div class="form-row">
          <div class="form-group col-md-3" style="display:inline-block">
             <label for="itemImageItemNumber">Item Number<span class="requiredIcon">*</span></label>
-            <input type="text" class="form-control" name="itemImageItemNumber" id="itemImageItemNumber" autocomplete="off">
+            <input type="text" class="form-control" name="itemImageItemNumber" id="itemImageItemNumber" autocomplete="off" readonly>
             <div id="itemImageItemNumberSuggestionsDiv" class="customListDivWidth"></div>
          </div>
          <div class="form-group col-md-4">
             <label for="itemImageItemName">Item Name</label>
-            <input type="text" class="form-control" name="itemImageItemName" id="itemImageItemName" readonly>
+            <input type="text" class="form-control" name="itemImageItemName" id="itemImageItemName" autocomplete="off">
+            <div id="itemImageItemNameSuggestionsDiv" class="customListDivWidth"></div>
          </div>
       </div>
       <br>
@@ -126,3 +125,5 @@
       </div>
    </div>
 </div>
+
+<script src="assets/js/autocomplete.js"></script>

@@ -134,11 +134,6 @@ $(document).ready(function(){
 		addSale();
 	});
 	
-	// Listen to update button in customer details tab
-	$('#updateCustomerDetailsButton').on('click', function(){
-		updateCustomer();
-	});
-	
 	// Listen to update button in vendor details tab
 	$('#updateVendorDetailsButton').on('click', function(){
 		updateVendor();
@@ -154,16 +149,6 @@ $(document).ready(function(){
 		updateSale();
 	});
 	
-	// Listen to delete button in customer details tab
-	$('#deleteCustomerButton').on('click', function(){
-		// Confirm before deleting
-		bootbox.confirm('Are you sure you want to delete?', function(result){
-			if(result){
-				deleteCustomer();
-			}
-		});
-	});
-	
 	// Listen to delete button in vendor details tab
 	$('#deleteVendorButton').on('click', function(){
 		// Confirm before deleting
@@ -174,32 +159,23 @@ $(document).ready(function(){
 		});
 	});
 	
-	// Listen to item name text box in item details tab
-	$('#itemDetailsItemName').keyup(function(){
-		showSuggestions('itemDetailsItemName', showItemNamesFile, 'itemDetailsItemNameSuggestionsDiv');
-	});
+	// // Listen to item name text box in item details tab
+	// $('#itemDetailsItemName').keyup(function(){
+	// 	showSuggestions('itemDetailsItemName', showItemNamesFile, 'itemDetailsItemNameSuggestionsDiv');
+	// });
 	
-	// Remove the item names suggestions dropdown in the item details tab
-	// when user selects an item from it
-	$(document).on('click', '#itemDetailsItemNamesSuggestionsList li', function(){
-		$('#itemDetailsItemName').val($(this).text());
-		$('#itemDetailsItemNamesSuggestionsList').fadeOut();
-	});
+	// // Remove the item names suggestions dropdown in the item details tab
+	// // when user selects an item from it
+	// $(document).on('click', '#itemDetailsItemNamesSuggestionsList li', function(){
+	// 	$('#itemDetailsItemName').val($(this).text());
+	// 	$('#itemDetailsItemNamesSuggestionsList').fadeOut();
+	// });
 	
-	// Listen to item number text box in item details tab
-	$('#itemDetailsItemNumber').keyup(function(){
-		showSuggestions('itemDetailsItemNumber', showItemNumberSuggestionsFile, 'itemDetailsItemNumberSuggestionsDiv');
-	});
+	// // Listen to item number text box in item details tab
+	// $('#itemDetailsItemNumber').keyup(function(){
+	// 	showSuggestions('itemDetailsItemNumber', showItemNumberSuggestionsFile, 'itemDetailsItemNumberSuggestionsDiv');
+	// });
 	
-	// Remove the item numbers suggestions dropdown in the item details tab
-	// when user selects an item from it
-	$(document).on('click', '#itemDetailsItemNumberSuggestionsList li', function(){
-		$('#itemDetailsItemNumber').val($(this).text());
-		$('#itemDetailsItemNumberSuggestionsList').fadeOut();
-		getItemDetailsToPopulate();
-	});
-	
-
 	// Listen to item number text box in sale details tab
 	$('#saleDetailsItemNumber').keyup(function(){
 		showSuggestions('saleDetailsItemNumber', showItemNumberForSaleTabFile, 'saleDetailsItemNumberSuggestionsDiv');
@@ -317,17 +293,6 @@ $(document).ready(function(){
 		getSaleDetailsToPopulate();
 	});
 
-
-	// Listen to image update button
-	$('#updateImageButton').on('click', function(){
-		processImage('imageForm', updateImageFile, 'itemImageMessage');
-	});
-	
-	// Listen to image delete button
-	$('#deleteImageButton').on('click', function(){
-		processImage('imageForm', deleteImageFile, 'itemImageMessage');
-	});
-	
 	// Initiate datepickers
 	$('.datepicker').datepicker({
 		format: 'yyyy-mm-dd',
