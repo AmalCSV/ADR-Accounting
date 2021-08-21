@@ -4,6 +4,7 @@ $(document).ready(function () {
 	$('#updateCustomerDetailsButton').on('click', function(){
 		updateCustomer();
 	});
+	enableUpdateDeleteButtonCustomer(false);
 	
 	// Listen to delete button in customer details tab
 	$('#deleteCustomerButton').on('click', function(){
@@ -47,6 +48,7 @@ function addCustomer() {
 		success: function(data){
 			$('#customerDetailsMessage').fadeIn();
 			$('#customerDetailsMessage').html(data);
+			enableUpdateDeleteButton(true);
 		},
 		complete: function(data){
 			populateLastInsertedID(customerLastInsertedIDFile, 'customerDetailsCustomerID');
@@ -151,10 +153,10 @@ function getCustomerDetailsToPopulate(){
 			$('#customerDetailsCustomerCity').val(data.city);
 			$('#customerDetailsCustomerDistrict').val(data.district).trigger("chosen:updated");
 			$('#customerDetailsStatus').val(data.status).trigger("chosen:updated");
+			enableUpdateDeleteButtonCustomer(true);
 		}
 	});
 }
-
 
 // Function to send customerID so that customer details can be pulled from db
 // to be displayed on sale details tab
@@ -175,3 +177,28 @@ function getCustomerDetailsToPopulateSaleTab(){
 		}
 	});
 }
+
+function showEditCustomer(customerId){
+	$('.nav-tabs a[href="#customerDetailsTab"]').tab('show');
+	$('#customerDetailsCustomerID').val(customerId);
+	getCustomerDetailsToPopulate();
+}
+
+
+function enableUpdateDeleteButtonCustomer(enable) {
+	if (enable) {
+	  $("#updateCustomerDetailsButton").prop("disabled", false);
+	  $("#deleteCustomerButton").prop("disabled", false);
+	  $("#addCustomer").prop("disabled", true);
+	} else {
+	  $("#updateCustomerDetailsButton").prop("disabled", true);
+	  $("#deleteCustomerButton").prop("disabled", true);
+	  $("#addCustomer").prop("disabled", false);
+	}
+  }
+  
+  
+$("#clearCustomer").on("click", function () {
+	enableUpdateDeleteButtonCustomer(false);
+});
+  

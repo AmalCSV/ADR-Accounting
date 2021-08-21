@@ -20,6 +20,7 @@
 						<th>City</th>
 						<th>District</th>
 						<th>Status</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>';
@@ -38,6 +39,7 @@
 						'<td>' . $row['city'] . '</td>' .
 						'<td>' . $row['district'] . '</td>' .
 						'<td>' . $row['status'] . '</td>' .
+						'<td>' . '<button onclick=showEditCustomer("'. $row['customerID'] .'") type="button" class="btn btn-primary btn-sm">Edit</button>'. '</td>' .
 					'</tr>';
 	}
 	
@@ -57,6 +59,7 @@
 							<th>City</th>
 							<th>District</th>
 							<th>Status</th>
+							<th>Actions</th>
 						</tr>
 					</tfoot>
 				</table>';
