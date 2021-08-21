@@ -324,11 +324,7 @@ $(document).ready(function(){
 		todayBtn: 'linked',
 		orientation: 'bottom left'
 	});
-	
-	// Calculate Total in purchase tab
-	$('#purchaseDetailsQuantity, #purchaseDetailsUnitPrice').change(function(){
-		calculateTotalInPurchaseTab();
-	});
+
 
 	// Calculate Total in sale tab
 	$('#saleDetailsDiscount, #saleDetailsQuantity, #saleDetailsUnitPrice').change(function(){
