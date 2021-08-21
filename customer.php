@@ -5,6 +5,10 @@
          <!-- Div to show the ajax message from validations/db submission -->
          <div id="customerDetailsMessage"></div>
          <form>
+         <div class="form-group col-md-6">
+            <label for="itemDetailsItemName">Item Name<span class="requiredIcon">*</span></label>
+            <input type="text" class="form-control" name="itemDetailsItemName1" id="itemDetailsItemName1" autocomplete="off">
+         </div>
             <div class="form-row">
                <div class="form-group col-md-4">
                   <label for="customerDetailsCustomerCompanyName">Company Name<span class="requiredIcon">*</span></label>
