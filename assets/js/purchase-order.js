@@ -1,3 +1,4 @@
+var itemData =[];
 // Function to call the insertPurchase.php script to insert purchase data to db
 function addPurchase() {
 	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
@@ -8,21 +9,21 @@ function addPurchase() {
 
 	const purchaseItems = [];
 	let item = {
-		id: $('#purchaseDetailsItemNumber').val(),
+		id: $('#purchaseDetailsItem').val(),
 		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
 		quntity: $('#purchaseDetailsQuantity').val(),
 		total: $(`#purchaseDetailsTotal`).val(),
-		name: $(`#purchaseDetailsItemName`).val(),
+		name: $(`#purchaseDetailsItem option:selected`).text(),
 	};
 	purchaseItems.push(item);
 
 	for (let index = 0; index < rowCount; index++) {
 		item = {
-			id: $(`#purchaseDetailsItemNumber${index+1}`).val(),
+			id: $(`#purchaseDetailsItem${index+1}`).val(),
 			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
 			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
 			total: $(`#purchaseDetailsTotal${index+1}`).val(),
-			name: $(`#purchaseDetailsItemName${index+1}`).val(),
+			name: $(`#purchaseDetailsItem${index+1} option:selected`).text(),
 		};
 		purchaseItems.push(item);
 	}
@@ -43,8 +44,6 @@ function addPurchase() {
 			$('#purchaseDetailsMessage').html(data);
 		},
 		complete: function(){
-			//getItemStockToPopulate('purchaseDetailsItemNumber', getItemStockFile, 'purchaseDetailsCurrentStock');
-			//populateLastInsertedID(purchaseLastInsertedIDFile, 'purchaseDetailsPurchaseID');
 			
 			populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
 			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
@@ -70,21 +69,21 @@ function updatePurchase() {
 
 	const purchaseItems = [];
 	let item = {
-		id: $('#purchaseDetailsItemNumber').val(),
+		id: $('#purchaseDetailsItem').val(),
 		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
 		quntity: $('#purchaseDetailsQuantity').val(),
 		total: $(`#purchaseDetailsTotal`).val(),
-		name: $(`#purchaseDetailsItemName`).val(),
+		name: $(`#purchaseDetailsItem option:selected`).text(),
 	};
 	purchaseItems.push(item);
 
 	for (let index = 0; index < rowCount; index++) {
 		item = {
-			id: $(`#purchaseDetailsItemNumber${index+1}`).val(),
+			id: $(`#purchaseDetailsItem${index+1}`).val(),
 			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
 			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
 			total: $(`#purchaseDetailsTotal${index+1}`).val(),
-			name: $(`#purchaseDetailsItemName${index+1}`).val(),
+			name: $(`#purchaseDetailsItem${index+1} option:selected`).text(),
 		};
 		purchaseItems.push(item);
 	}
@@ -105,7 +104,6 @@ function updatePurchase() {
 			$('#purchaseDetailsMessage').html(data);
 		},
 		complete: function(){
-			//getItemStockToPopulate('purchaseDetailsItemNumber', getItemStockFile, 'purchaseDetailsCurrentStock');
 			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
 			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
@@ -119,17 +117,14 @@ $('#updatePurchaseDetailsButton').on('click', function(){
     updatePurchase();
 });
 
-function addPurchaseItem(id, isGoodReceived) {
+function addPurchaseItem(id, viewType) {
     $("#poItemList").append( `
 			<div class="form-row" id="addedRow${id}"> 
+                    <div class="form-group col-md-4">
+						<select id='purchaseDetailsItem${id}' class="form-control">
+                        </select>
+				    </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsItemNumber${id}" name="purchaseDetailsItemNumber${id}" autocomplete="off">
-                        <div id="purchaseDetailsItemNumberSuggestionsDiv${id}" class="customListDivWidth"></div>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <input type="text" class="form-control invTooltip" id="purchaseDetailsItemName${id}" name="purchaseDetailsItemName${id}">
-                    </div>
-                    <div class="form-group col-md-1">
                         <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0">
                     </div>
                     <div class="form-group col-md-2">
@@ -137,8 +132,9 @@ function addPurchaseItem(id, isGoodReceived) {
                     </div>
                     <div class="form-group col-md-2">
                         <input type="text" class="form-control" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
-                    </div>
-					${isGoodReceived ? `<div class="form-group col-md-1"><input type="hidden" id="purchaseItemId${id}" name="purchaseItemId${id}">
+						<input type="hidden" id="purchaseItemId${id}" name="purchaseItemId${id}">
+					</div>
+					${viewType === 'GOOD_RECEIVED' ? `<div class="form-group col-md-1">
 						<input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity${id}" name="purchaseDetailsGoodReceivedQuantity${id}" value="0">
 					</div>`:`
 					<div class="form-group col-md-1">
@@ -152,9 +148,11 @@ function addPurchaseItem(id, isGoodReceived) {
 	setCalculationFunctions(id);
 }
 
-function setSuggestionFunctions(id) {console.log(id)
-	autocomplete(document.getElementById(`purchaseDetailsItemNumber${id}`), itemList.map(x => x.itemNumber), onSelectNumber, `purchaseDetailsItemName${id}`);
-	autocomplete(document.getElementById(`purchaseDetailsItemName${id}`), itemList.map(x => x.itemName), onSelectName, `purchaseDetailsItemNumber${id}`);
+function setSuggestionFunctions(id) {
+	console.log(id)
+	$(`#purchaseDetailsItem${id}`).select2({
+		data: itemData
+	});
 }
 
 function setCalculationFunctions(id) {
@@ -216,17 +214,24 @@ function initPurchaseOrder() {
 	initPurchaseOrderList();
 	initPurchaseOrderItems();
 	document.getElementById("goodReceivedData").style.display = "none";
-	document.getElementById("goodReceivedBtn").disabled = true
+	
 	document.getElementById("updatePurchaseBtn").disabled = true
 	document.getElementById("addPurchaseBtn").disabled = false
 	document.getElementById("addPurchaseItem").style.display = "block";
 	document.getElementById("lableActionHeader").text = '#';
 	document.getElementById("clearBtn").disabled = false;
+	document.getElementById("statusPO").style.display = "none";
 
-	autocomplete(document.getElementById("purchaseDetailsItemNumber"), itemList.map(x => x.itemNumber), onSelectNumber, 'purchaseDetailsItemName');
-	autocomplete(document.getElementById("purchaseDetailsItemName"), itemList.map(x => x.itemName), onSelectName, 'purchaseDetailsItemNumber');
-	
-}
+	document.getElementById("goodReceivedBtn").disabled = true
+	document.getElementById("closePOBtn").disabled = true
+	document.getElementById("sendPOBtn").disabled = true
+	document.getElementById("cancelPOBtn").disabled = true
+
+	itemData = getSelect2ItemData(itemList);
+	$('#purchaseDetailsItem').select2({
+		data: itemData
+	});
+} 
 
 
 function onSelectName(itemName, id) {
@@ -260,6 +265,7 @@ function initPurchaseOrderItems() {
 	$('#purchaseDetailsPurchaseID').val('');
 	$('#purchaseDetailsVendorName').val('');
 	$(`#purchaseOrderTotal`).val('');
+	$(`#purchaseOrderId`).val('');
 
 	for (let index = 0; index < rowCount-1; index++) {
 		deletePurchaseItem(index+1);
@@ -276,7 +282,7 @@ function openEditView(purchaseOrderId, viewType) {
 		},
 		method: 'POST',
 		success: function(data){
-			loadDataToPurchaseOrder(data, viewType ==='GOOD_RECEIVED');
+			loadDataToPurchaseOrder(data, viewType);
 		}
 	});	
 }
@@ -285,41 +291,71 @@ function openGoodReceive(purchaseOrderId) {
 	openEditView(purchaseOrderId, 'GOOD_RECEIVED');
 }
 
-function loadDataToPurchaseOrder(data, isGoodReceived){
+function loadDataToPurchaseOrder(data, viewType){
 	const {purchaseOrder, purchaseOrderItems} = JSON.parse(data);
 	$('#purchaseDetailsPurchaseDate').val(purchaseOrder.orderDate);
 	$('#purchaseDetailsDescription').val(purchaseOrder.description);
 	$('#purchaseDetailsPurchaseID').val(purchaseOrder.orderNumber);
 	$('#purchaseDetailsVendorName').val(purchaseOrder.fullName);
 	$(`#purchaseOrderTotal`).val(purchaseOrder.amount);
+	$(`#purchaseOrderId`).val(purchaseOrder.purchaseID);
+
+	document.getElementById("statusPO").style.display = "block";
+	$(`#statusPOText`).text(purchaseOrder.statusText);
 
 	for (let index = 0; index < purchaseOrderItems.length; index++) {
 		const numberText = index === 0 ? '' : index;
 		
-		$(`#purchaseDetailsItemNumber${numberText}`).val(purchaseOrderItems[index].itemNumber);
+		$(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].itemNumber);
 		$(`#purchaseDetailsUnitPrice${numberText}`).val(purchaseOrderItems[index].unitPrice);
 		$(`#purchaseDetailsQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
 		$(`#purchaseDetailsTotal${numberText}`).val(purchaseOrderItems[index].totalPrice);
-		$(`#purchaseDetailsItemName${numberText}`).val(purchaseOrderItems[index].itemName);
 		$(`#purchaseItemId${numberText}`).val(purchaseOrderItems[index].purchaseItemID);
-		
-		if(isGoodReceived){
-			//disableElements(['',])
+
+		if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
+			disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsUnitPrice${numberText}`,`purchaseDetailsQuantity${numberText}`,
+			`purchaseDetailsTotal${numberText}`]);
 		}
 		if(index>0 && index+1 !== purchaseOrderItems.length){
 			rowCount++;
-    		addPurchaseItem(rowCount, isGoodReceived);
+    		addPurchaseItem(rowCount, viewType);
 		}
 	}
 
-	if(isGoodReceived) {
-		document.getElementById("goodReceivedData").style.display = "block";
-		document.getElementById("goodReceivedBtn").disabled = false;
+	if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
+		disableElements([`purchaseDetailsItem`,`purchaseDetailsUnitPrice`,`purchaseDetailsQuantity`,
+			`purchaseDetailsTotal`, 'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
+		,'purchaseDetailsVendorName']);
+
+
 		document.getElementById("updatePurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseItem").style.display = "none";
 		document.getElementById("clearBtn").disabled = true;
-		document.getElementById("lableActionHeader").text = "Received";
+		
+
+		switch (viewType) {
+			case 'GOOD_RECEIVED':
+				document.getElementById("goodReceivedBtn").disabled = false
+				document.getElementById("closePOBtn").disabled = true
+				document.getElementById("sendPOBtn").disabled = true
+				document.getElementById("cancelPOBtn").disabled = true
+				document.getElementById("goodReceivedData").style.display = "block";
+				document.getElementById("lableActionHeader").text = "Received";
+				break;
+		
+			case 'VIEW':
+				document.getElementById("goodReceivedBtn").disabled = true;
+				document.getElementById("closePOBtn").disabled = purchaseOrder.status !== 2;
+				document.getElementById("sendPOBtn").disabled = purchaseOrder.status !== 1;
+				document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
+				break;
+			default:
+				break;
+		}
+	} else{
+		document.getElementById("updatePurchaseBtn").disabled = purchaseOrder.status !== 1;
+		document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
 	}
 }
 
@@ -334,7 +370,7 @@ function openViewPurchaseOrder(purchaseOrderId) {
 function updateGoodReceived() {
 	const items = [];
 	let item = {
-		itemNumber: $('#purchaseDetailsItemNumber').val(),
+		itemNumber: $('#purchaseDetailsItem').val(),
 		id: $('#purchaseItemId').val(),
 		goodReceived: $(`#purchaseDetailsGoodReceivedQuantity`).val(),
 	};
@@ -342,7 +378,7 @@ function updateGoodReceived() {
 
 	for (let index = 0; index < rowCount; index++) {
 		item = {
-			itemNumber: $(`#purchaseDetailsItemNumber${index+1}`).val(),
+			itemNumber: $(`#purchaseDetailsItem${index+1}`).val(),
 			id: $(`#purchaseItemId${index+1}`).val(),
 			goodReceived: $(`#purchaseDetailsGoodReceivedQuantity${index+1}`).val(),
 		};
@@ -366,4 +402,43 @@ function updateGoodReceived() {
 			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
 		}
 	});	
+	
 }
+
+function updatePO(statusId, status) {
+	const purchaseId = $(`#purchaseOrderId`).val();
+		$.ajax({
+			url: 'model/purchase/updateStatus.php',
+			data: {
+				purchaseID: purchaseId,
+				statusId: statusId
+			},
+			method: 'POST',
+			success: function(data){
+				$('#purchaseDetailsMessage').fadeIn();
+				$('#purchaseDetailsMessage').html(data);
+				$(`#statusPOText`).text(status);
+			}
+		});	
+	}
+
+function sendPO() {
+	updatePO(2, 'Pending');
+}
+
+function CancelPO() {
+	updatePO(4, 'Cancel');
+}
+
+function closePO() {
+	updatePO(3, 'Close');
+}
+
+
+ // Read selected option
+ $('#but_read').click(function(){
+	 var username = $('#selUser option:selected').text();
+	 var userid = $('#selUser').val();
+
+	 $('#result').html("id : " + userid + ", name : " + username);
+ });
