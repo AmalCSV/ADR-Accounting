@@ -5,6 +5,7 @@
 	if(isset($_POST['vendorDetailsStatus'])){
 		
 		$fullName = htmlentities($_POST['vendorDetailsVendorFullName']);
+		$companyName = htmlentities($_POST['vendorCompanyName']);
 		$email = htmlentities($_POST['vendorDetailsVendorEmail']);
 		$mobile = htmlentities($_POST['vendorDetailsVendorMobile']);
 		$phone2 = htmlentities($_POST['vendorDetailsVendorPhone2']);
@@ -13,10 +14,10 @@
 		$city = htmlentities($_POST['vendorDetailsVendorCity']);
 		$district = htmlentities($_POST['vendorDetailsVendorDistrict']);
 		$status = htmlentities($_POST['vendorDetailsStatus']);
-	
+
 		if(isset($fullName) && isset($mobile) && isset($address)) {
 			// Validate mobile number
-			if(filter_var($mobile, FILTER_VALIDATE_INT) === 0 || filter_var($mobile, FILTER_VALIDATE_INT)) {
+			if( preg_match('/^\d{10}$/', $mobile) && strlen($mobile) == 10) {
 				// Valid mobile number
 			} else {
 				// Mobile is wrong
@@ -33,7 +34,7 @@
 			
 			// Validate second phone number only if it's provided by user
 			if(!empty($phone2)){
-				if(filter_var($phone2, FILTER_VALIDATE_INT) === false) {
+				if(!(preg_match('/^\d{10}$/', $phone2) && strlen($phone2) == 10)) {
 					// Phone number 2 is not valid
 					echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid mobile number 2.</div>';
 					exit();
@@ -58,9 +59,9 @@
 			}
 			
 			// Start the insert process
-			$sql = 'INSERT INTO vendor(fullName, email, mobile, phone2, address, address2, city, district, status) VALUES(:fullName, :email, :mobile, :phone2, :address, :address2, :city, :district, :status)';
+			$sql = 'INSERT INTO vendor(companyName, contactPerson, email, mobile, phone2, address, address2, city, district, status) VALUES(:companyName, :contactPerson, :email, :mobile, :phone2, :address, :address2, :city, :district, :status)';
 			$stmt = $conn->prepare($sql);
-			$stmt->execute(['fullName' => $fullName, 'email' => $email, 'mobile' => $mobile, 'phone2' => $phone2, 'address' => $address, 'address2' => $address2, 'city' => $city, 'district' => $district, 'status' => $status]);
+			$stmt->execute(['companyName' => $companyName, 'contactPerson' => $fullName, 'email' => $email, 'mobile' => $mobile, 'phone2' => $phone2, 'address' => $address, 'address2' => $address2, 'city' => $city, 'district' => $district, 'status' => $status]);
 			echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Vendor added to database</div>';
 		} else {
 			// One or more fields are empty

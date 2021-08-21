@@ -3,8 +3,9 @@
 	require_once('../../inc/config/db.php');
 	
 	// Check if the POST query is received
-	if(isset($_POST['itemDetailsItemNumber'])) {
+	if(isset($_POST['itemDetailsProductID'])) {
 		
+		$productId = htmlentities($_POST['itemDetailsProductID']);
 		$itemNumber = htmlentities($_POST['itemDetailsItemNumber']);
 		$itemName = htmlentities($_POST['itemDetailsItemName']);
 		$status = htmlentities($_POST['itemDetailsStatus']);
@@ -20,7 +21,7 @@
 		$newStock = 0;
 		
 		// Check if mandatory fields are not empty
-		if(!empty($itemNumber) && !empty($itemName) && isset($sellingPrice) && isset($buyingPrice)){
+		if(!empty($productId) && $productId > 0 && !empty($itemNumber) && !empty($itemName) && isset($sellingPrice) && isset($buyingPrice)){
 			
 			// Sanitize item number
 			$itemNumber = filter_var($itemNumber, FILTER_SANITIZE_STRING);
@@ -75,9 +76,9 @@
 			// }
 
 			// Construct the UPDATE query
-			$updateItemDetailsSql = 'UPDATE item SET itemName = :itemName, unitOfMeasure = :unitOfMeasure, buyingPrice = :buyingPrice,  sellingPrice = :sellingPrice, warningQty = :warningQty, rackNo = :rackNo, status = :status, description = :description WHERE itemNumber = :itemNumber';
+			$updateItemDetailsSql = 'UPDATE item SET itemNumber = :itemNumber, itemName = :itemName, unitOfMeasure = :unitOfMeasure, buyingPrice = :buyingPrice,  sellingPrice = :sellingPrice, warningQty = :warningQty, rackNo = :rackNo, status = :status, description = :description WHERE productID = :productID';
 			$updateItemDetailsStatement = $conn->prepare($updateItemDetailsSql);
-			$updateItemDetailsStatement->execute(['itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemRackNo, 'status' => $status, 'description' => $description, 'itemNumber' => $itemNumber]);
+			$updateItemDetailsStatement->execute(['itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemRackNo, 'status' => $status, 'description' => $description, 'itemNumber' => $itemNumber,  'productID' => $productId]);
 			
 			// UPDATE item name in sale table
 			$updateItemInSaleTableSql = 'UPDATE sale SET itemName = :itemName WHERE itemNumber = :itemNumber';
@@ -101,5 +102,12 @@
 			echo json_encode($data);
 			exit();
 		}
+	}
+	else{
+		// One or more mandatory fields are empty. Therefore, display the error message
+		$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Invalid Details</div>';
+		$data = ['alertMessage' => $errorAlert];
+		echo json_encode($data);
+		exit();
 	}
 ?>
