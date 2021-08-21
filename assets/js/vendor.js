@@ -1,4 +1,24 @@
 
+$(document).ready(function () {
+	
+	// Listen to update button in vendor details tab
+	$('#updateVendorDetailsButton').on('click', function(){
+		updateVendor();
+	});
+	
+	enableUpdateDeleteVendor(false);
+	
+	// Listen to delete button in vendor details tab
+	$('#deleteVendorButton').on('click', function(){
+		// Confirm before deleting
+		bootbox.confirm('Are you sure you want to delete?', function(result){
+			if(result){
+				deleteVendor();
+			}
+		});
+	});
+});
+
 // Function to call the insertVendor.php script to insert vendor data to db
 function addVendor() {
 	var vendorDetailsVendorFullName = $('#vendorDetailsVendorFullName').val();
@@ -30,6 +50,7 @@ function addVendor() {
 		success: function(data){
 			$('#vendorDetailsMessage').fadeIn();
 			$('#vendorDetailsMessage').html(data);
+			enableUpdateDeleteVendor(true);
 		},
 		complete: function(data){
 			populateLastInsertedID(vendorLastInsertedIDFile, 'vendorDetailsVendorID');
@@ -92,11 +113,17 @@ function getVendorDetailsToPopulate(){
 			$('#vendorDetailsVendorCity').val(data.city);
 			$('#vendorDetailsVendorDistrict').val(data.district).trigger("chosen:updated");
 			$('#vendorDetailsStatus').val(data.status).trigger("chosen:updated");
+			enableUpdateDeleteVendor(true);
 		}
 	});
 }
 
+function showEditVendor(vendorId){
+	$('.nav-tabs a[href="#vendorDetailsTab"]').tab('show');
+	$('#vendorDetailsVendorID').val(vendorId);
+	getVendorDetailsToPopulate();
 
+}
 
 // Function to call the upateVendorDetails.php script to UPDATE vendor data in db
 function updateVendor() {
@@ -141,3 +168,21 @@ function updateVendor() {
 	});
 }
 
+
+function enableUpdateDeleteVendor(enable) {
+	if (enable) {
+	  $("#updateVendorDetailsButton").prop("disabled", false);
+	  $("#deleteVendorButton").prop("disabled", false);
+	  $("#addVendor").prop("disabled", true);
+	} else {
+	  $("#updateVendorDetailsButton").prop("disabled", true);
+	  $("#deleteVendorButton").prop("disabled", true);
+	  $("#addVendor").prop("disabled", false);
+	}
+  }
+  
+  
+$("#clearVendortButton").on("click", function () {
+	enableUpdateDeleteVendor(false);
+  });
+  

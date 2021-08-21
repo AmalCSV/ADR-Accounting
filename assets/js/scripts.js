@@ -129,25 +129,11 @@ $(document).ready(function(){
 		addSale();
 	});
 	
-	// Listen to update button in vendor details tab
-	$('#updateVendorDetailsButton').on('click', function(){
-		updateVendor();
-	});
-	
 	// Listen to update button in sale details tab
 	$('#updateSaleDetailsButton').on('click', function(){
 		updateSale();
 	});
 	
-	// Listen to delete button in vendor details tab
-	$('#deleteVendorButton').on('click', function(){
-		// Confirm before deleting
-		bootbox.confirm('Are you sure you want to delete?', function(result){
-			if(result){
-				deleteVendor();
-			}
-		});
-	});
 	
 	// // Listen to item name text box in item details tab
 	// $('#itemDetailsItemName').keyup(function(){

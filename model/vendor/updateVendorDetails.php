@@ -21,7 +21,7 @@
 		// Check if vendorID is given or not. If not given, the display a message
 		if(!empty($vendorDetailsVendorID)){
 			// Check if mandatory fields are not empty
-			if(!empty($vendorDetailsVendorFullName) && !empty($vendorDetailsVendorMobile) && !empty($vendorDetailsVendorAddress)) {
+			if(!empty($vendorCompanyName) && !empty($vendorDetailsVendorMobile) && !empty($vendorDetailsVendorAddress)) {
 				
 				// Validate mobile number
 				if(preg_match('/^\d{10}$/', $vendorDetailsVendorMobile) && strlen($vendorDetailsVendorMobile) == 10) {
@@ -40,7 +40,7 @@
 				}
 				
 				// Validate second phone number only if it's provided by user
-				if(isset($vendorDetailsVendorPhone2)){
+				if(!empty($vendorDetailsVendorPhone2)){
 					if(preg_match('/^\d{10}$/', $vendorDetailsVendorPhone2) && strlen($vendorDetailsVendorPhone2) == 10) {
 						// Phone number 2 is valid
 					} else {

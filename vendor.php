@@ -7,7 +7,7 @@
             <form>
                 <div class="form-row">
 					<div class="form-group col-md-4">
-                        <label for="vendorCompanyName">Company Name</label>
+                        <label for="vendorCompanyName">Company Name</label><span class="requiredIcon">*</span>
                         <input type="text" class="form-control" id="vendorCompanyName" name="vendorCompanyName" placeholder="" />
                     </div>
                     <div class="form-group col-md-4">
@@ -22,7 +22,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="vendorDetailsVendorID">Vendor ID</label>
-                        <input type="text" class="form-control invTooltip" id="vendorDetailsVendorID" name="vendorDetailsVendorID" title="This will be auto-generated when you add a new vendor" autocomplete="off" />
+                        <input type="text" class="form-control invTooltip" id="vendorDetailsVendorID" name="vendorDetailsVendorID" title="This will be auto-generated when you add a new vendor" autocomplete="off" readonly />
                         <div id="vendorDetailsVendorIDSuggestionsDiv" class="customListDivWidth"></div>
                     </div>
                 </div>

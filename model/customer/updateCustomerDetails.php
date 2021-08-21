@@ -18,7 +18,7 @@
 		$customerDetailsStatus = htmlentities($_POST['customerDetailsStatus']);
 		
 		// Check if mandatory fields are not empty
-		if(isset($customerDetailsCustomerFullName) && isset($customerDetailsCustomerMobile) && isset($customerDetailsCustomerAddress)) {
+		if(isset($customerDetailsCustomerCompanyName) && isset($customerDetailsCustomerMobile) && isset($customerDetailsCustomerAddress)) {
 			
 			// Validate mobile number
 			if( preg_match('/^\d{10}$/', $customerDetailsCustomerMobile) && strlen($customerDetailsCustomerMobile) == 10) {

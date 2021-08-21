@@ -26,7 +26,7 @@
                </div>
                <div class="form-group col-md-2" >
                   <label for="customerDetailsCustomerID">Customer ID</label>
-                  <input type="text" class="form-control invTooltip" id="customerDetailsCustomerID" name="customerDetailsCustomerID" title="This will be auto-generated when you add a new customer" autocomplete="off">
+                  <input type="text" class="form-control invTooltip" id="customerDetailsCustomerID" name="customerDetailsCustomerID" title="This will be auto-generated when you add a new customer" autocomplete="off" readonly>
                   <div id="customerDetailsCustomerIDSuggestionsDiv" class="customListDivWidth"></div>
                </div>
             </div>
@@ -67,7 +67,7 @@
             <button type="button" id="addCustomer" name="addCustomer" class="btn btn-success">Add Customer</button>
             <button type="button" id="updateCustomerDetailsButton" class="btn btn-primary">Update</button>
             <button type="button" id="deleteCustomerButton" class="btn btn-danger">Delete</button>
-            <button type="reset" class="btn">Clear</button>
+            <button type="reset" id="clearCustomer" class="btn">Clear</button>
          </form>
       </div>
    </div>
