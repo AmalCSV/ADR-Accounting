@@ -9,3 +9,12 @@ function enableElements(ids) {
 		document.getElementById(id).disabled = false;
 	});
 }
+
+function getSelect2ItemData(list) {
+	return list.map( x=> {
+		return {
+			id: x.itemNumber,
+			text: x.itemName
+		  }
+	});
+}

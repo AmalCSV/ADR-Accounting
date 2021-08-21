@@ -1,6 +1,6 @@
 var element ;
 
-function autocomplete(inp, arr, refreshCallback) {
+function autocomplete(inp, arr, refreshCallback, targetElementId) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
@@ -102,7 +102,7 @@ function autocomplete(inp, arr, refreshCallback) {
         closeAllLists(e.target);
         let id =  element+"autocomplete-list";
         if( id == e.target.parentNode.id ){
-            refreshCallback(e.target.innerText);
+            refreshCallback(e.target.innerText, targetElementId);
         }
     });
   }

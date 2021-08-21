@@ -23,10 +23,12 @@
 	<!-- Bootbox JS -->
 	<script src="vendor/bootbox/bootbox.min.js"></script>
 	
+	<script src='assets/lib/select2/dist/js/select2.min.js'></script>
 	<!-- Custom scripts -->
 	<script src="assets/js/scripts.js"></script>
 	<script src="assets/js/login.js"></script>
 	<!-- New scripts -->
+	<script src="assets/js/util.js"></script>
 	<script src="assets/js/item.js"></script>
 
 	<script src="assets/js/purchase-order.js"></script>
