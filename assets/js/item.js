@@ -15,6 +15,7 @@ function addItem() {
   var itemDetailsDescription = $("#itemDetailsDescription").val();
   var itemDetailsWarningQty = $("#itemDetailsWarningQty").val();
   var itemDetailsRackNo = $("#itemDetailsRackNo").val();
+  itemDetailsWarningQty = (itemDetailsWarningQty == "") ? 0 : itemDetailsWarningQty ;
   $.ajax({
     url: "model/item/insertItem.php",
     method: "POST",
@@ -48,7 +49,6 @@ function addItem() {
 // Function to call the upateItemDetails.php script to UPDATE item data in db
 function updateItem() {
   var itemDetailsProductID = $("#itemDetailsProductID").val();
-
   if (parseInt(itemDetailsProductID) > 0) {
     var itemDetailsItemNumber = $("#itemDetailsItemNumber").val();
     var itemDetailsItemName = $("#itemDetailsItemName").val();
@@ -59,6 +59,8 @@ function updateItem() {
     var itemDetailsDescription = $("#itemDetailsDescription").val();
     var itemDetailsWarningQty = $("#itemDetailsWarningQty").val();
     var itemDetailsRackNo = $("#itemDetailsRackNo").val();
+
+    itemDetailsWarningQty = (itemDetailsWarningQty == "") ? 0 : itemDetailsWarningQty ;
 
     $.ajax({
       url: "model/item/updateItemDetails.php",
@@ -115,8 +117,10 @@ function getAllItemsDetails() {
     dataType: "json",
     success: function (data) {
       itemList = data;
+      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
       autocomplete(document.getElementById("itemDetailsItemNumber"), itemList.map(x => x.itemNumber), onSelectItemNumber);
       autocomplete(document.getElementById("itemDetailsItemName"), itemList.map(x => x.itemName), onSelectItemName);
+     
     }
   });
 }
@@ -139,6 +143,14 @@ function onSelectItemNumber(itemNumber) {
       selectItem(data);
     }
   }
+}
+
+function showEditItem(productId){
+  $('.nav-tabs a[href="#itemDetailsTab"]').tab('show');
+  let selectedItem =  itemList.find(x => x.productID == productId);
+  $("#itemDetailsItemName").val(selectedItem.itemName);
+  $("#itemDetailsItemNumber").val(selectedItem.itemNumber);
+  selectItem(selectedItem);
 }
 
 function selectItem(data) {

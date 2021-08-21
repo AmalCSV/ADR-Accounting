@@ -19,6 +19,7 @@
 					<th>Buying Price</th>
 					<th>Status</th>
 					<th>Rack No</th>
+					<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>';
@@ -37,6 +38,7 @@
 					'<td>' . $row['buyingPrice'] . '</td>' .
 					'<td>' . $row['status'] . '</td>' .
 					'<td>' . $row['rackNo'] . '</td>' .
+					'<td>' . '<button onclick=showEditItem("'. $row['productID'] .'") type="button" class="btn btn-primary btn-sm">Edit</button>'. '</td>' .
 								'</tr>';
 	}
 	
@@ -55,6 +57,7 @@
 						<th>Buying Price</th>
 						<th>Status</th>
 						<th>Rack No</th>
+						<th>Actions</th>
 						</tr>
 					</tfoot>
 				</table>';
