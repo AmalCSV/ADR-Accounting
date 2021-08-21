@@ -197,9 +197,9 @@ $(document).ready(function(){
 	
 	
 	// Listen to item number text box in purchase details tab
-	$('#purchaseDetailsItemNumber').keyup(function(){
-		showSuggestions('purchaseDetailsItemNumber', showItemNumberForPurchaseTabFile, 'purchaseDetailsItemNumberSuggestionsDiv');
-	});
+	// $('#purchaseDetailsItemNumber').keyup(function(){
+	// 	showSuggestions('purchaseDetailsItemNumber', showItemNumberForPurchaseTabFile, 'purchaseDetailsItemNumberSuggestionsDiv');
+	// });
 	
 	// remove the item numbers suggestions dropdown in the purchase details tab
 	// when user selects an item from it

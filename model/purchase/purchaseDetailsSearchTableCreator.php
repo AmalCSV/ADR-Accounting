@@ -2,6 +2,13 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
+	function optionsMenu($status, $purchaseID) {
+		if( $status == 2) { 
+			return '<a class="dropdown-item" onclick="openGoodReceive(' . $purchaseID . ')">Good Receive</a> ';
+		}
+		return '';	
+	}
+
 	$uPrice = 0;
 	$qty = 0;
 	$totalPrice = 0;
@@ -38,7 +45,7 @@
 								</a>    
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 									<a class="dropdown-item" onclick="openEditPurchaseOrder(' . $row['purchaseID'] . ')">Edit</a>
-									<a class="dropdown-item" onclick="openGoodReceive(' . $row['purchaseID'] . ')">Good Receive</a>
+									'. optionsMenu($row['status'], $row['purchaseID']) . '
 								</div>
 							</div>
                     	</td>'.
@@ -60,6 +67,7 @@
 					</tfoot>
 				</table>';
 	echo $output;
+
 ?>
 
 

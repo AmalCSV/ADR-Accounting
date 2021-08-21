@@ -127,7 +127,7 @@ function addPurchaseItem(id, isGoodReceived) {
                         <div id="purchaseDetailsItemNumberSuggestionsDiv${id}" class="customListDivWidth"></div>
                     </div>
                     <div class="form-group col-md-3">
-                        <input type="text" class="form-control invTooltip" id="purchaseDetailsItemName${id}" name="purchaseDetailsItemName${id}" readonly title="This will be auto-filled when you enter the item number above">
+                        <input type="text" class="form-control invTooltip" id="purchaseDetailsItemName${id}" name="purchaseDetailsItemName${id}">
                     </div>
                     <div class="form-group col-md-1">
                         <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0">
@@ -152,18 +152,9 @@ function addPurchaseItem(id, isGoodReceived) {
 	setCalculationFunctions(id);
 }
 
-function setSuggestionFunctions(id) {
-	$(`#purchaseDetailsItemNumber${id}`).keyup(function(){
-		showSuggestions(`purchaseDetailsItemNumber${id}`, showItemNumberForPurchaseTabFile, `purchaseDetailsItemNumberSuggestionsDiv${id}`);
-	});
-
-	$(document).on('click', `#purchaseDetailsItemNumberSuggestionsList li`, function(){
-		$(`#purchaseDetailsItemNumber${id}`).val($(this).text());
-		$(`#purchaseDetailsItemNumberSuggestionsList`).fadeOut();
-		
-		getItemName(`purchaseDetailsItemNumber${id}`, getItemNameFile, `purchaseDetailsItemName${id}`);
-		//getItemStockToPopulate(`purchaseDetailsItemNumber${id}`, getItemStockFile, `purchaseDetailsCurrentStock${id}`);
-	});
+function setSuggestionFunctions(id) {console.log(id)
+	autocomplete(document.getElementById(`purchaseDetailsItemNumber${id}`), itemList.map(x => x.itemNumber), onSelectNumber, `purchaseDetailsItemName${id}`);
+	autocomplete(document.getElementById(`purchaseDetailsItemName${id}`), itemList.map(x => x.itemName), onSelectName, `purchaseDetailsItemNumber${id}`);
 }
 
 function setCalculationFunctions(id) {
@@ -231,7 +222,33 @@ function initPurchaseOrder() {
 	document.getElementById("addPurchaseItem").style.display = "block";
 	document.getElementById("lableActionHeader").text = '#';
 	document.getElementById("clearBtn").disabled = false;
+
+	autocomplete(document.getElementById("purchaseDetailsItemNumber"), itemList.map(x => x.itemNumber), onSelectNumber, 'purchaseDetailsItemName');
+	autocomplete(document.getElementById("purchaseDetailsItemName"), itemList.map(x => x.itemName), onSelectName, 'purchaseDetailsItemNumber');
+	
 }
+
+
+function onSelectName(itemName, id) {
+	console.log(itemName, id)
+	if (itemName && itemName != "") {
+	  const data = itemList.find(x => x.itemName == itemName);
+	  if (data) {
+		$(`#${id}`).val(data.itemNumber);
+		selectItem(data);
+	  }
+	}
+  }
+  
+  function onSelectNumber(itemNumber, id) {
+	if (itemNumber && itemNumber != "") {
+	  var data = itemList.find(x => x.itemNumber == itemNumber);
+	  if (data) {
+		$(`#${id}`).val(data.itemName);
+		selectItem(data);
+	  }
+	}
+  }
 
 function initPurchaseOrderList() {
 	searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
