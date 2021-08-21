@@ -5,7 +5,7 @@ let title = {
     text: orderType,
     color: "#333333",
     width: "*",
-    fontSize: 28,
+    fontSize: 14,
     bold: true,
     alignment: "right",
     margin: [0, 0, 0, 15]
@@ -22,13 +22,13 @@ let orderNo = {
         color: "#aaaaab",
         bold: true,
         width: "*",
-        fontSize: 12,
+        fontSize: 11,
         alignment: "right"
       }, {
         text: orderNumber,
         bold: true,
         color: "#333333",
-        fontSize: 12,
+        fontSize: 11,
         alignment: "right",
         width: 100
       }
@@ -44,13 +44,13 @@ let orderNo = {
         color: "#aaaaab",
         bold: true,
         width: "*",
-        fontSize: 12,
+        fontSize: 11,
         alignment: "right"
       }, {
         text: date,
         bold: true,
         color: "#333333",
-        fontSize: 12,
+        fontSize: 11,
         alignment: "right",
         width: 100
       }
@@ -63,23 +63,23 @@ return headerContent;
 
 }
 
-function getFromTo() {
+function getFromToPO(fromCompany, toCompany, fromAddres, toAddress) {
 let fromTo = [
     {
     columns: [
       {
-        text: 'From',
+        text: 'Bill & Ship To',
         color: '#aaaaab',
         bold: true,
-        fontSize: 14,
+        fontSize: 11,
         alignment: 'left',
         margin: [0, 20, 0, 5],
       },
       {
-        text: 'To',
+        text: 'Supplier',
         color: '#aaaaab',
         bold: true,
-        fontSize: 14,
+        fontSize: 11,
         alignment: 'left',
         margin: [0, 20, 0, 5],
       },
@@ -88,15 +88,17 @@ let fromTo = [
   {
     columns: [
       {
-        text: 'Your Name \n Your Company Inc.',
+        text:  toCompany,
         bold: true,
         color: '#333333',
+        fontSize: 11,
         alignment: 'left',
       },
       {
-        text: 'Client Name \n Client Company',
+        text: fromCompany,
         bold: true,
         color: '#333333',
+        fontSize: 11,
         alignment: 'left',
       },
     ],
@@ -104,31 +106,47 @@ let fromTo = [
   {
     columns: [
       {
-        text: 'Address',
-        color: '#aaaaab',
-        bold: true,
-        margin: [0, 7, 0, 3],
+        text: toAddress,
+        fontSize: 11,
+        style: 'invoiceBillingAddress',
       },
       {
-        text: 'Address',
-        color: '#aaaaab',
-        bold: true,
-        margin: [0, 7, 0, 3],
+        text: fromAddres,
+        fontSize: 11,
+        style: 'invoiceBillingAddress',
       },
     ],
   },
   {
     columns: [
       {
-        text: '9999 Street name 1A \n New-York City NY 00000 \n   USA',
+        text: "Namal Gamage",
+        fontSize: 11,
+        margin: [0, 4, 0, 4],
         style: 'invoiceBillingAddress',
       },
       {
-        text: '1111 Other street 25 \n New-York City NY 00000 \n   USA',
+        text: "J.C.P Perera",
+        fontSize: 11,
+        margin: [0, 4, 0, 4],
         style: 'invoiceBillingAddress',
       },
     ],
-  }];
+  },
+  {
+    columns: [
+      {
+        text: "0712384000",
+        fontSize: 11,
+        style: 'invoiceBillingAddress',
+      },
+      {
+        text: "0712384000",
+        fontSize: 11,
+        style: 'invoiceBillingAddress',
+      },
+    ],
+  }  ];
 
   return fromTo;
 }
@@ -178,55 +196,85 @@ function getItemTable(){
         },
         table: {
           headerRows: 1,
-          widths: ['*', 80],
+          widths: [20,'*', 80, 80, 80],
           body: [
             [
               {
-                text: 'ITEM DESCRIPTION',
+                text: 'No',
                 fillColor: '#eaf2f5',
                 border: [false, true, false, true],
-                margin: [0, 5, 0, 5],
-                textTransform: 'uppercase',
+                fontSize: 11,
               },
               {
-                text: 'ITEM TOTAL',
+                text: 'Item',
+                fillColor: '#eaf2f5',
+                border: [false, true, false, true],
+                fontSize: 11,
+              },
+              {
+                text: 'Qty',
+                fillColor: '#eaf2f5',
+                border: [false, true, false, true],
+                fontSize: 11,
+              },
+              {
+                text: 'Unit Price(Rs)',
+                fillColor: '#eaf2f5',
+                border: [false, true, false, true],
+                fontSize: 11,
+              },
+              {
+                text: 'Item Total(Rs)',
                 border: [false, true, false, true],
                 alignment: 'right',
+                fontSize: 11,
                 fillColor: '#eaf2f5',
-                margin: [0, 5, 0, 5],
-                textTransform: 'uppercase',
               },
             ],
             [
+              {
+                text: '1',
+                style: 'itemDetails'
+              },
               {
                 text: 'Item 1',
-                border: [false, false, false, true],
-                margin: [0, 5, 0, 5],
-                alignment: 'left',
+                style: 'itemDetails'
               },
               {
-                border: [false, false, false, true],
-                text: '$999.99',
-                fillColor: '#f5f5f5',
-                alignment: 'right',
-                margin: [0, 5, 0, 5],
+                text: '2',
+                style: 'itemDetails'
+              },
+              {
+                text: '100.00',
+                style: 'itemDetails'
+              },
+              {
+                text: '200.00',
+                style: 'itemPrice'
               },
             ],
             [
               {
-                text: 'Item 2',
-                border: [false, false, false, true],
-                margin: [0, 5, 0, 5],
-                alignment: 'left',
+                text: '2',
+                style: 'itemDetails'
               },
               {
-                text: '$999.99',
-                border: [false, false, false, true],
-                fillColor: '#f5f5f5',
-                alignment: 'right',
-                margin: [0, 5, 0, 5],
+                text: 'Item 2',
+                style: 'itemDetails'
               },
-            ],
+              {
+                text: '2',
+                style: 'itemDetails'
+              },
+              {
+                text: '100.00',
+                style: 'itemDetails'
+              },
+              {
+                text: '200.00',
+                style: 'itemPrice'
+              },
+            ]
           ],
         },
       }
@@ -234,7 +282,7 @@ function getItemTable(){
     return layout;
 }
 
-function getTotal(){
+function getTotal(subtotal, discount, totalPrice){
     let total = {
         layout: {
           defaultBorder: false,
@@ -281,48 +329,48 @@ function getTotal(){
                 text: 'Payment Subtotal',
                 border: [false, true, false, true],
                 alignment: 'right',
-                margin: [0, 5, 0, 5],
+                margin: [0, 2, 0, 2],
               },
               {
                 border: [false, true, false, true],
-                text: '$999.99',
+                text: subtotal,
                 alignment: 'right',
                 fillColor: '#f5f5f5',
-                margin: [0, 5, 0, 5],
+                margin: [0, 2, 0, 2],
               },
             ],
             [
               {
-                text: 'Payment Processing Fee',
+                text: 'Discount',
                 border: [false, false, false, true],
                 alignment: 'right',
-                margin: [0, 5, 0, 5],
+                margin: [0, 2, 0, 2],
               },
               {
-                text: '$999.99',
+                text: discount,
                 border: [false, false, false, true],
                 fillColor: '#f5f5f5',
                 alignment: 'right',
-                margin: [0, 5, 0, 5],
+                margin: [0, 2, 0, 2],
               },
             ],
             [
               {
                 text: 'Total Amount',
                 bold: true,
-                fontSize: 20,
+                fontSize: 14,
                 alignment: 'right',
                 border: [false, false, false, true],
-                margin: [0, 5, 0, 5],
+                margin: [0, 2, 0, 2],
               },
               {
-                text: 'USD $999.99',
+                text: totalPrice,
                 bold: true,
-                fontSize: 20,
+                fontSize: 14,
                 alignment: 'right',
                 border: [false, false, false, true],
                 fillColor: '#f5f5f5',
-                margin: [0, 5, 0, 5],
+                margin: [0, 2, 0, 2],
               },
             ],
           ],
@@ -331,14 +379,14 @@ function getTotal(){
       return total;
 }
 
-function getNotes(){
+function getNotes(note){
     let notes = [
         {
             text: 'NOTES',
             style: 'notesTitle',
           },
           {
-            text: 'Some notes goes here \n Notes second line',
+            text: note,
             style: 'notesText',
           }
     ];
@@ -349,7 +397,7 @@ function downloadSummaryReport() {
   let content = [];
 
   let header = getOrderHeader("PURCHASE ORDER", "00001", "June 01, 2016");
-  let fromTo = getFromTo();
+  let fromTo = getFromToPO("ABC Pvt Ltd", "Anthony Distributors", "No:12, 1 st Lane, Badulla", "No84/21, Nawala");
   let newLine = {
     alignment: 'justify',
     margin: [40, 0],
@@ -362,8 +410,8 @@ function downloadSummaryReport() {
     alignment: 'center',
     text: 'Invoice No. 123',
     bold: true,
-    margin: [0, 10, 0, 10],
-    fontSize: 15,
+    margin: [0, 5, 0, 5],
+    fontSize: 11,
   };
 
   content.push(header);
@@ -376,11 +424,17 @@ function downloadSummaryReport() {
   content.push({text: '\n\n'});
   content.push({text: '\n'});
 
-  let itemTotal =  getTotal();
+  let itemTotal =  getTotal("100.00", "0%", "Rs. 100.00");
   content.push(itemTotal);
 
-  let notes = getNotes();
+  let notes = getNotes('Some notes goes here \n Notes second line');
   content.push(notes);
+  content.push([{
+    text: 'Authorized By \n\n\n ..............................',
+    fontSize: 12,
+    alignment: 'left',
+    margin: [0, 30, 0, 15],
+  }]);
 
   let tableLayouts = {
     hLayout: {
@@ -472,8 +526,20 @@ function downloadSummaryReport() {
       notesText: {
         fontSize: 10
       },
+      itemDetails: {
+        fontSize: 11,
+        border: [false, false, false, true],
+        margin: [0,2, 0, 2],
+        alignment: 'left'
+      },
+      itemPrice: {
+        border: [false, false, false, true],
+        fillColor: '#f5f5f5',
+        alignment: 'right',
+        fontSize:11
+      },
       defaultStyle: {
-        columnGap: 20
+        columnGap: 14
         //font: 'Quicksand',
       }
     }

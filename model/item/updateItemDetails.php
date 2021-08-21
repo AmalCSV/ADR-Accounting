@@ -38,7 +38,7 @@
 			// }
 			
 			// Validate unit price. It has to be a number or floating point value
-			if(filter_var($buyingPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($buyingPrice, FILTER_VALIDATE_FLOAT)){
+			if((filter_var($buyingPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($buyingPrice, FILTER_VALIDATE_FLOAT))  && $buyingPrice > 0){
 				// Valid unit price
 			} else {
 				// Unit price is not a valid number
@@ -49,7 +49,7 @@
 			}
 
 			// Validate unit price. It has to be a number or floating point value
-			if(filter_var($sellingPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($sellingPrice, FILTER_VALIDATE_FLOAT)){
+			if((filter_var($sellingPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($sellingPrice, FILTER_VALIDATE_FLOAT)) && $sellingPrice > 0){
 				// Valid unit price
 			} else {
 				// Unit price is not a valid number
