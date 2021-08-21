@@ -123,12 +123,7 @@ $(document).ready(function(){
 		addVendor();
 	});
 	
-	
-	// Listen to purchase add button
-	$('#addPurchase').on('click', function(){
-		addPurchase();
-	});
-	
+
 	// Listen to sale add button
 	$('#addSaleButton').on('click', function(){
 		addSale();
@@ -137,11 +132,6 @@ $(document).ready(function(){
 	// Listen to update button in vendor details tab
 	$('#updateVendorDetailsButton').on('click', function(){
 		updateVendor();
-	});
-	
-	// Listen to update button in purchase details tab
-	$('#updatePurchaseDetailsButton').on('click', function(){
-		updatePurchase();
 	});
 	
 	// Listen to update button in sale details tab
@@ -300,11 +290,7 @@ $(document).ready(function(){
 		todayBtn: 'linked',
 		orientation: 'bottom left'
 	});
-	
-	// Calculate Total in purchase tab
-	$('#purchaseDetailsQuantity, #purchaseDetailsUnitPrice').change(function(){
-		calculateTotalInPurchaseTab();
-	});
+
 
 	// Calculate Total in sale tab
 	$('#saleDetailsDiscount, #saleDetailsQuantity, #saleDetailsUnitPrice').change(function(){
@@ -781,41 +767,44 @@ function calculateTotalInSaleTab(){
 	$('#saleDetailsTotal').val(Number(unitPriceST) * ((100 - Number(discountST)) / 100) * Number(quantityST));
 }
 
-// Function to call the insertPurchase.php script to insert purchase data to db
-function addPurchase() {
-	var purchaseDetailsItemNumber = $('#purchaseDetailsItemNumber').val();
-	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
-	var purchaseDetailsItemName = $('#purchaseDetailsItemName').val();
-	var purchaseDetailsQuantity = $('#purchaseDetailsQuantity').val();
-	var purchaseDetailsUnitPrice = $('#purchaseDetailsUnitPrice').val();
-	var purchaseDetailsVendorName = $('#purchaseDetailsVendorName').val();
+// Function to call the insertCustomer.php script to insert customer data to db
+function addCustomer() {
+	var customerDetailsCustomerFullName = $('#customerDetailsCustomerFullName').val();
+	var customerDetailsCustomerEmail = $('#customerDetailsCustomerEmail').val();
+	var customerDetailsCustomerMobile = $('#customerDetailsCustomerMobile').val();
+	var customerDetailsCustomerPhone2 = $('#customerDetailsCustomerPhone2').val();
+	var customerDetailsCustomerAddress = $('#customerDetailsCustomerAddress').val();
+	var customerDetailsCustomerAddress2 = $('#customerDetailsCustomerAddress2').val();
+	var customerDetailsCustomerCity = $('#customerDetailsCustomerCity').val();
+	var customerDetailsCustomerDistrict = $('#customerDetailsCustomerDistrict option:selected').text();
+	var customerDetailsStatus = $('#customerDetailsStatus option:selected').text();
 	
 	$.ajax({
-		url: 'model/purchase/insertPurchase.php',
+		url: 'model/customer/insertCustomer.php',
 		method: 'POST',
 		data: {
-			purchaseDetailsItemNumber:purchaseDetailsItemNumber,
-			purchaseDetailsPurchaseDate:purchaseDetailsPurchaseDate,
-			purchaseDetailsItemName:purchaseDetailsItemName,
-			purchaseDetailsQuantity:purchaseDetailsQuantity,
-			purchaseDetailsUnitPrice:purchaseDetailsUnitPrice,
-			purchaseDetailsVendorName:purchaseDetailsVendorName,
+			customerDetailsCustomerFullName:customerDetailsCustomerFullName,
+			customerDetailsCustomerEmail:customerDetailsCustomerEmail,
+			customerDetailsCustomerMobile:customerDetailsCustomerMobile,
+			customerDetailsCustomerPhone2:customerDetailsCustomerPhone2,
+			customerDetailsCustomerAddress:customerDetailsCustomerAddress,
+			customerDetailsCustomerAddress2:customerDetailsCustomerAddress2,
+			customerDetailsCustomerCity:customerDetailsCustomerCity,
+			customerDetailsCustomerDistrict:customerDetailsCustomerDistrict,
+			customerDetailsStatus:customerDetailsStatus,
 		},
 		success: function(data){
-			$('#purchaseDetailsMessage').fadeIn();
-			$('#purchaseDetailsMessage').html(data);
+			$('#customerDetailsMessage').fadeIn();
+			$('#customerDetailsMessage').html(data);
 		},
-		complete: function(){
-			getItemStockToPopulate('purchaseDetailsItemNumber', getItemStockFile, 'purchaseDetailsCurrentStock');
-			populateLastInsertedID(purchaseLastInsertedIDFile, 'purchaseDetailsPurchaseID');
-			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
-			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
-			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
-			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
+		complete: function(data){
+			populateLastInsertedID(customerLastInsertedIDFile, 'customerDetailsCustomerID');
+			searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
+			reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
+
 		}
 	});
 }
-
 
 // Function to call the insertSale.php script to insert sale data to db
 function addSale() {
@@ -1033,41 +1022,6 @@ function getSaleDetailsToPopulate(){
 	});
 }
 
-// Function to call the updatePurchase.php script to update purchase data to db
-function updatePurchase() {
-	var purchaseDetailsItemNumber = $('#purchaseDetailsItemNumber').val();
-	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
-	var purchaseDetailsItemName = $('#purchaseDetailsItemName').val();
-	var purchaseDetailsQuantity = $('#purchaseDetailsQuantity').val();
-	var purchaseDetailsUnitPrice = $('#purchaseDetailsUnitPrice').val();
-	var purchaseDetailsPurchaseID = $('#purchaseDetailsPurchaseID').val();
-	var purchaseDetailsVendorName = $('#purchaseDetailsVendorName').val();
-	
-	$.ajax({
-		url: 'model/purchase/updatePurchase.php',
-		method: 'POST',
-		data: {
-			purchaseDetailsItemNumber:purchaseDetailsItemNumber,
-			purchaseDetailsPurchaseDate:purchaseDetailsPurchaseDate,
-			purchaseDetailsItemName:purchaseDetailsItemName,
-			purchaseDetailsQuantity:purchaseDetailsQuantity,
-			purchaseDetailsUnitPrice:purchaseDetailsUnitPrice,
-			purchaseDetailsPurchaseID:purchaseDetailsPurchaseID,
-			purchaseDetailsVendorName:purchaseDetailsVendorName,
-		},
-		success: function(data){
-			$('#purchaseDetailsMessage').fadeIn();
-			$('#purchaseDetailsMessage').html(data);
-		},
-		complete: function(){
-			getItemStockToPopulate('purchaseDetailsItemNumber', getItemStockFile, 'purchaseDetailsCurrentStock');
-			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
-			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
-			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
-			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
-		}
-	});
-}
 
 // Function to call the updateSale.php script to update sale data to db
 function updateSale() {

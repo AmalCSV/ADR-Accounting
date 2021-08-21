@@ -8,7 +8,7 @@
 		$purchaseIDString = '%' . htmlentities($_POST['textBoxValue']) . '%';
 		
 		// Construct the SQL query to get the purchase ID
-		$sql = 'SELECT purchaseID FROM purchase WHERE purchaseID LIKE ?';
+		$sql = 'SELECT purchaseID FROM purchaseOrder WHERE purchaseID LIKE ?';
 		$stmt = $conn->prepare($sql);
 		$stmt->execute([$purchaseIDString]);
 		
