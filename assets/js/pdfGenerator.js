@@ -212,7 +212,7 @@ function getItemTable(items) {
   return layout;
 }
 
-function getItemsDetails(){
+function getItemsDetails(items){
   let tableHeader = [];
   let firstRow = [
     {
@@ -255,27 +255,29 @@ function getItemsDetails(){
   ];
   tableHeader.push(firstRow);
 
-  for (let i = 0; i <= 10; i++) {
-    let item = [
-      {
-        text: "2",
-        style: "itemDetails"
-      }, {
-        text: "Item 2",
-        style: "itemDetails"
-      }, {
-        text: "2",
-        style: "itemDetails"
-      }, {
-        text: "100.00",
-        style: "itemDetails"
-      }, {
-        text: "200.00",
-        style: "itemPrice"
-      }
-    ];
-    tableHeader.push(item);
-  };
+  if(items && items.length >0 ){
+    for (let i = 0; i < items.length; i++) {
+      let itemContent = [
+        {
+          text: items[i].itemNumber,
+          style: "itemDetails"
+        }, {
+          text: items[i].itemName,
+          style: "itemDetails"
+        }, {
+          text: items[i].quantity,
+          style: "itemDetails"
+        }, {
+          text: items[i].unitPrice,
+          style: "itemDetails"
+        }, {
+          text: items[i].totalPrice,
+          style: "itemPrice"
+        }
+      ];
+      tableHeader.push(itemContent);
+    };
+  }
   return tableHeader;
 }
 
@@ -400,10 +402,17 @@ function getNotes(note) {
   return notes;
 }
 
-function createPurchaseOrder(){
+function downloadOrderPdf(orderType, order, items){
   let content = [];
+ let type = "";
+  if(orderType === "PO"){
+    type = "PURCHASE ORDER";
+  }
+  else{
+    type = "SALES ORDER";
+  }
 
-  let header = getOrderHeader("PURCHASE ORDER", "00001", "June 01, 2016");
+  let header = getOrderHeader(type, order.orderNumber, order.orderDate);
   let fromTo = getFromToPO("ABC Pvt Ltd", "Anthony Distributors", "No:12, 1 st Lane, Badulla", "No84/21, Nawala");
   let newLine = {
     alignment: "justify",
@@ -435,7 +444,7 @@ function createPurchaseOrder(){
   content.push({text: "\n\n"});
   content.push({text: "\n"});
 
-  let itemTotal = getTotal("100.00", "0%", "Rs. 100.00");
+  let itemTotal = getTotal(order.amount, "0%", "Rs. " + order.amount);
   content.push(itemTotal);
 
   let notes = getNotes("Some notes goes here \n Notes second line");
@@ -448,64 +457,11 @@ function createPurchaseOrder(){
       margin: [0, 30, 0, 15]
     }
   ]);
-  return content;
+  downloadpdf(content, order.orderNumber);
 
 };
 
-
-function createSalesOrder(){
-  let content = [];
-
-  let header = getOrderHeader("SALES ORDER", "00002", "June 01, 2016");
-  let fromTo = getFromToPO("ABC Pvt Ltd", "Anthony Distributors", "No:12, 1 st Lane, Badulla", "No84/21, Nawala");
-  let newLine = {
-    alignment: "justify",
-    margin: [
-      40, 0
-    ],
-    fontSize: 9,
-    text: "\n\n"
-  };
-
-  let itemsHeader = {
-    width: "100%",
-    alignment: "center",
-    text: "Item Details",
-    bold: true,
-    margin: [
-      0, 5, 0, 5
-    ],
-    fontSize: 11
-  };
-
-  content.push(header);
-  content.push(fromTo);
-  content.push(newLine);
-  content.push(itemsHeader);
-
-  let itemsTable = getItemTable(items);
-  content.push(itemsTable);
-  content.push({text: "\n\n"});
-  content.push({text: "\n"});
-
-  let itemTotal = getTotal("100.00", "0%", "Rs. 100.00");
-  content.push(itemTotal);
-
-  let notes = getNotes("Some notes goes here \n Notes second line");
-  content.push(notes);
-  content.push([
-    {
-      text: "Authorized By : ..............................",
-      fontSize: 12,
-      alignment: "left",
-      margin: [0, 30, 0, 15]
-    }
-  ]);
-  return content;
-}
-
-
-function downloadpdf(con) {
+function downloadpdf(con, docName) {
   let content = con;
 
   let tableLayouts = {
@@ -627,7 +583,7 @@ function downloadpdf(con) {
     // Here implement function for hide waiting loader
   };
   // let airnavtableforpdf = table(airnavtabledata, ['anv', 'value']);
-  let dfname = `Summary` + ".pdf"; //'SearchResult-' + new Date(Date.now()).toLocaleString().split(',')[0].split("/").join("-") + '.pdf';
+  let dfname = docName + ".pdf"; //'SearchResult-' + new Date(Date.now()).toLocaleString().split(',')[0].split("/").join("-") + '.pdf';
 
   // pdfMake.createPdf(dd, null, fonts).download(dfname, callbackFunction);
   pdfMake.createPdf(dd, tableLayouts, fonts).download(dfname, callbackFunction);
