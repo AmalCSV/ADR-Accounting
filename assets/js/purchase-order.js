@@ -1,4 +1,7 @@
 var itemData =[];
+var order = {};
+var orderItems = {};
+
 // Function to call the insertPurchase.php script to insert purchase data to db
 function addPurchase() {
 	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
@@ -293,6 +296,8 @@ function openGoodReceive(purchaseOrderId) {
 
 function loadDataToPurchaseOrder(data, viewType){
 	const {purchaseOrder, purchaseOrderItems} = JSON.parse(data);
+	order = purchaseOrder;
+	orderItems = purchaseOrderItems;
 	$('#purchaseDetailsPurchaseDate').val(purchaseOrder.orderDate);
 	$('#purchaseDetailsDescription').val(purchaseOrder.description);
 	$('#purchaseDetailsPurchaseID').val(purchaseOrder.orderNumber);
@@ -442,3 +447,7 @@ function closePO() {
 
 	 $('#result').html("id : " + userid + ", name : " + username);
  });
+
+ function printPurchaseOrderPdf(){
+	downloadOrderPdf("PO", order, orderItems);
+ }
