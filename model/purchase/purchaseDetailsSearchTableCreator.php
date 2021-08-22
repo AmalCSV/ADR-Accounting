@@ -2,6 +2,22 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
+	abstract class poStatus {
+		const created = 1;
+		const pending = 2;
+		const close = 3;
+		const cancel = 4;
+	}
+
+	function optionsMenu($status, $purchaseID) {
+		if( $status == poStatus::pending) { 
+			return '<a class="dropdown-item" onclick="openGoodReceive(' . $purchaseID . ')">Good Receive</a> ';
+		} else if ($status == poStatus::created){
+			return '<a class="dropdown-item" onclick="openEditPurchaseOrder(' . $purchaseID . ')">Edit</a>';
+		}
+		return '';	
+	}
+
 	$uPrice = 0;
 	$qty = 0;
 	$totalPrice = 0;
@@ -37,8 +53,8 @@
 									<i class="navbar-toggler-icon"></i>
 								</a>    
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<a class="dropdown-item" onclick="openEditPurchaseOrder(' . $row['purchaseID'] . ')">Edit</a>
-									<a class="dropdown-item" onclick="openGoodReceive(' . $row['purchaseID'] . ')">Good Receive</a>
+								<a class="dropdown-item" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')">View</a>
+								'. optionsMenu($row['status'], $row['purchaseID']) . '
 								</div>
 							</div>
                     	</td>'.
@@ -60,6 +76,7 @@
 					</tfoot>
 				</table>';
 	echo $output;
+
 ?>
 
 

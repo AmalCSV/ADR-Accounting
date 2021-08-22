@@ -15,7 +15,7 @@
 		$newStock = 0;
 		
 		// Check if mandatory fields are not empty
-		if( isset($purchaseDetailsPurchaseID) && isset($purchaseDetailsPurchaseDate) && isset($purchaseDetailsVendorName) && isset($purchaseDetailsGrandTotal)){		
+		if( isset($purchaseDetailsPurchaseID) && isset($purchaseDetailsPurchaseDate) && isset($purchaseDetailsVendorName) && isset($purchaseDetailsGrandTotal) && $purchaseDetailsVendorName != ''){		
 			
 			// Sanitize item number
 			//$purchaseDetailsItemNumber = filter_var($purchaseDetailsItemNumber, FILTER_SANITIZE_STRING);
