@@ -39,7 +39,7 @@
 			// }
 			
 			// Get the vendorId for the given vendorName
-			$vendorIDsql = 'SELECT * FROM vendor WHERE fullName = :fullName';
+			$vendorIDsql = 'SELECT * FROM vendor WHERE companyName = :fullName';
 			$vendorIDStatement = $conn->prepare($vendorIDsql);
 			$vendorIDStatement->execute(['fullName' => $purchaseDetailsVendorName]);
 			$row = $vendorIDStatement->fetch(PDO::FETCH_ASSOC);

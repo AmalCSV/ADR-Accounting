@@ -2,76 +2,35 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
-	if(isset($_POST['saleDetailsItemNumber'])){
-		
-		$itemNumber = htmlentities($_POST['saleDetailsItemNumber']);
-		$itemName = htmlentities($_POST['saleDetailsItemName']);
+	if(isset($_POST['saleDetailsSaleID'])){
+		$saleDetailsSaleID = htmlentities($_POST['saleDetailsSaleID']);
 		$discount = htmlentities($_POST['saleDetailsDiscount']);
-		$quantity = htmlentities($_POST['saleDetailsQuantity']);
-		$unitPrice = htmlentities($_POST['saleDetailsUnitPrice']);
-		$customerID = htmlentities($_POST['saleDetailsCustomerID']);
+		$salesOrderNetTotal = htmlentities($_POST['salesOrderNetTotal']);
+		$salesItem = htmlentities($_POST['salesItem']);
+		$salesOrderTotal = htmlentities($_POST['salesOrderTotal']);
 		$customerName = htmlentities($_POST['saleDetailsCustomerName']);
 		$saleDate = htmlentities($_POST['saleDetailsSaleDate']);
 		
 		// Check if mandatory fields are not empty
-		if(!empty($itemNumber) && isset($customerID) && isset($saleDate) && isset($quantity) && isset($unitPrice)){
+		if(!empty($saleDetailsSaleID) && isset($salesOrderTotal) && isset($customerName) && isset($saleDate) && isset($salesItem)){
 			
-			// Sanitize item number
-			$itemNumber = filter_var($itemNumber, FILTER_SANITIZE_STRING);
-			
-			// Validate item quantity. It has to be a number
-			if(filter_var($quantity, FILTER_VALIDATE_INT) === 0 || filter_var($quantity, FILTER_VALIDATE_INT)){
-				// Valid quantity
-			} else {
-				// Quantity is not a valid number
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for quantity</div>';
-				exit();
-			}
-			
-			// Check if customerID is empty
-			if($customerID == ''){ 
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a Customer ID.</div>';
-				exit();
-			}
-			
-			// Validate customerID
-			if(filter_var($customerID, FILTER_VALIDATE_INT) === 0 || filter_var($customerID, FILTER_VALIDATE_INT)){
-				// Valid customerID
-			} else {
-				// customerID is not a valid number
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid Customer ID</div>';
-				exit();
-			}
-			
-			// Check if itemNumber is empty
-			if($itemNumber == ''){ 
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter Item Number.</div>';
-				exit();
-			}
-			
-			// Check if unit price is empty
-			if($unitPrice == ''){ 
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter Unit Price.</div>';
-				exit();
-			}
-			
-			// Validate unit price. It has to be a number or floating point value
-			if(filter_var($unitPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($unitPrice, FILTER_VALIDATE_FLOAT)){
-				// Valid float (unit price)
-			} else {
-				// Unit price is not a valid number
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for unit price</div>';
-				exit();
-			}
-			
-			// Validate discount only if it's provided
-			if(!empty($discount)){
-				if(filter_var($discount, FILTER_VALIDATE_FLOAT) === false){
-					// Discount is not a valid floating point number
-					echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid discount amount</div>';
-					exit();
+			// insert sales order 
+
+			$insertPurchaseOrderSql = 'INSERT INTO purchaseOrder(orderNumber, orderDate, amount, vendorID, description) VALUES(:orderNumber, :orderDate, :amount, :vendorID, :note)';
+			$insertPurchaseOrderStatement = $conn->prepare($insertPurchaseOrderSql);
+			$insertPurchaseOrderStatement->execute(['orderNumber' => $purchaseDetailsPurchaseID, 'orderDate' => $purchaseDetailsPurchaseDate, 'amount' => $purchaseDetailsGrandTotal, 
+				 'vendorID' => $vendorID, 'note' => $purchaseDetailsDescription]);
+
+			$purchaseOrderID = $conn->lastInsertId();
+				foreach ($purchaseItems as $item) {
+					$insertPurchaseSql = 'INSERT INTO purchaseItem(itemNumber, purchaseDate, itemName, unitPrice, quantity, vendorName, vendorID, purchaseOrderID, totalPrice) VALUES(:itemNumber, :purchaseDate, :itemName, :unitPrice, :quantity, :vendorName, :vendorID, :purchaseOrderID, :totalPrice)';
+					$insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
+					$insertPurchaseStatement->execute(['itemNumber' => $item['id'], 'purchaseDate' => $purchaseDetailsPurchaseDate, 'itemName' => $item['name'], 'unitPrice' => $item['buyingPrice'], 'quantity' => $item['quntity'], 'vendorName' => $purchaseDetailsVendorName, 'vendorID' => $vendorID, 'purchaseOrderID' => $purchaseOrderID, 'totalPrice'=> $item['total']]);		
 				}
-			}
+
+				echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Purchase details added successfully.</div>';
+				exit();
+
 
 			// Calculate the stock values
 			$stockSql = 'SELECT stock FROM item WHERE itemNumber = :itemNumber';

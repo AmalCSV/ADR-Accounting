@@ -22,7 +22,7 @@
 	
 	<!-- Bootbox JS -->
 	<script src="vendor/bootbox/bootbox.min.js"></script>
-	
+	<!-- select js -->
 	<script src='assets/lib/select2/dist/js/select2.min.js'></script>
 	<!-- Custom scripts -->
 	<script src="assets/js/scripts.js"></script>
@@ -32,6 +32,7 @@
 	<script src="assets/js/item.js"></script>
 
 	<script src="assets/js/purchase-order.js"></script>
+	<script src="assets/js/sales-order.js"></script>
 	<script src="vendor/pdfmake/pdfmake.js"></script>
 	<script src="vendor/pdfmake/vfs_fonts.js"></script>
 

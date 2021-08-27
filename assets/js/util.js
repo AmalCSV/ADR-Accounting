@@ -18,3 +18,12 @@ function getSelect2ItemData(list) {
 		  }
 	});
 }
+
+function getSelect2CustomerData(list) {
+	return list.map( x=> {
+		return {
+			id: x.customerID,
+			text: x.companyName
+		  }
+	});
+}
