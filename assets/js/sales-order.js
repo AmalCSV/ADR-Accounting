@@ -137,7 +137,7 @@ $('#deleteSalesItem').on('click', function(){
 });
 
 function initSalesOrderList() {
-	searchTableCreator('salesDetailsTableDiv1', saleDetailsSearchTableCreatorFile, 'salesDetailsTable');
+	searchTableCreator('salesDetailsTableDiv1', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
 }
 
 function initSalesOrderItems() {

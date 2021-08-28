@@ -34,3 +34,11 @@
     background-color: DodgerBlue !important; 
     color: #ffffff; 
   }
+
+  /*select 2 style */
+  .select2-container {
+    width: 100%!important;
+  }
+  .select2-search--dropdown .select2-search__field {
+  width: 98%;
+  }
