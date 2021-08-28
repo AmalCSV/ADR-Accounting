@@ -1,3 +1,5 @@
+var companyImage = ""; 
+
 // File that creates the purchase details search table
 purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator.php';
 
@@ -134,6 +136,8 @@ $(document).ready(function(){
 		updateSale();
 	});
 	
+	//Get company details
+	getCompanyDetails();
 	
 	// // Listen to item name text box in item details tab
 	// $('#itemDetailsItemName').keyup(function(){
@@ -183,9 +187,9 @@ $(document).ready(function(){
 	
 	
 	// Listen to item number text box in purchase details tab
-	// $('#purchaseDetailsItemNumber').keyup(function(){
-	// 	showSuggestions('purchaseDetailsItemNumber', showItemNumberForPurchaseTabFile, 'purchaseDetailsItemNumberSuggestionsDiv');
-	// });
+	$('#purchaseDetailsItemNumber').keyup(function(){
+		showSuggestions('purchaseDetailsItemNumber', showItemNumberForPurchaseTabFile, 'purchaseDetailsItemNumberSuggestionsDiv');
+	});
 	
 	// remove the item numbers suggestions dropdown in the purchase details tab
 	// when user selects an item from it
@@ -1042,4 +1046,31 @@ function updateSale() {
 			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
 		}
 	});
+}
+
+
+function getCompanyDetails(){
+	$.ajax({
+		url: 'model/company/populateCompanyDetails.php',
+		method: 'POST',
+		dataType: 'json',
+		success: function(data){
+			companyImage = data.logo;
+		},
+		error: function(data){
+			console.log(data);
+		}
+	});
+
+	// $.ajax({
+	// 	url: 'model/distributor/getDistributors.php',
+	// 	method: 'POST',
+	// 	dataType: 'json',
+	// 	success: function(data){
+	// 		console.log(data);
+	// 	},
+	// 	error: function(data){
+	// 		console.log(data);
+	// 	}
+	// });
 }

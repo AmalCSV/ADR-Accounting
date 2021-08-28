@@ -22,7 +22,9 @@
 	$qty = 0;
 	$totalPrice = 0;
 	
-	$purchaseDetailsSearchSql = ' SELECT po.*,v.contactPerson as fullName FROM purchaseOrder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false';
+
+	$purchaseDetailsSearchSql = ' SELECT po.*,v.companyName as fullName FROM purchaseOrder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false';
+
 	$purchaseDetailsSearchStatement = $conn->prepare($purchaseDetailsSearchSql);
 	$purchaseDetailsSearchStatement->execute();
 

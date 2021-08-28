@@ -3,7 +3,7 @@
 	require_once('../../inc/config/db.php');
 
 	if(isset($_POST['purchaseID'])){
-        $purchaseDetailSql = "SELECT po.*,v.fullName,
+        $purchaseDetailSql = "SELECT po.*,v.companyName as fullName,
         CASE
             WHEN po.status = 1 THEN 'Created'
             WHEN po.status = 2 THEN 'Pending'
