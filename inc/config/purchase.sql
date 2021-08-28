@@ -31,3 +31,6 @@ CREATE TABLE `purchaseItem` (
  ) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
 
 
+
+ALTER TABLE `purchaseorder` ADD `paidAmount` FLOAT NULL DEFAULT '0' AFTER `amount`;
+

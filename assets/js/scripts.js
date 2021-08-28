@@ -3,6 +3,8 @@ var companyImage = "";
 // File that creates the purchase details search table
 purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator.php';
 
+purchasePaymentTableCreatorFile = 'model/purchase/purchasePaymentTableCreator.php';
+
 // File that creates the customer details search table
 customerDetailsSearchTableCreatorFile = 'model/customer/customerDetailsSearchTableCreator.php';
 

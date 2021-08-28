@@ -22,7 +22,6 @@
 	$qty = 0;
 	$totalPrice = 0;
 	
-
 	$purchaseDetailsSearchSql = ' SELECT po.*,v.companyName as fullName FROM purchaseOrder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false';
 
 	$purchaseDetailsSearchStatement = $conn->prepare($purchaseDetailsSearchSql);
@@ -36,6 +35,7 @@
 						<th>Vendor Name</th>
 						<th>Vendor ID</th>
 						<th>Total Price</th>
+						<th>Paid Amount</th>
 						<th> Action </th>
 					</tr>
 				</thead>
@@ -49,6 +49,7 @@
 						'<td>' . $row['fullName'] . '</td>' .
 						'<td>' . $row['vendorID'] . '</td>' .
 						'<td>' . $row['amount'] . '</td>' .
+						'<td>' . $row['paidAmount'] . '</td>' .
 						' <td align="center">
 							<div class="dropdown">
 								<a class="btn btn-secondary" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,7 +59,7 @@
 								<a class="dropdown-item" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')">View</a>
 								'. optionsMenu($row['status'], $row['purchaseID']) . '
 								</div>
-							</div>
+							</div> ' . '<button onclick=showPayments("'. $row['purchaseID'] .'") type="button" class="btn btn-primary btn-sm">Payments</button>' . '
                     	</td>'.
 					'</tr>';
 	}
@@ -73,6 +74,7 @@
 						<th>Vendor Name</th>
 						<th>Vendor ID</th>
 						<th>Total Price</th>
+						<th>Paid Amount</th>
 						<th> Action </th>
 						</tr>
 					</tfoot>
