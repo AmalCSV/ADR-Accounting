@@ -47,7 +47,6 @@ function addPurchase() {
 			$('#purchaseDetailsMessage').html(data);
 		},
 		complete: function(){
-			
 			populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
 			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
@@ -131,7 +130,7 @@ function addPurchaseItem(id, viewType) {
                         <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0">
+                        <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
                     </div>
                     <div class="form-group col-md-2">
                         <input type="text" class="form-control" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
@@ -147,28 +146,42 @@ function addPurchaseItem(id, viewType) {
                 </div>
             </div>
 	` );
-	setSuggestionFunctions(id);
-	setCalculationFunctions(id);
+	setPOSuggestionFunctions(id);
+	setPOCalculationFunctions(id);
 }
 
-function setSuggestionFunctions(id) {
-	console.log(id)
+function setPOSuggestionFunctions(id) {
 	$(`#purchaseDetailsItem${id}`).select2({
 		data: itemData
 	});
+	purchaseItemSelectChange(id);
+	$(`#purchaseDetailsItem${id}`).change(function(){
+		purchaseItemSelectChange(id);
+	});
 }
 
-function setCalculationFunctions(id) {
-	$(`#purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
+$('#purchaseDetailsItem').change(function(){
+	purchaseItemSelectChange('');
+});
+
+function purchaseItemSelectChange(id) {
+	const itemId = $(`#purchaseDetailsItem${id}`).val();
+	const item = itemList.find(x => x.productID === itemId);
+	$(`#purchaseDetailsUnitPrice${id}`).val(item ? item.buyingPrice : 0);
+}
+
+
+function setPOCalculationFunctions(id) {
+	$(`#purchaseDetailsItem${id} #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
 		calculateTotalInPurchase(id);
-		calculateGrandTotal();
+		calculatePOGrandTotal();
 	});
 }
 
 // Calculate Total in purchase tab
-$('#purchaseDetailsQuantity, #purchaseDetailsUnitPrice').change(function(){
+$('#purchaseDetailsQuantity, #purchaseDetailsItem, #purchaseDetailsUnitPrice').change(function(){
 	calculateTotalInPurchaseTab();
-	calculateGrandTotal();
+	calculatePOGrandTotal();
 });
 
 function calculateTotalInPurchase(id){
@@ -180,7 +193,8 @@ function calculateTotalInPurchase(id){
 function deletePurchaseItem(id) {
 	$(`#addedRow${id}`).remove();
 	rowCount--;
-	calculateGrandTotal();
+	$(`#deletePurchaseItem${rowCount}`).prop("disabled", false);
+	calculatePOGrandTotal();
 }
 
 $('#deletePurchaseItem').on('click', function(){
@@ -189,11 +203,12 @@ $('#deletePurchaseItem').on('click', function(){
 
 var rowCount = 0;
 $('#addPurchaseItem').on('click', function(){
+	$(`#deletePurchaseItem${rowCount}`).prop("disabled", true);
 	rowCount++;
     addPurchaseItem(rowCount);
 });
 
-function calculateGrandTotal() {
+function calculatePOGrandTotal() {
 	let tot = $(`#purchaseDetailsTotal`).val();
 	tot = tot || 0;
 	for (let index = 0; index < rowCount; index++) {
@@ -201,11 +216,16 @@ function calculateGrandTotal() {
 		tot = Number(tot) + Number(itemTotal || 0);
 	}
 	$(`#purchaseOrderTotal`).val(tot);
+	validateAddPurchases(tot);
 }
+
+function validateAddPurchases(netAmount) {
+	$('#addPurchaseBtn').prop("disabled", netAmount===0);
+}
+
 
 function initPurchaseOrder() {
 	const currentDate =  new Date().toISOString().slice(0, 10);
-	$('#purchaseDetailsPurchaseDate').val(currentDate);
 	$.ajax({
 		url: 'model/purchase/nextPurchaseID.php',
 		method: 'POST',
@@ -216,9 +236,10 @@ function initPurchaseOrder() {
 
 	initPurchaseOrderList();
 	initPurchaseOrderItems();
+	$('#purchaseDetailsPurchaseDate').val(currentDate);
 	document.getElementById("goodReceivedData").style.display = "none";
 	
-	document.getElementById("updatePurchaseBtn").disabled = true
+	//document.getElementById("updatePurchaseBtn").disabled = true
 	document.getElementById("addPurchaseBtn").disabled = false
 	document.getElementById("addPurchaseItem").style.display = "block";
 	document.getElementById("lableActionHeader").text = '#';
@@ -229,11 +250,14 @@ function initPurchaseOrder() {
 	document.getElementById("closePOBtn").disabled = true
 	document.getElementById("sendPOBtn").disabled = true
 	document.getElementById("cancelPOBtn").disabled = true
-
+	rowCount = 0;
 	itemData = getSelect2ItemData(itemList);
 	$('#purchaseDetailsItem').select2({
 		data: itemData
 	});
+
+	purchaseItemSelectChange('');
+	$('#addPurchaseBtn').prop("disabled", true);
 } 
 
 
@@ -270,7 +294,8 @@ function initPurchaseOrderItems() {
 	$(`#purchaseOrderTotal`).val('');
 	$(`#purchaseOrderId`).val('');
 
-	for (let index = 0; index < rowCount-1; index++) {
+	for (let index = 0; index <= rowCount+1; index++) {
+		console.log(index)
 		deletePurchaseItem(index+1);
 	}
 }
@@ -333,7 +358,7 @@ function loadDataToPurchaseOrder(data, viewType){
 		,'purchaseDetailsVendorName']);
 
 
-		document.getElementById("updatePurchaseBtn").disabled = true;
+		//document.getElementById("updatePurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseItem").style.display = "none";
 		document.getElementById("clearBtn").disabled = true;
