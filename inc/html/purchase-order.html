@@ -4,10 +4,10 @@
       <div class="card-body">
           <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="purchaseOrderTab" data-toggle="tab" href="#purchaseDetailsTab">Add/Edit</a>
+              <a class="nav-link active" data-toggle="tab" href="#purchaseListTab">Purchase Orders</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#purchaseListTab">Purchase Orders</a>
+              <a class="nav-link " id="purchaseOrderTab" data-toggle="tab" href="#purchaseDetailsTab">Add/Edit</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="poPaymentsTab" data-toggle="tab" href="#purchasePaymentsTab" disabled>Payments</a>
@@ -15,7 +15,8 @@
           </ul>
           <!-- Tab panes -->
           <div class="tab-content">
-            <div id="purchaseDetailsTab" class="container-fluid tab-pane active">
+            <div id="purchaseDetailsTab" class="container-fluid tab-pane">
+              <br>
               <div id="purchaseDetailsMessage"></div>
               <form>
                 <div class="form-row">
@@ -119,7 +120,7 @@
                 <button type="button" id="printPdfBtn" class="btn btn-secondary" onclick="printPurchaseOrderPdf()">Print</button>
               </form>
             </div>
-            <div id="purchaseListTab" class="container-fluid tab-pane fade">
+            <div id="purchaseListTab" class="container-fluid tab-pane fade active show">
               <br>
               <p>Use the grid below to search purchase details</p>
               <div class="table-responsive" id="purchaseDetailsTableDiv1"></div>

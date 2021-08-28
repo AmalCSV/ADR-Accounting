@@ -512,7 +512,7 @@ function loadPayments(data) {
   $("#paidAmount").html(purchaseOrder.paidAmount);
   $("#poNumber").html(purchaseOrder.orderNumber);
   $("#vendor").html(purchaseOrder.fullName);
-  let status = purchaseOrder.amount >= purchaseOrder.paidAmount ? " Settled" : " Need to pay"
+  let status = purchaseOrder.amount == purchaseOrder.paidAmount ? " Settled" : " Need to pay"
   $("#paymentStatus").html(status);
   
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
