@@ -174,6 +174,9 @@ function initSalesOrder() {
 		data: itemData
 	});
 	itemSelectChange('');
+	$('#addSaleButton').prop("disabled", true);
+	$('#saleDetailsMessage').prop("display", "none");
+	
 } 
 
 $('#saleDetailsItem').change(function(){
@@ -198,6 +201,7 @@ function calculateNetTotal(){
     const discountP = $('#saleDetailsDiscountp').val()
     const val= Math.round(Number(tot) * ((100 - Number(discountP)) / 100), 2);
     $('#salesOrderNetTotal').val(val);
+	validateAddSales(val);
 }
 
 $('#saleDetailsDiscountp').change(function(){
@@ -218,3 +222,11 @@ function initCustomers() {
 	});
 }
 
+// Listen to sale add button
+$('#addSaleButton').on('click', function(){
+	addSale();
+});
+
+function validateAddSales(netAmount) {
+	$('#addSaleButton').prop("disabled", netAmount===0);
+}
