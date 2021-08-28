@@ -25,3 +25,5 @@ CREATE TABLE `salesOrderItem` (
   KEY `salesOrder_fk_idx` (`salesOrderId`),
   CONSTRAINT `salesOrder_fk` FOREIGN KEY (`salesOrderId`) REFERENCES `salesOrder` (`saleID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+ALTER TABLE `salesorder` ADD `paidAmount` FLOAT NULL DEFAULT '0' AFTER `amount`;

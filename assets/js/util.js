@@ -24,12 +24,6 @@ function getToday() {
 
   today = mm + "/" + dd + "/" + yyyy;
   return today;
-	return list.map( x=> {
-		return {
-			id: x.productID,
-			text: x.itemName
-		  }
-	});
 }
 
 function getSelect2CustomerData(list) {
