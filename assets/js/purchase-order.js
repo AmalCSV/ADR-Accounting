@@ -238,18 +238,12 @@ function initPurchaseOrder() {
 	initPurchaseOrderItems();
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
 	document.getElementById("goodReceivedData").style.display = "none";
-	
-	//document.getElementById("updatePurchaseBtn").disabled = true
-	document.getElementById("addPurchaseBtn").disabled = false
 	document.getElementById("addPurchaseItem").style.display = "block";
 	document.getElementById("lableActionHeader").text = '#';
-	document.getElementById("clearBtn").disabled = false;
 	document.getElementById("statusPO").style.display = "none";
 
-	document.getElementById("goodReceivedBtn").disabled = true
-	document.getElementById("closePOBtn").disabled = true
-	document.getElementById("sendPOBtn").disabled = true
-	document.getElementById("cancelPOBtn").disabled = true
+	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
+	displayElements(["clearBtn","addPurchaseBtn"])
 	rowCount = 0;
 	itemData = getSelect2ItemData(itemList);
 	$('#purchaseDetailsItem').select2({
@@ -262,7 +256,6 @@ function initPurchaseOrder() {
 
 
 function onSelectName(itemName, id) {
-	console.log(itemName, id)
 	if (itemName && itemName != "") {
 	  const data = itemList.find(x => x.itemName == itemName);
 	  if (data) {
@@ -295,7 +288,6 @@ function initPurchaseOrderItems() {
 	$(`#purchaseOrderId`).val('');
 
 	for (let index = 0; index <= rowCount+1; index++) {
-		console.log(index)
 		deletePurchaseItem(index+1);
 	}
 }
@@ -359,32 +351,39 @@ function loadDataToPurchaseOrder(data, viewType){
 
 
 		//document.getElementById("updatePurchaseBtn").disabled = true;
-		document.getElementById("addPurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseItem").style.display = "none";
-		document.getElementById("clearBtn").disabled = true;
-		
-
 		switch (viewType) {
 			case 'GOOD_RECEIVED':
-				document.getElementById("goodReceivedBtn").disabled = false
-				document.getElementById("closePOBtn").disabled = true
-				document.getElementById("sendPOBtn").disabled = true
-				document.getElementById("cancelPOBtn").disabled = true
+				displayElements(["goodReceivedBtn"]);
+				displayHideElements(["cancelPOBtn", "sendPOBtn", "closePOBtn", "addPurchaseBtn", "clearBtn"]);
 				document.getElementById("goodReceivedData").style.display = "block";
 				document.getElementById("lableActionHeader").text = "Received";
 				break;
 		
 			case 'VIEW':
-				document.getElementById("goodReceivedBtn").disabled = true;
-				document.getElementById("closePOBtn").disabled = purchaseOrder.status !== 2;
-				document.getElementById("sendPOBtn").disabled = purchaseOrder.status !== 1;
-				document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
+				switch (purchaseOrder.status) {
+					case '1':
+						displayHideElements(["goodReceivedBtn", "closePOBtn", "addPurchaseBtn", "clearBtn" ]);
+						displayElements(["sendPOBtn", "cancelPOBtn", "printPdfBtn"]);
+						break;
+					case '2':
+						displayElements(["cancelPOBtn", "closePOBtn"]);
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);	
+						break;
+					case '3':
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
+						displayElements(["cancelPOBtn"]);
+						break;
+					default:
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "cancelPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
+						break;
+				}
 				break;
 			default:
 				break;
 		}
 	} else{
-		document.getElementById("updatePurchaseBtn").disabled = purchaseOrder.status !== 1;
+		displayHideElements(["clearBtn", "addPurchaseBtn"]);
 		document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
 	}
 }
