@@ -11,9 +11,12 @@ function enableElements(ids) {
 }
 
 function getSelect2ItemData(list) {
-  return list.map(x => {
-    return {id: x.itemNumber, text: x.itemName};
-  });
+	return list.map( x=> {
+		return {
+			id: x.productID,
+			text: x.itemName
+		  }
+	});
 }
 
 function getToday() {
@@ -24,12 +27,6 @@ function getToday() {
 
   today = mm + "/" + dd + "/" + yyyy;
   return today;
-	return list.map( x=> {
-		return {
-			id: x.productID,
-			text: x.itemName
-		  }
-	});
 }
 
 function getSelect2CustomerData(list) {
