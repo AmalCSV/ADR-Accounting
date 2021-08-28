@@ -5,7 +5,7 @@
 	
 	if($vendorNamesStatement->rowCount() > 0) {
 		while($row = $vendorNamesStatement->fetch(PDO::FETCH_ASSOC)) {
-			echo '<option value="' .$row['fullName'] . '">' . $row['fullName'] . '</option>';
+			echo '<option value="' .$row['companyName'] . '">' . $row['companyName'] . '</option>';
 		}
 	}
 	$vendorNamesStatement->closeCursor();

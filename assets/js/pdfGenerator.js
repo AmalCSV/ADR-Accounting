@@ -457,6 +457,9 @@ function downloadOrderPdf(orderType, order, items){
       margin: [0, 30, 0, 15]
     }
   ]);
+  content.push({text: "\n"});
+  content.push({text: "Payments\n"});
+  content.push(paymentSection());
   downloadpdf(content, order.orderNumber);
 
 };
@@ -587,4 +590,35 @@ function downloadpdf(con, docName) {
 
   // pdfMake.createPdf(dd, null, fonts).download(dfname, callbackFunction);
   pdfMake.createPdf(dd, tableLayouts, fonts).download(dfname, callbackFunction);
+}
+
+function paymentSection() {
+  return {
+    style: 'tableExample',
+    layout: {
+      hLineWidth: function (i, node) {
+        return 1;
+      },
+      vLineWidth: function (i, node) {
+        return 1;
+      },
+      hLineColor: function (i, node) {
+        return 'gray';
+      },
+      vLineColor: function (i, node) {
+        return 'gray';
+      },
+    },
+    table: {
+      headerRows: 1,
+      widths: [
+        80, 90, "*", 90, 80
+      ],
+      heights: [30,150],
+      body: [
+        ['Date', 'Amount', 'Type (Cash or cheque)', 'Cheque No', 'Cheque Date'],
+        [' ', '', '', '', ''],
+      ]
+    }
+  };
 }

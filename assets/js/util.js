@@ -27,3 +27,15 @@ function getSelect2CustomerData(list) {
 		  }
 	});
 }
+
+function displayElements(ids) {
+	ids.forEach(id => {
+		document.getElementById(id).style.display = "";
+	});
+}
+
+function displayHideElements(ids) {
+	ids.forEach(id => {
+		document.getElementById(id).style.display = "none";
+	});
+}

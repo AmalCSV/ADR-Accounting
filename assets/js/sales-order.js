@@ -87,14 +87,14 @@ function setSuggestionFunctions(id) {
 	$(`#saleDetailsItem${id}`).select2({
 		data: itemData
 	});
-	itemSelectChange(id);
+	salesItemSelectChange(id);
 	$(`#saleDetailsItem${id}`).change(function(){
-		itemSelectChange(id);
+		salesItemSelectChange(id);
 	});
 }
 
 function setCalculationFunctions(id) {
-	$(`#saleDetailsQuantity${id}, #saleDetailsUnitPrice${id}`).change(function(){
+	$(`#saleDetailsQuantity${id}, #saleDetailsUnitPrice${id},  #saleDetailsItem${id}`).change(function(){
 		calculateTotalInSales(id);
 		calculateGrandTotal();
         calculateNetTotal();
@@ -173,24 +173,24 @@ function initSalesOrder() {
 	$('#saleDetailsItem').select2({
 		data: itemData
 	});
-	itemSelectChange('');
+	salesItemSelectChange('');
 	$('#addSaleButton').prop("disabled", true);
 	$('#saleDetailsMessage').prop("display", "none");
 	
 } 
 
 $('#saleDetailsItem').change(function(){
-	itemSelectChange('');
+	salesItemSelectChange('');
 });
 
-function itemSelectChange(id) {
+function salesItemSelectChange(id) {
 	const itemId = $(`#saleDetailsItem${id}`).val();
 	const item = itemList.find(x => x.productID === itemId);
 	$(`#saleDetailsUnitPrice${id}`).val(item ? item.sellingPrice : 0);
 }
 
 // Calculate Total in sale tab
-$('#saleDetailsQuantity, #saleDetailsUnitPrice').change(function(){
+$('#saleDetailsQuantity, #saleDetailsUnitPrice, #saleDetailsItem').change(function(){
     calculateTotalInSales('');
     calculateGrandTotal();
     calculateNetTotal();
