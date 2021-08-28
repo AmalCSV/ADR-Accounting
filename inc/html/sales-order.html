@@ -26,31 +26,31 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="saleDetailsCustomerName" class="col-md-12">Customer</label>
-                                <select id="saleDetailsCustomerName" class="col-md-12 form-control">
+                                <select id="saleDetailsCustomerName" class="col-md-12 form-control" style="min-width:300px;">
                                 </select>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-10">
-                                <label for="purchaseDetailsDescription">Note</label>
+                                <label for="salesDescription">Note</label>
                                 <textarea rows="4" class="form-control" id="salesDescription" name="salesDescription"  autocomplete="off"></textarea>
                             </div>
                         </div>
                         <div class="form-row"> 
                             <div class="form-group col-md-4">
-                              <label for="purchaseDetailsItemName">Item Name<span class="requiredIcon">*</span></label>
+                              <label>Item Name<span class="requiredIcon">*</span></label>
                             </div>
                             <div class="form-group col-md-2">
-                              <label for="purchaseDetailsQuantity">Quantity<span class="requiredIcon">*</span></label>
+                              <label>Quantity<span class="requiredIcon">*</span></label>
                             </div>
                             <div class="form-group col-md-2">
-                              <label for="purchaseDetailsUnitPrice">Unit Price<span class="requiredIcon">*</span></label>
+                              <label>Unit Price<span class="requiredIcon">*</span></label>
                             </div>
                             <div class="form-group col-md-2">
-                              <label for="purchaseDetailsTotal">Sub Total</label>
+                              <label>Sub Total</label>
                             </div>
                             <div class="form-group col-md-1">
-                              <label id="lableActionHeader">#</label>
+                              <label >#</label>
                             </div>
                         </div>
                         <div id="salesItemList">
@@ -63,10 +63,10 @@
                                     <input type="number" class="form-control" id="saleDetailsQuantity" name="saleDetailsQuantity" value="0" />
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <input type="text" class="form-control" id="saleDetailsUnitPrice" name="saleDetailsUnitPrice" value="0" />
+                                    <input type="text" class="form-control" id="saleDetailsUnitPrice" name="saleDetailsUnitPrice" value="0" readonly/>
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <input type="text" class="form-control" id="saleDetailsTotal" name="saleDetailsTotal" />
+                                    <input type="text" class="form-control" id="saleDetailsTotal" name="saleDetailsTotal" readonly/>
                                 </div>
                                 <div class="form-group col-md-1">
                                     <button type="button" id="saleDetailsItemAdd"  class="btn btn-info">Add</button>
@@ -102,7 +102,13 @@
                         <button type="reset" id="saleClear" onclick="initSalesOrder()" class="btn">Clear</button>
                     </form>
                 </div>
+                <div id="salesListTab" class="container-fluid tab-pane fade">
+                    <br />
+                    <p>Use the grid below to search sale details</p>
+                    <div class="table-responsive" id="salesDetailsTableDiv1"></div>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
