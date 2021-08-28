@@ -239,6 +239,7 @@ function initPurchaseOrder() {
 
 	initPurchaseOrderList();
 	initPurchaseOrderItems();
+  $("#poPaymentsTab").prop("disabled", true);
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
 	document.getElementById("goodReceivedData").style.display = "none";
 	document.getElementById("addPurchaseItem").style.display = "block";
@@ -266,7 +267,6 @@ function onSelectName(itemName, id) {
 		selectItem(data);
 	  }
 	}
-  }
 }
 
 function onSelectNumber(itemNumber, id) {
