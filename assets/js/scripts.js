@@ -127,11 +127,6 @@ $(document).ready(function(){
 		addVendor();
 	});
 	
-
-	// Listen to sale add button
-	$('#addSaleButton').on('click', function(){
-		addSale();
-	});
 	
 	// Listen to update button in sale details tab
 	$('#updateSaleDetailsButton').on('click', function(){
@@ -283,11 +278,6 @@ $(document).ready(function(){
 		orientation: 'bottom left'
 	});
 
-
-	// Calculate Total in sale tab
-	$('#saleDetailsDiscount, #saleDetailsQuantity, #saleDetailsUnitPrice').change(function(){
-		calculateTotalInSaleTab();
-	});
 	
 	// Close any suggestions lists from the page when a user clicks on the page
 	$(document).on('click', function(){

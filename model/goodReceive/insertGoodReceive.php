@@ -9,7 +9,7 @@
             $insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
             $insertPurchaseStatement->execute(['goodReceived' => $item['goodReceived'], 'purchaseItemID' => $item['id']]);
             
-            $newItemCurrentStockSql = 'SELECT * FROM item WHERE itemNumber = :itemNumber';
+            $newItemCurrentStockSql = 'SELECT * FROM item WHERE productID = :itemNumber';
             $newItemCurrentStockStatement = $conn->prepare($newItemCurrentStockSql);
             $newItemCurrentStockStatement->execute(['itemNumber' => $item['itemNumber']]);
             

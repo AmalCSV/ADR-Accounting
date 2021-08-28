@@ -4,56 +4,56 @@ var orderItems = {};
 
 // Function to call the insertPurchase.php script to insert purchase data to db
 function addPurchase() {
-  var purchaseDetailsPurchaseDate = $("#purchaseDetailsPurchaseDate").val();
-  var purchaseDetailsDescription = $("#purchaseDetailsDescription").val();
-  var purchaseDetailsPurchaseID = $("#purchaseDetailsPurchaseID").val();
-  var purchaseDetailsVendorName = $("#purchaseDetailsVendorName").val();
-  const grandTotal = $(`#purchaseOrderTotal`).val();
+	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
+	var purchaseDetailsDescription = $('#purchaseDetailsDescription').val();
+	var purchaseDetailsPurchaseID = $('#purchaseDetailsPurchaseID').val();
+	var purchaseDetailsVendorName = $('#purchaseDetailsVendorName').val();
+	const grandTotal= $(`#purchaseOrderTotal`).val();
 
-  const purchaseItems = [];
-  let item = {
-    id: $("#purchaseDetailsItem").val(),
-    buyingPrice: $("#purchaseDetailsUnitPrice").val(),
-    quntity: $("#purchaseDetailsQuantity").val(),
-    total: $(`#purchaseDetailsTotal`).val(),
-    name: $(`#purchaseDetailsItem option:selected`).text()
-  };
-  purchaseItems.push(item);
+	const purchaseItems = [];
+	let item = {
+		id: $('#purchaseDetailsItem').val(),
+		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
+		quntity: $('#purchaseDetailsQuantity').val(),
+		total: $(`#purchaseDetailsTotal`).val(),
+		name: $(`#purchaseDetailsItem option:selected`).text(),
+	};
+	purchaseItems.push(item);
 
-  for (let index = 0; index < rowCount; index++) {
-    item = {
-      id: $(`#purchaseDetailsItem${index + 1}`).val(),
-      buyingPrice: $(`#purchaseDetailsUnitPrice${index + 1}`).val(),
-      quntity: $(`#purchaseDetailsQuantity${index + 1}`).val(),
-      total: $(`#purchaseDetailsTotal${index + 1}`).val(),
-      name: $(`#purchaseDetailsItem${index + 1} option:selected`).text()
-    };
-    purchaseItems.push(item);
-  }
+	for (let index = 0; index < rowCount; index++) {
+		item = {
+			id: $(`#purchaseDetailsItem${index+1}`).val(),
+			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
+			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
+			total: $(`#purchaseDetailsTotal${index+1}`).val(),
+			name: $(`#purchaseDetailsItem${index+1} option:selected`).text(),
+		};
+		purchaseItems.push(item);
+	}
 
-  $.ajax({
-    url: "model/purchase/insertPurchase.php",
-    method: "POST",
-    data: {
-      purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
-      purchaseDetailsGrandTotal: grandTotal,
-      purchaseDetailsDescription: purchaseDetailsDescription,
-      purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
-      purchaseDetailsVendorName: purchaseDetailsVendorName,
-      purchaseItems: purchaseItems
-    },
-    success: function (data) {
-      $("#purchaseDetailsMessage").fadeIn();
-      $("#purchaseDetailsMessage").html(data);
-    },
-    complete: function () {
-      populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
-      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
-      reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
-    }
-  });
+	$.ajax({
+		url: 'model/purchase/insertPurchase.php',
+		method: 'POST',
+		data: {
+			purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
+			purchaseDetailsGrandTotal: grandTotal,
+			purchaseDetailsDescription: purchaseDetailsDescription,
+			purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
+			purchaseDetailsVendorName: purchaseDetailsVendorName,
+			purchaseItems: purchaseItems,
+		},
+		success: function(data){
+			$('#purchaseDetailsMessage').fadeIn();
+			$('#purchaseDetailsMessage').html(data);
+		},
+		complete: function(){
+			populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
+			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
+			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
+			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
+		}
+	});
 }
 
 // Listen to purchase add button
@@ -131,7 +131,7 @@ function addPurchaseItem(id, viewType) {
                         <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0">
+                        <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
                     </div>
                     <div class="form-group col-md-2">
                         <input type="text" class="form-control" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
@@ -148,27 +148,43 @@ function addPurchaseItem(id, viewType) {
 					`}
                 </div>
             </div>
-	`);
-  setSuggestionFunctions(id);
-  setCalculationFunctions(id);
+	` );
+	setPOSuggestionFunctions(id);
+	setPOCalculationFunctions(id);
 }
 
-function setSuggestionFunctions(id) {
-  console.log(id);
-  $(`#purchaseDetailsItem${id}`).select2({data: itemData});
+function setPOSuggestionFunctions(id) {
+	$(`#purchaseDetailsItem${id}`).select2({
+		data: itemData
+	});
+	purchaseItemSelectChange(id);
+	$(`#purchaseDetailsItem${id}`).change(function(){
+		purchaseItemSelectChange(id);
+	});
 }
 
-function setCalculationFunctions(id) {
-  $(`#purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function () {
-    calculateTotalInPurchase(id);
-    calculateGrandTotal();
-  });
+$('#purchaseDetailsItem').change(function(){
+	purchaseItemSelectChange('');
+});
+
+function purchaseItemSelectChange(id) {
+	const itemId = $(`#purchaseDetailsItem${id}`).val();
+	const item = itemList.find(x => x.productID === itemId);
+	$(`#purchaseDetailsUnitPrice${id}`).val(item ? item.buyingPrice : 0);
+}
+
+
+function setPOCalculationFunctions(id) {
+	$(`#purchaseDetailsItem${id}, #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
+		calculateTotalInPurchase(id);
+		calculatePOGrandTotal();
+	});
 }
 
 // Calculate Total in purchase tab
-$("#purchaseDetailsQuantity, #purchaseDetailsUnitPrice").change(function () {
-  calculateTotalInPurchaseTab();
-  calculateGrandTotal();
+$('#purchaseDetailsQuantity, #purchaseDetailsItem, #purchaseDetailsUnitPrice').change(function(){
+	calculateTotalInPurchaseTab();
+	calculatePOGrandTotal();
 });
 
 function calculateTotalInPurchase(id) {
@@ -178,9 +194,10 @@ function calculateTotalInPurchase(id) {
 }
 
 function deletePurchaseItem(id) {
-  $(`#addedRow${id}`).remove();
-  rowCount--;
-  calculateGrandTotal();
+	$(`#addedRow${id}`).remove();
+	rowCount--;
+	$(`#deletePurchaseItem${rowCount}`).prop("disabled", false);
+	calculatePOGrandTotal();
 }
 
 $("#deletePurchaseItem").on("click", function () {
@@ -188,62 +205,67 @@ $("#deletePurchaseItem").on("click", function () {
 });
 
 var rowCount = 0;
-$("#addPurchaseItem").on("click", function () {
-  rowCount++;
-  addPurchaseItem(rowCount);
+$('#addPurchaseItem').on('click', function(){
+	$(`#deletePurchaseItem${rowCount}`).prop("disabled", true);
+	rowCount++;
+    addPurchaseItem(rowCount);
 });
 
-function calculateGrandTotal() {
-  let tot = $(`#purchaseDetailsTotal`).val();
-  tot = tot || 0;
-  for (let index = 0; index < rowCount; index++) {
-    const itemTotal = $(`#purchaseDetailsTotal${index + 1}`).val();
-    tot = Number(tot) + Number(itemTotal || 0);
-  }
-  $(`#purchaseOrderTotal`).val(tot);
+function calculatePOGrandTotal() {
+	let tot = $(`#purchaseDetailsTotal`).val();
+	tot = tot || 0;
+	for (let index = 0; index < rowCount; index++) {
+		const itemTotal = $(`#purchaseDetailsTotal${index+1}`).val();
+		tot = Number(tot) + Number(itemTotal || 0);
+	}
+	$(`#purchaseOrderTotal`).val(tot);
+	validateAddPurchases(tot);
 }
+
+function validateAddPurchases(netAmount) {
+	$('#addPurchaseBtn').prop("disabled", netAmount===0);
+}
+
 
 function initPurchaseOrder() {
-  const currentDate = new Date().toISOString().slice(0, 10);
-  $("#purchaseDetailsPurchaseDate").val(currentDate);
-  $.ajax({
-    url: "model/purchase/nextPurchaseID.php",
-    method: "POST",
-    success: function (data) {
-      $("#purchaseDetailsPurchaseID").val(data);
-    }
-  });
+	const currentDate =  new Date().toISOString().slice(0, 10);
+	$.ajax({
+		url: 'model/purchase/nextPurchaseID.php',
+		method: 'POST',
+		success: function(data){
+			$('#purchaseDetailsPurchaseID').val(data);
+		}
+	});
 
-  initPurchaseOrderList();
-  initPurchaseOrderItems();
-  $("#poPaymentsTab").prop("disabled", true);
+	initPurchaseOrderList();
+	initPurchaseOrderItems();
+	$('#purchaseDetailsPurchaseDate').val(currentDate);
+	document.getElementById("goodReceivedData").style.display = "none";
+	document.getElementById("addPurchaseItem").style.display = "block";
+	document.getElementById("lableActionHeader").text = '#';
+	document.getElementById("statusPO").style.display = "none";
 
-  document.getElementById("goodReceivedData").style.display = "none";
+	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
+	displayElements(["clearBtn","addPurchaseBtn"])
+	rowCount = 0;
+	itemData = getSelect2ItemData(itemList);
+	$('#purchaseDetailsItem').select2({
+		data: itemData
+	});
 
-  document.getElementById("updatePurchaseBtn").disabled = true;
-  document.getElementById("addPurchaseBtn").disabled = false;
-  document.getElementById("addPurchaseItem").style.display = "block";
-  document.getElementById("lableActionHeader").text = "#";
-  document.getElementById("clearBtn").disabled = false;
-  document.getElementById("statusPO").style.display = "none";
+	purchaseItemSelectChange('');
+	$('#addPurchaseBtn').prop("disabled", true);
+} 
 
-  document.getElementById("goodReceivedBtn").disabled = true;
-  document.getElementById("closePOBtn").disabled = true;
-  document.getElementById("sendPOBtn").disabled = true;
-  document.getElementById("cancelPOBtn").disabled = true;
-
-  itemData = getSelect2ItemData(itemList);
-  $("#purchaseDetailsItem").select2({data: itemData});
-}
 
 function onSelectName(itemName, id) {
-  console.log(itemName, id);
-  if (itemName && itemName != "") {
-    const data = itemList.find(x => x.itemName == itemName);
-    if (data) {
-      $(`#${id}`).val(data.itemNumber);
-      selectItem(data);
-    }
+	if (itemName && itemName != "") {
+	  const data = itemList.find(x => x.itemName == itemName);
+	  if (data) {
+		$(`#${id}`).val(data.itemNumber);
+		selectItem(data);
+	  }
+	}
   }
 }
 
@@ -262,16 +284,16 @@ function initPurchaseOrderList() {
 }
 
 function initPurchaseOrderItems() {
-  $("#purchaseDetailsPurchaseDate").val("");
-  $("#purchaseDetailsDescription").val("");
-  $("#purchaseDetailsPurchaseID").val("");
-  $("#purchaseDetailsVendorName").val("");
-  $(`#purchaseOrderTotal`).val("");
-  $(`#purchaseOrderId`).val("");
+	$('#purchaseDetailsPurchaseDate').val('');
+	$('#purchaseDetailsDescription').val('');
+	$('#purchaseDetailsPurchaseID').val('');
+	$('#purchaseDetailsVendorName').val('');
+	$(`#purchaseOrderTotal`).val('');
+	$(`#purchaseOrderId`).val('');
 
-  for (let index = 0; index < rowCount - 1; index++) {
-    deletePurchaseItem(index + 1);
-  }
+	for (let index = 0; index <= rowCount+1; index++) {
+		deletePurchaseItem(index+1);
+	}
 }
 
 function openEditView(purchaseOrderId, viewType) {
@@ -290,82 +312,84 @@ function openEditView(purchaseOrderId, viewType) {
 }
 
 function openGoodReceive(purchaseOrderId) {
-  openEditView(purchaseOrderId, "GOOD_RECEIVED");
+	openEditView(purchaseOrderId, 'GOOD_RECEIVED');
 }
 
-function loadDataToPurchaseOrder(data, viewType) {
-  const {purchaseOrder, purchaseOrderItems} = JSON.parse(data);
-  order = purchaseOrder;
-  orderItems = purchaseOrderItems;
-  $("#purchaseDetailsPurchaseDate").val(purchaseOrder.orderDate);
-  $("#purchaseDetailsDescription").val(purchaseOrder.description);
-  $("#purchaseDetailsPurchaseID").val(purchaseOrder.orderNumber);
-  $("#purchaseDetailsVendorName").val(purchaseOrder.fullName);
-  $(`#purchaseOrderTotal`).val(purchaseOrder.amount);
-  $(`#purchaseOrderId`).val(purchaseOrder.purchaseID);
+function loadDataToPurchaseOrder(data, viewType){
+	const {purchaseOrder, purchaseOrderItems} = JSON.parse(data);
+	order = purchaseOrder;
+	orderItems = purchaseOrderItems;
+	$('#purchaseDetailsPurchaseDate').val(purchaseOrder.orderDate);
+	$('#purchaseDetailsDescription').val(purchaseOrder.description);
+	$('#purchaseDetailsPurchaseID').val(purchaseOrder.orderNumber);
+	$('#purchaseDetailsVendorName').val(purchaseOrder.fullName);
+	$(`#purchaseOrderTotal`).val(purchaseOrder.amount);
+	$(`#purchaseOrderId`).val(purchaseOrder.purchaseID);
 
-  document.getElementById("statusPO").style.display = "block";
-  $(`#statusPOText`).text(purchaseOrder.statusText);
+	document.getElementById("statusPO").style.display = "block";
+	$(`#statusPOText`).text(purchaseOrder.statusText);
 
-  for (let index = 0; index < purchaseOrderItems.length; index++) {
-    const numberText = index === 0
-      ? ""
-      : index;
+	for (let index = 0; index < purchaseOrderItems.length; index++) {
+		const numberText = index === 0 ? '' : index;
+		
+		$(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].itemNumber);
+		$(`#purchaseDetailsUnitPrice${numberText}`).val(purchaseOrderItems[index].unitPrice);
+		$(`#purchaseDetailsQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
+		$(`#purchaseDetailsTotal${numberText}`).val(purchaseOrderItems[index].totalPrice);
+		$(`#purchaseItemId${numberText}`).val(purchaseOrderItems[index].purchaseItemID);
 
-    $(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].itemNumber);
-    $(`#purchaseDetailsUnitPrice${numberText}`).val(purchaseOrderItems[index].unitPrice);
-    $(`#purchaseDetailsQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
-    $(`#purchaseDetailsTotal${numberText}`).val(purchaseOrderItems[index].totalPrice);
-    $(`#purchaseItemId${numberText}`).val(purchaseOrderItems[index].purchaseItemID);
+		if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
+			disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsUnitPrice${numberText}`,`purchaseDetailsQuantity${numberText}`,
+			`purchaseDetailsTotal${numberText}`]);
+		}
+		if(index>0 && index+1 !== purchaseOrderItems.length){
+			rowCount++;
+    		addPurchaseItem(rowCount, viewType);
+		}
+	}
 
-    if (viewType === "GOOD_RECEIVED" || viewType === "VIEW") {
-      disableElements([`purchaseDetailsItem${numberText}`, `purchaseDetailsUnitPrice${numberText}`, `purchaseDetailsQuantity${numberText}`, `purchaseDetailsTotal${numberText}`]);
-    }
-    if (index > 0 && index + 1 !== purchaseOrderItems.length) {
-      rowCount++;
-      addPurchaseItem(rowCount, viewType);
-    }
-  }
+	if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
+		disableElements([`purchaseDetailsItem`,`purchaseDetailsUnitPrice`,`purchaseDetailsQuantity`,
+			`purchaseDetailsTotal`, 'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
+		,'purchaseDetailsVendorName']);
 
-  if (viewType === "GOOD_RECEIVED" || viewType === "VIEW") {
-    disableElements([
-      `purchaseDetailsItem`,
-      `purchaseDetailsUnitPrice`,
-      `purchaseDetailsQuantity`,
-      `purchaseDetailsTotal`,
-      "purchaseDetailsDescription",
-      "purchaseDetailsPurchaseID",
-      "purchaseDetailsVendorName"
-    ]);
 
-    document.getElementById("updatePurchaseBtn").disabled = true;
-    document.getElementById("addPurchaseBtn").disabled = true;
-    document.getElementById("addPurchaseItem").style.display = "none";
-    document.getElementById("clearBtn").disabled = true;
-
-    switch (viewType) {
-      case "GOOD_RECEIVED":
-        document.getElementById("goodReceivedBtn").disabled = false;
-        document.getElementById("closePOBtn").disabled = true;
-        document.getElementById("sendPOBtn").disabled = true;
-        document.getElementById("cancelPOBtn").disabled = true;
-        document.getElementById("goodReceivedData").style.display = "block";
-        document.getElementById("lableActionHeader").text = "Received";
-        break;
-
-      case "VIEW":
-        document.getElementById("goodReceivedBtn").disabled = true;
-        document.getElementById("closePOBtn").disabled = purchaseOrder.status !== 2;
-        document.getElementById("sendPOBtn").disabled = purchaseOrder.status !== 1;
-        document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
-        break;
-      default:
-        break;
-    }
-  } else {
-    document.getElementById("updatePurchaseBtn").disabled = purchaseOrder.status !== 1;
-    document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
-  }
+		//document.getElementById("updatePurchaseBtn").disabled = true;
+		document.getElementById("addPurchaseItem").style.display = "none";
+		switch (viewType) {
+			case 'GOOD_RECEIVED':
+				displayElements(["goodReceivedBtn"]);
+				displayHideElements(["cancelPOBtn", "sendPOBtn", "closePOBtn", "addPurchaseBtn", "clearBtn"]);
+				document.getElementById("goodReceivedData").style.display = "block";
+				document.getElementById("lableActionHeader").text = "Received";
+				break;
+		
+			case 'VIEW':
+				switch (purchaseOrder.status) {
+					case '1':
+						displayHideElements(["goodReceivedBtn", "closePOBtn", "addPurchaseBtn", "clearBtn" ]);
+						displayElements(["sendPOBtn", "cancelPOBtn", "printPdfBtn"]);
+						break;
+					case '2':
+						displayElements(["cancelPOBtn", "closePOBtn"]);
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);	
+						break;
+					case '3':
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
+						displayElements(["cancelPOBtn"]);
+						break;
+					default:
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "cancelPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+	} else{
+		displayHideElements(["clearBtn", "addPurchaseBtn"]);
+		document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
+	}
 }
 
 function openEditPurchaseOrder(purchaseOrderId) {

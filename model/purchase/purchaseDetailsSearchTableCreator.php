@@ -22,7 +22,8 @@
 	$qty = 0;
 	$totalPrice = 0;
 	
-	$purchaseDetailsSearchSql = ' SELECT po.*,v.companyName as  fullName FROM purchaseOrder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false';
+	$purchaseDetailsSearchSql = ' SELECT po.*,v.companyName as fullName FROM purchaseOrder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false';
+
 	$purchaseDetailsSearchStatement = $conn->prepare($purchaseDetailsSearchSql);
 	$purchaseDetailsSearchStatement->execute();
 
@@ -52,7 +53,7 @@
 						' <td align="center">
 							<div class="dropdown">
 								<a class="btn btn-secondary" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="navbar-toggler-icon"></i>
+									Action
 								</a>    
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<a class="dropdown-item" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')">View</a>
