@@ -614,10 +614,13 @@ function paymentSection() {
       widths: [
         80, 90, "*", 90, 80
       ],
-      heights: [30,150],
+      heights: 80,
       body: [
         ['Date', 'Amount', 'Type (Cash or cheque)', 'Cheque No', 'Cheque Date'],
-        [' ', '', '', '', ''],
+        [' ', ' ', '', '', ''],
+        [' ', ' ', '', '', ''],
+        [' ', ' ', '', '', ''],
+        [' ', ' ', '', '', ''],
       ]
     }
   };

@@ -122,10 +122,13 @@ $('#updatePurchaseDetailsButton').on('click', function(){
 function addPurchaseItem(id, viewType) {
     $("#poItemList").append( `
 			<div class="form-row" id="addedRow${id}"> 
-                    <div class="form-group col-md-4">
-						<select id='purchaseDetailsItem${id}' class="form-control">
+                    <div class="form-group col-md-3">
+						<select id='purchaseDetailsItem${id}' class="form-control" style="width: 100%">
                         </select>
 				    </div>
+					<div class="form-group col-md-1">
+                        <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
+                    </div>
                     <div class="form-group col-md-2">
                         <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0">
                     </div>
@@ -152,8 +155,10 @@ function addPurchaseItem(id, viewType) {
 
 function setPOSuggestionFunctions(id) {
 	$(`#purchaseDetailsItem${id}`).select2({
+		placeholder: {text: "Select Item"},
 		data: itemData
 	});
+
 	purchaseItemSelectChange(id);
 	$(`#purchaseDetailsItem${id}`).change(function(){
 		purchaseItemSelectChange(id);
@@ -168,8 +173,9 @@ function purchaseItemSelectChange(id) {
 	const itemId = $(`#purchaseDetailsItem${id}`).val();
 	const item = itemList.find(x => x.productID === itemId);
 	$(`#purchaseDetailsUnitPrice${id}`).val(item ? item.buyingPrice : 0);
+	$(`#purchaseDetailsAvalableQuantity${id}`).val(item ? item.stock : 0);
+	
 }
-
 
 function setPOCalculationFunctions(id) {
 	$(`#purchaseDetailsItem${id}, #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
@@ -247,6 +253,7 @@ function initPurchaseOrder() {
 	rowCount = 0;
 	itemData = getSelect2ItemData(itemList);
 	$('#purchaseDetailsItem').select2({
+		placeholder: {text: "Select Item"},
 		data: itemData
 	});
 
