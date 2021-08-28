@@ -67,7 +67,7 @@ function addSalesItem(id, viewType) {
                         <input type="number" class="form-control" id="saleDetailsQuantity${id}" name="saleDetailsQuantity${id}" value="0">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="saleDetailsUnitPrice${id}" name="saleDetailsUnitPrice${id}" value="0">
+                        <input type="text" class="form-control" id="saleDetailsUnitPrice${id}" name="saleDetailsUnitPrice${id}" value="0" readonly>
                     </div>
                     <div class="form-group col-md-2">
                         <input type="text" class="form-control" id="saleDetailsTotal${id}" name="saleDetailsTotal${id}" readonly>
@@ -87,6 +87,10 @@ function setSuggestionFunctions(id) {
 	$(`#saleDetailsItem${id}`).select2({
 		data: itemData
 	});
+	itemSelectChange(id);
+	$(`#saleDetailsItem${id}`).change(function(){
+		itemSelectChange(id);
+	});
 }
 
 function setCalculationFunctions(id) {
@@ -99,6 +103,7 @@ function setCalculationFunctions(id) {
 
 var rowCount = 0;
 $('#saleDetailsItemAdd').on('click', function(){
+	$(`#deleteSalesItem${rowCount}`).prop("disabled", true);
 	rowCount++;
     addSalesItem(rowCount);
 });
@@ -122,6 +127,7 @@ function calculateTotalInSales(id){
 function deleteSalesItem(id) {
 	$(`#addedRow${id}`).remove();
 	rowCount--;
+	$(`#deleteSalesItem${rowCount}`).prop("disabled", false);
 	calculateGrandTotal();
     calculateNetTotal();
 }
@@ -142,9 +148,10 @@ function initSalesOrderItems() {
 	$(`#saleDetailsItem`).val('');
     $(`#saleDetailsDiscountp`).val(0);
     
-	for (let index = 0; index < rowCount-1; index++) {
+	for (let index = 0; index <= rowCount+1; index++) {
 		deleteSalesItem(index+1);
 	}
+	rowCount = 0;
 }
 
 function initSalesOrder() {
@@ -166,8 +173,18 @@ function initSalesOrder() {
 	$('#saleDetailsItem').select2({
 		data: itemData
 	});
+	itemSelectChange('');
 } 
 
+$('#saleDetailsItem').change(function(){
+	itemSelectChange('');
+});
+
+function itemSelectChange(id) {
+	const itemId = $(`#saleDetailsItem${id}`).val();
+	const item = itemList.find(x => x.productID === itemId);
+	$(`#saleDetailsUnitPrice${id}`).val(item ? item.sellingPrice : 0);
+}
 
 // Calculate Total in sale tab
 $('#saleDetailsQuantity, #saleDetailsUnitPrice').change(function(){
@@ -192,7 +209,7 @@ function initCustomers() {
 		url: 'model/customer/getAllCustomers.php',
 		method: 'POST',
 		dataType: "json",
-		success: function(data) { console.log(data)
+		success: function(data) {
 			const customerData = getSelect2CustomerData(data);
 			$('#saleDetailsCustomerName').select2({
 				data: customerData
