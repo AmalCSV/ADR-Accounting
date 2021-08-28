@@ -32,7 +32,8 @@
                   <div class="form-group col-md-4">
                       <label for="purchaseDetailsVendorName">Vendor Name<span class="requiredIcon">*</span></label>
                       <select id="purchaseDetailsVendorName" name="purchaseDetailsVendorName" class="form-control chosenSelect">
-                          <?php 
+                        <option  value="null">--Select Vendor--</option> 
+                        <?php 
                               require('model/vendor/getVendorNames.php');
                           ?>
                       </select>
@@ -69,7 +70,7 @@
                 <div id="poItemList">
                   <div class="form-row"> 
                           <div class="form-group col-md-4">
-                            <select id="purchaseDetailsItem" class="form-control">
+                            <select id="purchaseDetailsItem" class="form-control" style="width: 100%">
                             </select>
                           </div>
                           <div class="form-group col-md-2">
@@ -85,20 +86,23 @@
                           <div class="form-group col-md-1" id="goodReceivedData">
                             <input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity" name="purchaseDetailsGoodReceivedQuantity" value="0">
                           </div>
-                          <div class="form-group col-md-1">
-                              <button type="button" id="addPurchaseItem"  class="btn btn-info">Add</button>
+                          <div class="form-group col-md-1"> 
                           </div>
                       </div>
                   </div>
                 <div class="form-row">
-                  <div class="form-group col-md-8">
+                  <div class="form-group col-md-4">
+                    <button type="button" id="addPurchaseItem"  class="btn btn-info">Add Item Row</button>
+                  </div>
+                  <div class="form-group col-md-4">
                       <label style="float:right">Total </label>
                     </div>
                   <div class="form-group col-md-2">
                       <input type="text" class="form-control" id="purchaseOrderTotal" name="purchaseOrderTotal" readonly>
                     </div>
                 </div>
-
+                <hr>
+                
                 <button type="button" id="addPurchaseBtn" class="btn btn-success">Add Purchase</button>
                 <!-- <button type="button" id="updatePurchaseBtn" class="btn btn-primary">Update</button> -->
                 <button type="reset" id="clearBtn" class="btn" onclick="initPurchaseOrder()">Clear</button>
