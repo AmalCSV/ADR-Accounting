@@ -172,7 +172,7 @@ function purchaseItemSelectChange(id) {
 
 
 function setPOCalculationFunctions(id) {
-	$(`#purchaseDetailsItem${id} #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
+	$(`#purchaseDetailsItem${id}, #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
 		calculateTotalInPurchase(id);
 		calculatePOGrandTotal();
 	});
