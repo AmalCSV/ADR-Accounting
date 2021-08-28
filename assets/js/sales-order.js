@@ -3,11 +3,12 @@ var itemData =[];
 function addSale() {
 	var saleDetailsSaleID = $('#saleDetailsSaleID').val();
 	var saleDetailsDiscount = $('#saleDetailsDiscountp').val();
-	var saleDetailsCustomerID = $('#salesDescription').val();
-	var saleDetailsCustomerName = $('#saleDetailsCustomerName').val();
+	var saleDetailsCustomerID = $('#saleDetailsCustomerName').val();
+	var saleDetailsCustomerName = $('#saleDetailsCustomerName option:selected').text();
 	var saleDetailsSaleDate = $('#saleDetailsSaleDate').val();
 	var salesOrderTotal = $('#salesOrderTotal').val();
 	var salesOrderNetTotal = $('#salesOrderNetTotal').val();
+	var salesDescription = $('#salesDescription').val();
 
 	const salesItem = [];
 
@@ -35,13 +36,15 @@ function addSale() {
 		url: 'model/sale/insertSale.php',
 		method: 'POST',
 		data: {
-			saleDetailsSaleID:saleDetailsSaleID,
-			saleDetailsDiscount:saleDetailsDiscount,
-			salesOrderTotal:salesOrderTotal,
-			saleDetailsCustomerName:saleDetailsCustomerName,
-			saleDetailsSaleDate:saleDetailsSaleDate,
-			salesOrderNetTotal:salesOrderNetTotal,
-			salesItem:salesItem,
+			saleDetailsSaleID: saleDetailsSaleID,
+			saleDetailsDiscount: saleDetailsDiscount,
+			salesOrderTotal: salesOrderTotal,
+			saleDetailsCustomerName: saleDetailsCustomerName,
+			saleDetailsSaleDate: saleDetailsSaleDate,
+			salesOrderNetTotal: salesOrderNetTotal,
+			salesDescription: salesDescription,
+			saleDetailsCustomerID: saleDetailsCustomerID,
+			salesItem: salesItem,
 		},
 		success: function(data){
 			$('#saleDetailsMessage').fadeIn();
@@ -128,7 +131,7 @@ $('#deleteSalesItem').on('click', function(){
 });
 
 function initSalesOrderList() {
-	searchTableCreator('salesDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'salesDetailsTable');
+	searchTableCreator('salesDetailsTableDiv1', saleDetailsSearchTableCreatorFile, 'salesDetailsTable');
 }
 
 function initSalesOrderItems() {

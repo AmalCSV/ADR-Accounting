@@ -13,7 +13,7 @@ function enableElements(ids) {
 function getSelect2ItemData(list) {
 	return list.map( x=> {
 		return {
-			id: x.itemNumber,
+			id: x.productID,
 			text: x.itemName
 		  }
 	});
