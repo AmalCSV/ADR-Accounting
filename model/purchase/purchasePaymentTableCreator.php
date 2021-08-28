@@ -37,7 +37,7 @@
 						'<td class="text-right">' . $row['realisationDate'] . '</td>' .
 						'<td class="text-right">' . $row['chequeStatus'] . '</td>' .
 						'<td>' . $row['note'] . '</td>' .
-						'<td>' . (($row['chequeNo'] != "" && $row['chequeStatus'] == "") ?'<button onclick=updateChequeStatusPopup("'. $row['id'] .'") type="button" class="btn btn-primary btn-sm">Deposit</button>' : '') . '  ' . 
+						'<td>' . (($row['chequeNo'] != "" && $row['chequeStatus'] == "Received") ?'<button onclick=updateChequeStatusPopup("'. $row['id'] .'","'.  $row['amount'] .'") type="button" class="btn btn-primary btn-sm">Deposit</button>' : '') . '  ' . 
 						'<button onclick=deletePaymentPopup("'. $row['id'] .'") type="button" class="btn btn-danger btn-sm">Delete</button>' . '</td>' .
 					'</tr>';
 	}

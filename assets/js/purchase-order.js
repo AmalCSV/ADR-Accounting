@@ -481,6 +481,9 @@ function loadPayments(data) {
   $("#paidAmount").html(purchaseOrder.paidAmount);
   $("#poNumber").html(purchaseOrder.orderNumber);
   $("#vendor").html(purchaseOrder.fullName);
+  let status = purchaseOrder.amount >= purchaseOrder.paidAmount ? " Settled" : " Need to pay"
+  $("#paymentStatus").html(status);
+  
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
 }
 
@@ -524,19 +527,21 @@ function addPayment() {
   var chequeNo = $("#chequeNo").val();
   var chequeDate = $("#chequeDate").val();
 
-  if (paymentType == "Cheque" && !(chequeNo == "" || chequeDate == "")) {
+  if(paymentType == "Cash"){
+    insertPayment();
+  }
+  else if (paymentType == "Cheque") {
     if (chequeNo != "" && chequeDate != "") {
-      addPayment();
+      insertPayment();
     } else {
       $("#PaymentDetailsMessage").fadeIn();
-      $("#PaymentDetailsMessage").html("Please add cheque details");
+      showPaymentMessages("Please add cheque details", "error");
+
     }
-  } else {
-    addPayment();
-  }
+  } 
 }
 
-function addPayment() {
+function insertPayment() {
   var orderId = $("#paymentOrderId").val();
   var paymentAmount = $("#paymentAmount").val();
   var paymentDate = $("#paymentDate").val();
@@ -568,6 +573,7 @@ function addPayment() {
         showPaymentMessages("Payment added successfully", "success");
       },
       complete: function () {
+        showPayments(orderId);
         initPurchaseOrderPaymentList(orderId);
         searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
         reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
@@ -575,7 +581,7 @@ function addPayment() {
       }
     });
   } else {
-    showPaymentMessages("Invalid amount", "error");
+    showPaymentMessages("Invalid amount. Please re-check the amount", "error");
   }
 }
 
@@ -625,37 +631,52 @@ function deletePayment(paymentId){
       initPurchaseOrderPaymentList(orderId);
     },
     complete: function () {
-
+      showPayments(orderId);
+      initPurchaseOrderPaymentList(orderId);
+      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
+      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
 
 }
 
-function updateChequeStatusPopup(paymentId) {
-  bootbox.dialog({
-    message: "<p>Deposit or Cancel Cheque ?</p>",
-    size: 'medium',
-    buttons: {
-        cancel: {
-            label: "Cancel cheque",
-            className: 'btn-primary',
-            callback: function(){
-                console.log('Custom cancel clicked');
-                updateChequeStatus(paymentId, "Canceled");
-            }
-        },
-        noclose: {
-            label: "Deposit cheque",
-            className: 'btn-info',
-            callback: function(){
-                updateChequeStatus(paymentId, "Deposited");
-            }
-        }
-    }
-  });
+function updateChequeStatusPopup(paymentId, amount) {
 
+  var creditAmount = $("#creditAmount").text();
+
+  if(parseFloat(creditAmount) <= 0 ){
+    showPaymentMessages("This bill is already settled.", "error");
+  }
+  else if(parseFloat(amount) > parseFloat(creditAmount)){
+    showPaymentMessages("This amount will be added extra payment to the vendor.", "error");
+  }
+  else if ( parseFloat(creditAmount)>0 && parseFloat(amount) <= parseFloat(creditAmount)) {
+    bootbox.dialog({
+      message: "<p>Deposit or Cancel Cheque ?</p>",
+      size: 'medium',
+      buttons: {
+          cancel: {
+              label: "Cancel cheque",
+              className: 'btn-primary',
+              callback: function(){
+                  updateChequeStatus(paymentId, "Canceled");
+              }
+          },
+          noclose: {
+              label: "Deposit cheque",
+              className: 'btn-info',
+              callback: function(){
+                  updateChequeStatus(paymentId, "Deposited");
+              }
+          }
+      }
+    });
+  }
+  else{
+    showPaymentMessages("An error occurred. Please try again.", "error");
+  }
 }
-
 
 function updateChequeStatus(paymentId, status){
   var orderId = $("#paymentOrderId").val();
@@ -674,7 +695,11 @@ function updateChequeStatus(paymentId, status){
       initPurchaseOrderPaymentList(orderId);
     },
     complete: function () {
-
+      showPayments(orderId);
+      initPurchaseOrderPaymentList(orderId);
+      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
+      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
 
