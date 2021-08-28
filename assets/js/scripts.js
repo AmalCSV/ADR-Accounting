@@ -125,11 +125,6 @@ $(document).ready(function(){
 		addVendor();
 	});
 	
-
-	// Listen to sale add button
-	$('#addSaleButton').on('click', function(){
-		addSale();
-	});
 	
 	// Listen to update button in sale details tab
 	$('#updateSaleDetailsButton').on('click', function(){
