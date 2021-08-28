@@ -13,8 +13,17 @@ function enableElements(ids) {
 function getSelect2ItemData(list) {
 	return list.map( x=> {
 		return {
-			id: x.itemNumber,
+			id: x.productID,
 			text: x.itemName
+		  }
+	});
+}
+
+function getSelect2CustomerData(list) {
+	return list.map( x=> {
+		return {
+			id: x.customerID,
+			text: x.companyName
 		  }
 	});
 }
