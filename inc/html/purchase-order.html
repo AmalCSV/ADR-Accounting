@@ -9,6 +9,9 @@
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#purchaseListTab">Purchase Orders</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="poPaymentsTab" data-toggle="tab" href="#purchasePaymentsTab" disabled>Payments</a>
+            </li>
           </ul>
           <!-- Tab panes -->
           <div class="tab-content">
@@ -111,6 +114,77 @@
               <br>
               <p>Use the grid below to search purchase details</p>
               <div class="table-responsive" id="purchaseDetailsTableDiv1"></div>
+            </div>
+            <div id="purchasePaymentsTab" class="container-fluid tab-pane">
+              <br>
+              <input type="hidden" id="paymentOrderId" name="paymentOrderId">
+              <div id="PaymentDetailsMessage"></div>
+              <div class="form-row">
+                <div class="form-group col-md-3" style="display:inline-block">
+                  <label for="totalAmount" style="display : inline-flex"> Order No  : <span id="poNumber"></span> </label>
+                </div>
+                <div class="form-group col-md-3" style="display:inline-block">
+                  <label for="totalAmount"  style="display : inline-flex"> Vendor : <span id="vendor"></span>  </label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-3" style="display:inline-block">
+                  <label for="totalAmount"> Total Amount</label>
+                  <h3 ><span id="totalAmount" class="badge bg-primary text-white"></span></h3>  
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="paidAmount"> Paid Amount </label>
+                  <h3><span id="paidAmount" class="badge bg-success text-white"></span></h3>
+                </div>
+                <div class="form-group col-md-2">
+                  <label for="creditAmount"> Credit</label>
+                  <h3><span id="creditAmount" class="badge bg-warning text-white"></span></h3>
+                </div>
+             </div>
+              <br>
+             <h5>Settle this  bill</h5>
+              <form id="poPaymentForm"> 
+                <div class="form-row">
+                  <div class="form-group col-md-2">
+                     <label for="paymentAmount">Amount<span class="requiredIcon">*</span></label>
+                     <input type="text" class="form-control" name="paymentAmount" id="paymentAmount" pattern="[0-9]{1,10}" autocomplete="off">
+                  </div>
+                  <div class="form-group col-md-2">
+                     <label for="paymentAmount">Date<span class="requiredIcon">*</span></label>
+                    <input type="text" class="form-control datepicker" name="paymentDate" id="paymentDate" value="2018-05-24" readonly="">
+                  </div>
+                <div class="form-group col-md-2">
+                  <label for="paymentAmount">Payment Type<span class="requiredIcon">*</span></label>
+                  <select  class="form-control"  name="paymentType" id="paymentType">
+                    <option value="Cash">Cash</option>
+                    <option value="Cheque">Cheque</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-2 d-none" id="chequeNoDiv">
+                  <label for="chequeNo">Cheque No</label>
+                  <input type="text" class="form-control" name="chequeNo" id="chequeNo" autocomplete="off">
+                </div>
+                <div class="form-group col-md-2 d-none" id="chequeDateDiv">
+                    <label for="chequeDate">Realisation Date</label>
+                    <input type="text" class="form-control datepicker" name="chequeDate" id="chequeDate" value="2018-05-24" readonly="">
+                </div>
+             </div>
+             <div  class="form-row">
+              <div class="form-group col-md-6">
+                <label for="paymentNote" >Note</label>
+                <input type="text" id=paymentNote class="form-control"></input>
+              </div>
+              <div class="form-group col-md-2" style="text-align: right; margin-top: 30px;">
+                <button type="reset" id="clearPaymentFormBtn" class="btn">Clear</button>
+                <button type="button" id="addItem" class="btn btn-success" onclick="addPayment()">Add Payment</button>
+              </div>
+             </div>
+              </form>
+              <br>
+              <br>
+              <p>Payment History</p>
+              <div class="table-responsive" id="purchasePaymentsTableDiv"></div>
+
             </div>
           </div>
       </div> 
