@@ -39,7 +39,6 @@ function addItem() {
     },
     complete: function () {
       populateLastInsertedID(itemLastInsertedIDFile, "itemDetailsProductID");
-      getItemStockToPopulate("itemDetailsItemNumber", getItemStockFile, itemDetailsTotalStock);
       searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
       reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
     }
@@ -120,9 +119,19 @@ function getAllItemsDetails() {
       searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
       autocomplete(document.getElementById("itemDetailsItemNumber"), itemList.map(x => x.itemNumber), onSelectItemNumber);
       autocomplete(document.getElementById("itemDetailsItemName"), itemList.map(x => x.itemName), onSelectItemName);
-     
+      autocomplete(document.getElementById("itemImageItemName"), itemList.map(x => x.itemName), onSelectImageItemName);
     }
   });
+}
+
+function onSelectImageItemName(itemName) {
+  if (itemName && itemName != "") {
+    var data = itemList.find(x => x.itemName == itemName);
+    if (data) {
+      $("#itemImageItemNumber").val(data.itemNumber);
+      $("#itemImageProductID").val(data.productID);
+    }
+  }
 }
 
 function onSelectItemName(itemName) {
@@ -169,7 +178,7 @@ function selectItem(data) {
     $("#itemDetailsUnitMeasure").val(data.unitOfMeasure).trigger("chosen:updated");
     $("#initialQtySec").addClass("d-none");
 
-    newImgUrl = "data/item_images/" + data.itemNumber + "/" + data.imageURL;
+    newImgUrl = "data/item_images/" + data.productID + "/" + data.imageURL;
 
     // Set the item image
     if (data.imageURL == "imageNotAvailable.jpg" || data.imageURL == "") {
@@ -240,6 +249,8 @@ function processImage(imageFormID, scriptPath, messageDivID) {
     contentType: false,
     processData: false,
     success: function (data) {
+      $("#clearImageButton").trigger("click");
+      $("#itemClear").trigger("click");
       $("#" + messageDivID).html(data);
     }
   });

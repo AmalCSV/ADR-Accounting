@@ -90,6 +90,7 @@
    <br>							
    <form name="imageForm" id="imageForm" method="post">
       <div class="form-row">
+         <input id="itemImageProductID"  name="itemImageProductID" class="form-control" type="text" hidden></input>
          <div class="form-group col-md-3" style="display:inline-block">
             <label for="itemImageItemNumber">Item Number<span class="requiredIcon">*</span></label>
             <input type="text" class="form-control" name="itemImageItemNumber" id="itemImageItemNumber" autocomplete="off" readonly>
@@ -98,7 +99,6 @@
          <div class="form-group col-md-4">
             <label for="itemImageItemName">Item Name</label>
             <input type="text" class="form-control" name="itemImageItemName" id="itemImageItemName" autocomplete="off">
-            <div id="itemImageItemNameSuggestionsDiv" class="customListDivWidth"></div>
          </div>
       </div>
       <br>
@@ -111,7 +111,7 @@
       <br>
       <button type="button" id="updateImageButton" class="btn btn-primary">Upload Image</button>
       <button type="button" id="deleteImageButton" class="btn btn-danger">Delete Image</button>
-      <button type="reset" class="btn">Clear</button>
+      <button type="reset" id="clearImageButton"  class="btn">Clear</button>
    </form>
 </div>
 <div  id="itemListTab" class="container-fluid tab-pane fade active show">

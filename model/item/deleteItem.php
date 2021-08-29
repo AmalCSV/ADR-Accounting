@@ -2,9 +2,9 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
-	$itemNumber = htmlentities($_POST['itemDetailsItemNumber']);
+	$itemNumber = htmlentities($_POST['itemImageProductID']);
 	
-	if(isset($_POST['itemDetailsItemNumber'])){
+	if(isset($_POST['itemImageProductID'])){
 		
 		// Check if mandatory fields are not empty
 		if(!empty($itemNumber)){
@@ -13,14 +13,14 @@
 			$itemNumber = filter_var($itemNumber, FILTER_SANITIZE_STRING);
 
 			// Check if the item is in the database
-			$itemSql = 'SELECT itemNumber FROM item WHERE itemNumber=:itemNumber';
+			$itemSql = 'SELECT itemNumber FROM item WHERE productID=:itemNumber';
 			$itemStatement = $conn->prepare($itemSql);
 			$itemStatement->execute(['itemNumber' => $itemNumber]);
 			
 			if($itemStatement->rowCount() > 0){
 				
 				// Item exists in DB. Hence start the DELETE process
-				$deleteItemSql = 'DELETE FROM item WHERE itemNumber=:itemNumber';
+				$deleteItemSql = 'DELETE FROM item WHERE productID=:itemNumber';
 				$deleteItemStatement = $conn->prepare($deleteItemSql);
 				$deleteItemStatement->execute(['itemNumber' => $itemNumber]);
 
