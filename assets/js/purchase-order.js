@@ -333,7 +333,7 @@ function loadDataToPurchaseOrder(data, viewType){
 	$(`#purchaseOrderTotal`).val(purchaseOrder.amount);
 	$(`#purchaseOrderId`).val(purchaseOrder.purchaseID);
 
-	document.getElementById("statusPO").style.display = "block";
+	document.getElementById("statusPO").style.display = "flex";
 	$(`#statusPOText`).text(purchaseOrder.statusText);
 
 	for (let index = 0; index < purchaseOrderItems.length; index++) {
