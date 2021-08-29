@@ -30,7 +30,7 @@ function addPurchase() {
 		};
 		purchaseItems.push(item);
 	}
-
+console.log(purchaseItems)
 	$.ajax({
 		url: 'model/purchase/insertPurchase.php',
 		method: 'POST',
@@ -48,10 +48,12 @@ function addPurchase() {
 		},
 		complete: function(){
 			populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
-			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+			searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
 			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
 			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
+
+			$('#addPurchaseBtn').prop('disabled', true);
 		}
 	});
 }
@@ -323,7 +325,7 @@ function openGoodReceive(purchaseOrderId) {
 }
 
 function loadDataToPurchaseOrder(data, viewType){
-	const {purchaseOrder, purchaseOrderItems} = JSON.parse(data);
+	let {purchaseOrder, purchaseOrderItems} = JSON.parse(data);
 	order = purchaseOrder;
 	orderItems = purchaseOrderItems;
 	$('#purchaseDetailsPurchaseDate').val(purchaseOrder.orderDate);
@@ -336,9 +338,12 @@ function loadDataToPurchaseOrder(data, viewType){
 	document.getElementById("statusPO").style.display = "block";
 	$(`#statusPOText`).text(purchaseOrder.statusText);
 
-	for (let index = 0; index < purchaseOrderItems.length; index++) {
+	for (let index = 0; index < purchaseOrderItems.length; index++) {console.log(purchaseOrderItems[index])
 		const numberText = index === 0 ? '' : index;
-		
+		if(index>0){
+			rowCount++;
+    		addPurchaseItem(rowCount, viewType);
+		}
 		$(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].itemNumber);
 		$(`#purchaseDetailsUnitPrice${numberText}`).val(purchaseOrderItems[index].unitPrice);
 		$(`#purchaseDetailsQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
@@ -346,12 +351,8 @@ function loadDataToPurchaseOrder(data, viewType){
 		$(`#purchaseItemId${numberText}`).val(purchaseOrderItems[index].purchaseItemID);
 
 		if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
-			disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsUnitPrice${numberText}`,`purchaseDetailsQuantity${numberText}`,
-			`purchaseDetailsTotal${numberText}`]);
-		}
-		if(index>0 && index+1 !== purchaseOrderItems.length){
-			rowCount++;
-    		addPurchaseItem(rowCount, viewType);
+		//	disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsUnitPrice${numberText}`,`purchaseDetailsQuantity${numberText}`,
+		//	`purchaseDetailsTotal${numberText}`]);
 		}
 	}
 

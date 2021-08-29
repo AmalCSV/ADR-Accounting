@@ -11,21 +11,24 @@
             WHEN po.status = 4 THEN 'Cancel'
             ELSE ''
         END AS statusText
-        FROM purchaseOrder po inner join vendor v on po.vendorID=v.vendorID 
+        FROM purchaseorder po inner join vendor v on po.vendorID=v.vendorID 
         where isDeleted = false and po.purchaseID =". $_POST['purchaseID'];
         $stmt = $conn->prepare($purchaseDetailSql);
         $stmt->execute();
         $purchaseDetail = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $purchaseItemsSql = 'SELECT pi.* from purchaseItem pi WHERE purchaseOrderID='. $_POST['purchaseID'];
+        $purchaseItemsSql = 'SELECT pi.* from purchaseitem pi WHERE purchaseOrderID='. $_POST['purchaseID'];
         $stmtItem = $conn->prepare($purchaseItemsSql);
         $stmtItem->execute();
-        $purchaseItems = $stmtItem->fetch(PDO::FETCH_ASSOC);
-        $stmtItem->closeCursor();
 
+        $purchaseItems = array();
+        while($row =  $stmtItem->fetch(PDO::FETCH_ASSOC)){
+            array_push($purchaseItems, $row);
+        }
+        
         $object = (object) [
             'purchaseOrder' => $purchaseDetail,
-            'purchaseOrderItems' => (array) [$purchaseItems],
+            'purchaseOrderItems' => (array) $purchaseItems,
           ];
         echo (json_encode($object));
     }

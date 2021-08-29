@@ -1,4 +1,4 @@
-CREATE TABLE `purchaseOrder` (
+CREATE TABLE `purchaseorder` (
   `purchaseID` int(11) NOT NULL AUTO_INCREMENT,
   `orderNumber` varchar(20) NOT NULL,
   `orderDate` date NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE `purchaseOrder` (
   CONSTRAINT `vendor_fk` FOREIGN KEY (`vendorID`) REFERENCES `vendor` (`vendorID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
-CREATE TABLE `purchaseItem` (
+CREATE TABLE `purchaseitem` (
    `purchaseItemID` int(11) NOT NULL AUTO_INCREMENT,
    `itemNumber` varchar(255) NOT NULL,
    `purchaseDate` date NOT NULL,

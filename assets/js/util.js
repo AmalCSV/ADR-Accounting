@@ -10,7 +10,7 @@ function enableElements(ids) {
   });
 }
 
-function getSelect2ItemData(list) {
+function getSelect2ItemData(list= []) {
 	return list.map( x=> {
 		return {
 			id: x.productID,
