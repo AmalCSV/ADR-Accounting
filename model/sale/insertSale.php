@@ -19,7 +19,7 @@
 			
 			// insert sales order 
 			$discountAmount = $salesOrderTotal - $salesOrderNetTotal;
-			$insertSalesOrderSql = 'INSERT INTO salesOrder(salesNumber, saleDate, amount, customerID, description, discount, discountPercentage, customerName) 
+			$insertSalesOrderSql = 'INSERT INTO salesorder(salesNumber, saleDate, amount, customerID, description, discount, discountPercentage, customerName) 
 			VALUES(:salesNumber, :saleDate, :amount, :customerID, :note, :discount, :discountPercentage, :customerName)';
 			$insertSalesOrderStatement = $conn->prepare($insertSalesOrderSql);
 			$insertSalesOrderStatement->execute(['salesNumber' => $saleDetailsSaleID, 'saleDate' => $saleDate, 'amount' => $salesOrderNetTotal, 
@@ -27,7 +27,7 @@
 
 			$salesOrderID = $conn->lastInsertId();
 				foreach ($salesItem as $item) {
-					$insertSalesSql = 'INSERT INTO salesOrderItem(itemNumber, itemName, unitPrice, quantity, salesOrderId, totalPrice) VALUES(:itemNumber, :itemName, :unitPrice, :quantity, :salesOrderId, :totalPrice)';
+					$insertSalesSql = 'INSERT INTO salesorderitem(itemNumber, itemName, unitPrice, quantity, salesOrderId, totalPrice) VALUES(:itemNumber, :itemName, :unitPrice, :quantity, :salesOrderId, :totalPrice)';
 					$insertSalesStatement = $conn->prepare($insertSalesSql);
 					$insertSalesStatement->execute(['itemNumber' => $item['id'], 'itemName' => $item['name'], 'unitPrice' => $item['sellingPrice'], 'quantity' => $item['quntity'], 'salesOrderId' => $salesOrderID, 'totalPrice'=> $item['total']]);		
 				

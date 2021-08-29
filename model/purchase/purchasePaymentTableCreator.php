@@ -4,7 +4,7 @@
 
 	$orderId =  htmlentities($_POST['orderId']);
 	
-	$purchaseDetailsSearchSql = ' SELECT pp.*, po.orderNumber, v.companyName FROM purchaseorderpayment pp inner join purchaseOrder po on pp.purchaseOrderID = po.purchaseID inner join vendor v on po.vendorID=v.vendorID where po.purchaseID = :orderId and pp.isDeleted = false'  ;
+	$purchaseDetailsSearchSql = ' SELECT pp.*, po.orderNumber, v.companyName FROM purchaseorderpayment pp inner join purchaseorder po on pp.purchaseOrderID = po.purchaseID inner join vendor v on po.vendorID=v.vendorID where po.purchaseID = :orderId and pp.isDeleted = false'  ;
 	$purchaseDetailsSearchStatement = $conn->prepare($purchaseDetailsSearchSql);
 	$purchaseDetailsSearchStatement->execute(['orderId' => $orderId]);
 
