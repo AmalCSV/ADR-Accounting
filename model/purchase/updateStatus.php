@@ -9,7 +9,7 @@
 	require_once('../../inc/config/db.php');
 
 	if(isset($_POST['statusId']) && isset($_POST['purchaseID'])) {
-            $updateStatusSql = 'UPDATE purchaseOrder SET status = :statusId WHERE purchaseID = :purchaseID';
+            $updateStatusSql = 'UPDATE purchaseorder SET status = :statusId WHERE purchaseID = :purchaseID';
             $updatePurchaseStatement = $conn->prepare($updateStatusSql);
             $updatePurchaseStatement->execute(['statusId' => $_POST['statusId'], 'purchaseID' => $_POST['purchaseID']]);
             

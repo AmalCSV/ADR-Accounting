@@ -47,14 +47,14 @@
 			
 			// insert purchase order 
 
-			$insertPurchaseOrderSql = 'INSERT INTO purchaseOrder(orderNumber, orderDate, amount, vendorID, description) VALUES(:orderNumber, :orderDate, :amount, :vendorID, :note)';
+			$insertPurchaseOrderSql = 'INSERT INTO purchaseorder(orderNumber, orderDate, amount, vendorID, description) VALUES(:orderNumber, :orderDate, :amount, :vendorID, :note)';
 			$insertPurchaseOrderStatement = $conn->prepare($insertPurchaseOrderSql);
 			$insertPurchaseOrderStatement->execute(['orderNumber' => $purchaseDetailsPurchaseID, 'orderDate' => $purchaseDetailsPurchaseDate, 'amount' => $purchaseDetailsGrandTotal, 
 				 'vendorID' => $vendorID, 'note' => $purchaseDetailsDescription]);
 
 			$purchaseOrderID = $conn->lastInsertId();
 				foreach ($purchaseItems as $item) {
-					$insertPurchaseSql = 'INSERT INTO purchaseItem(itemNumber, purchaseDate, itemName, unitPrice, quantity, vendorName, vendorID, purchaseOrderID, totalPrice) VALUES(:itemNumber, :purchaseDate, :itemName, :unitPrice, :quantity, :vendorName, :vendorID, :purchaseOrderID, :totalPrice)';
+					$insertPurchaseSql = 'INSERT INTO purchaseitem(itemNumber, purchaseDate, itemName, unitPrice, quantity, vendorName, vendorID, purchaseOrderID, totalPrice) VALUES(:itemNumber, :purchaseDate, :itemName, :unitPrice, :quantity, :vendorName, :vendorID, :purchaseOrderID, :totalPrice)';
 					$insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
 					$insertPurchaseStatement->execute(['itemNumber' => $item['id'], 'purchaseDate' => $purchaseDetailsPurchaseDate, 'itemName' => $item['name'], 'unitPrice' => $item['buyingPrice'], 'quantity' => $item['quntity'], 'vendorName' => $purchaseDetailsVendorName, 'vendorID' => $vendorID, 'purchaseOrderID' => $purchaseOrderID, 'totalPrice'=> $item['total']]);		
 				}

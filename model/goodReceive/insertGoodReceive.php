@@ -5,7 +5,7 @@
 	if(isset($_POST['items'])) {
         $goodReceivedItems = $_POST['items'];
         foreach ($goodReceivedItems as $item) {
-            $insertPurchaseSql = 'UPDATE purchaseItem SET goodReceivedQuantity = :goodReceived WHERE purchaseItemID = :purchaseItemID';
+            $insertPurchaseSql = 'UPDATE purchaseitem SET goodReceivedQuantity = :goodReceived WHERE purchaseItemID = :purchaseItemID';
             $insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
             $insertPurchaseStatement->execute(['goodReceived' => $item['goodReceived'], 'purchaseItemID' => $item['id']]);
             

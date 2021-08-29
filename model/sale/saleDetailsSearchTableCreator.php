@@ -2,7 +2,7 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
-	$saleDetailsSearchSql = 'SELECT * FROM salesOrder';
+	$saleDetailsSearchSql = 'SELECT * FROM salesorder';
 	$saleDetailsSearchStatement = $conn->prepare($saleDetailsSearchSql);
 	$saleDetailsSearchStatement->execute();
 
