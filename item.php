@@ -126,4 +126,3 @@
    </div>
 </div>
 
-<script src="assets/js/autocomplete.js"></script>

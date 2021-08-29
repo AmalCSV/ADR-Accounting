@@ -122,8 +122,8 @@ $action = '';
 				<input type="password" class="form-control" id="loginPassword" name="loginPassword">
 			  </div>
 			  <button type="button" id="login" class="btn btn-primary">Login</button>
-			  <a href="login.php?action=register" class="btn btn-success">Register</a>
-			  <a href="login.php?action=resetPassword" class="btn btn-warning">Reset Password</a>
+			  <!-- <a href="login.php?action=register" class="btn btn-success">Register</a>
+			  <a href="login.php?action=resetPassword" class="btn btn-warning">Reset Password</a> -->
 			  <button type="reset" class="btn">Clear</button>
 			</form>
 		  </div>
