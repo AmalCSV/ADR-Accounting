@@ -16,6 +16,7 @@
 						<th>Discount %</th>
 						<th>Discount</th>
 						<th>Net Total</th>
+						<th>Received Amount</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -32,6 +33,7 @@
 						'<td>' . $row['discountPercentage'] . '</td>' .
 						'<td>' . $row['discount'] . '</td>' .
 						'<td>' . $row['amount'] . '</td>' .
+						'<td>' . $row['paidAmount'] . '</td>' .
 						'<td>' . '<button onclick=showSalesPayments("'. $row['saleID'] .'") type="button" class="btn btn-primary btn-sm">Payments</button>' . '</td>' .
 					'</tr>';
 	}
@@ -48,6 +50,7 @@
 						<th>Discount %</th>
 						<th>Discount</th>
 						<th>Net Total</th>
+						<th>Received Amount</th>
 						<th>Action</th>
 					</tr>
 					</tfoot>

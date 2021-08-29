@@ -344,11 +344,11 @@ function insertSalesPayment() {
       },
       success: function (data) {
         $("#soPaymentDetailsMessage").fadeIn();
-        $("#clearPaymentFormBtn").trigger("click");
+        $("#soClearPaymentFormBtn").trigger("click");
         showSalesPaymentMessages("Payment added successfully", "success");
       },
       complete: function () {
-        showPayments(orderId);
+        showSalesPayments(orderId)
         initSalesOrderPaymentList(orderId);
         searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
         reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
@@ -381,16 +381,16 @@ function showSalesPaymentMessages(txt, type) {
   $("#soPaymentDetailsMessage").html(msg);
 }
 
-function deletePaymentPopup(paymentId) {
+function deleteSalesPaymentPopup(paymentId) {
   bootbox.confirm("Are you sure you want to delete?", function (result) {
     if (result) {
       var orderId = $("#paymentSalesId").val();
-      deletePayment(paymentId);
+      deleteSalesPayment(paymentId);
     }
   });
 }
 
-function deletePayment(paymentId) {
+function deleteSalesPayment(paymentId) {
   var orderId = $("#paymentSalesId").val();
 
   $.ajax({
@@ -405,7 +405,7 @@ function deletePayment(paymentId) {
       initSalesOrderPaymentList(orderId);
     },
     complete: function () {
-      showPayments(orderId);
+      showSalesPayments(orderId);
       initSalesOrderPaymentList(orderId);
       searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
       reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
@@ -413,8 +413,8 @@ function deletePayment(paymentId) {
   });
 }
 
-function updateChequeStatusPopup(paymentId, amount) {
-  var creditAmount = $("#creditAmount").text();
+function updateSalesChequeStatusPopup(paymentId, amount) {
+  var creditAmount = $("#soCreditAmount").text();
 
   if (parseFloat(creditAmount) <= 0) {
     showSalesPaymentMessages("This bill is already settled.", "error");
@@ -447,7 +447,7 @@ function updateChequeStatusPopup(paymentId, amount) {
 }
 
 function updateSOChequeStatus(paymentId, status) {
-  var orderId = $("#paymentOrderId").val();
+  var orderId = $("#paymentSalesId").val();
   let note = status + " on " + getToday();
   $.ajax({
     url: "model/sale/updateSalesChequeStatus.php",
@@ -458,12 +458,12 @@ function updateSOChequeStatus(paymentId, status) {
       note: note
     },
     success: function (data) {
-      $("#PaymentDetailsMessage").empty();
-      $("#PaymentDetailsMessage").html(data);
+      $("#soPaymentDetailsMessage").empty();
+      $("#soPaymentDetailsMessage").html(data);
       initSalesOrderPaymentList(orderId);
     },
     complete: function () {
-      showPayments(orderId);
+      showSalesPayments(orderId);
       initSalesOrderPaymentList(orderId);
       searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
       reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
