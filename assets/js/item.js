@@ -193,7 +193,7 @@ function selectItem(data) {
 // Function to delte item from db
 function deleteItem() {
   // Get the item number entered by the user
-  var itemDetailsItemNumber = $("#itemDetailsItemNumber").val();
+  var itemDetailsItemNumber = $("#itemDetailsProductID").val();
 
   // Call the deleteItem.php script only if there is a value in the
   // item number textbox

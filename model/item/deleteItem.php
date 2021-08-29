@@ -2,9 +2,9 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
-	$itemNumber = htmlentities($_POST['itemImageProductID']);
+	$itemNumber = htmlentities($_POST['itemDetailsItemNumber']);
 	
-	if(isset($_POST['itemImageProductID'])){
+	if(isset($_POST['itemDetailsItemNumber'])){
 		
 		// Check if mandatory fields are not empty
 		if(!empty($itemNumber)){
