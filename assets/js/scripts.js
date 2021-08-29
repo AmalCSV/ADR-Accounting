@@ -851,7 +851,7 @@ function getItemDetailsToPopulateForSaleTab(){
 			$('#saleDetailsTotalStock').val(data.stock);
 			$('#saleDetailsUnitPrice').val(data.unitPrice);
 
-			newImgUrl = 'data/item_images/' + data.itemNumber + '/' + data.imageURL;
+			newImgUrl = 'data/item_images/' + data.productID + '/' + data.imageURL;
 			
 			// Set the item image
 			if(data.imageURL == 'imageNotAvailable.jpg' || data.imageURL == ''){

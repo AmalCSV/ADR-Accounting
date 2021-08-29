@@ -59,36 +59,10 @@
 				exit();
 			}
 			
-			// Calculate the stock
-			// $stockSelectSql = 'SELECT stock FROM item WHERE itemNumber = :itemNumber';
-			// $stockSelectStatement = $conn->prepare($stockSelectSql);
-			// $stockSelectStatement->execute(['itemNumber' => $itemNumber]);
-			// if($stockSelectStatement->rowCount() > 0) {
-			// 	$row = $stockSelectStatement->fetch(PDO::FETCH_ASSOC);
-			// 	$initialStock = $row['stock'];
-			// 	$newStock = $initialStock + $itemDetailsQuantity;
-			// } else {
-			// 	// Item is not in DB. Therefore, stop the update and quit
-			// 	$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Item Number does not exist in DB. Therefore, update not possible.</div>';
-			// 	$data = ['alertMessage' => $errorAlert];
-			// 	echo json_encode($data);
-			// 	exit();
-			// }
-
 			// Construct the UPDATE query
 			$updateItemDetailsSql = 'UPDATE item SET itemNumber = :itemNumber, itemName = :itemName, unitOfMeasure = :unitOfMeasure, buyingPrice = :buyingPrice,  sellingPrice = :sellingPrice, warningQty = :warningQty, rackNo = :rackNo, status = :status, description = :description WHERE productID = :productID';
 			$updateItemDetailsStatement = $conn->prepare($updateItemDetailsSql);
 			$updateItemDetailsStatement->execute(['itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemRackNo, 'status' => $status, 'description' => $description, 'itemNumber' => $itemNumber,  'productID' => $productId]);
-			
-			// UPDATE item name in sale table
-			$updateItemInSaleTableSql = 'UPDATE sale SET itemName = :itemName WHERE itemNumber = :itemNumber';
-			$updateItemInSaleTableSstatement = $conn->prepare($updateItemInSaleTableSql);
-			$updateItemInSaleTableSstatement->execute(['itemName' => $itemName, 'itemNumber' => $itemNumber]);
-			
-			// UPDATE item name in purchase table
-			$updateItemInPurchaseTableSql = 'UPDATE purchase SET itemName = :itemName WHERE itemNumber = :itemNumber';
-			$updateItemInPurchaseTableSstatement = $conn->prepare($updateItemInPurchaseTableSql);
-			$updateItemInPurchaseTableSstatement->execute(['itemName' => $itemName, 'itemNumber' => $itemNumber]);
 			
 			$successAlert = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Item details updated.</div>';
 			$data = ['alertMessage' => $successAlert, 'newStock' => $newStock];

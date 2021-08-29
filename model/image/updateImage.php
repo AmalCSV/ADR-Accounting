@@ -2,10 +2,9 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
-	if(isset($_POST['itemImageItemNumber'])){
+	if(isset($_POST['itemImageProductID'])){
 		
-		$itemImageItemNumber = htmlentities($_POST['itemImageItemNumber']);
-		
+		$itemImageItemNumber = htmlentities($_POST['itemImageProductID']);
 		$baseImageFolder = '../../data/item_images/';
 		$itemImageFolder = '';
 		
@@ -19,7 +18,7 @@
 				$itemImageItemNumber = filter_var($itemImageItemNumber, FILTER_SANITIZE_STRING);
 				
 				// Check if itemNumber is in DB
-				$itemNumberSql = 'SELECT * FROM item WHERE itemNumber = :itemNumber';
+				$itemNumberSql = 'SELECT * FROM item WHERE productID  = :itemNumber';
 				$itemNumberStatement = $conn->prepare($itemNumberSql);
 				$itemNumberStatement->execute(['itemNumber' => $itemImageItemNumber]);
 				
@@ -54,7 +53,7 @@
 						if(move_uploaded_file($_FILES['itemImageFile']['tmp_name'], $targetPath)){
 							
 							// Update image url in item table
-							$updateImageUrlSql = 'UPDATE item SET imageURL = :imageURL WHERE itemNumber = :itemNumber';
+							$updateImageUrlSql = 'UPDATE item SET imageURL = :imageURL WHERE productID  = :itemNumber';
 							$updateImageUrlStatement = $conn->prepare($updateImageUrlSql);
 							$updateImageUrlStatement->execute(['imageURL' => $fileName, 'itemNumber' => $itemImageItemNumber]);
 							
