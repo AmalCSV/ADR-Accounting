@@ -18,10 +18,10 @@
 		$description = htmlentities($_POST['itemDetailsDescription']);
 		$warningQuantity = htmlentities($_POST['itemDetailsWarningQty']);
 		$itemitemRackNo = htmlentities($_POST['itemDetailsRackNo']);
-
+		$itemDetailsVendorID = htmlentities($_POST['itemDetailsVendorID']);
 	
 		// Check if mandatory fields are not empty
-		if(!empty($itemNumber) && !empty($itemName) && isset($sellingPrice) && isset($buyingPrice)){
+		if(!empty($itemNumber) && !empty($itemName) && isset($sellingPrice) && isset($buyingPrice) && $itemDetailsVendorID != "null"){
 			
 			// Sanitize item number
 			$itemNumber = filter_var($itemNumber, FILTER_SANITIZE_STRING);
@@ -31,7 +31,9 @@
 				// Valid quantity
 			} else {
 				// Quantity is not a valid number
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for initial quantity</div>';
+				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for initial quantity</div>';
+				$data = ['alertMessage' => $errorAlert, 'status' => "error"];
+				echo json_encode($data);
 				exit();
 			}
 			
@@ -40,7 +42,9 @@
 				// Valid quantity
 			} else {
 				// Quantity is not a valid number
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for warning quantity</div>';
+				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for warning quantity</div>';
+				$data = ['alertMessage' => $errorAlert, 'status' => "error"];
+				echo json_encode($data);
 				exit();
 			}
 			
@@ -49,7 +53,9 @@
 				// Valid float (buying price)
 			} else {
 				// Unit price is not a valid number
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for buying price</div>';
+				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for buying price</div>';
+				$data = ['alertMessage' => $errorAlert, 'status' => "error"];
+				echo json_encode($data);
 				exit();
 			}
 
@@ -58,7 +64,9 @@
 				// Valid float (selling price)
 			} else {
 				// Unit price is not a valid number
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for selling price</div>';
+				$errorAlert =  '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for selling price</div>';
+				$data = ['alertMessage' => $errorAlert, 'status' => "error"];
+				echo json_encode($data);
 				exit();
 			}
 			
@@ -78,24 +86,28 @@
 			if($stockStatement->rowCount() > 0){
 				//$row = $stockStatement->fetch(PDO::FETCH_ASSOC);
 				//$quantity = $quantity + $row['stock'];
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Item already exists in DB. Please click the <strong>Update</strong> button to update the details. Or use a different Item Number.</div>';
+				$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Item already exists in DB. Please click the <strong>Update</strong> button to update the details. Or use a different Item Number.</div>';
+				$data = ['alertMessage' => $errorAlert, 'status' => "error"];
+				echo json_encode($data);
 				exit();
 			} else {
 				// Item does not exist, therefore, you can add it to DB as a new item
 				// Start the insert process
-
-				$insertItemSql = 'INSERT INTO item(itemNumber, itemName, unitOfMeasure, stock,  buyingPrice, sellingPrice, warningQty , rackNo, status, description) VALUES(:itemNumber, :itemName, :unitOfMeasure, :stock,  :buyingPrice, :sellingPrice, :warningQty,:rackNo,  :status, :description)';
+				$insertItemSql = 'INSERT INTO item(itemNumber, itemName, unitOfMeasure, stock,  buyingPrice, sellingPrice, warningQty , rackNo, status, description, vendorID) VALUES(:itemNumber, :itemName, :unitOfMeasure, :stock,  :buyingPrice, :sellingPrice, :warningQty,:rackNo,  :status, :description, :vendorID)';
 				$insertItemStatement = $conn->prepare($insertItemSql);
-				$insertItemStatement->execute(['itemNumber' => $itemNumber, 'itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'stock' => $initialQty,'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemitemRackNo,  'status' => $status, 'description' => $description]);
+				$insertItemStatement->execute(['itemNumber' => $itemNumber, 'itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'stock' => $initialQty,'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemitemRackNo,  'status' => $status, 'description' => $description, 'vendorID' => $itemDetailsVendorID]);
 				
-				echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Item added to database.</div>';
+				$successAlert = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Item added to database.</div>';
+				$data = ['alertMessage' => $successAlert, 'status' => "success"];
+				echo json_encode($data);
 				exit();
-
 			}
 
 		} else {
 			// One or more mandatory fields are empty. Therefore, display a the error message
-			echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter all fields marked with a (*)</div>';
+			$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter all fields marked with a (*)</div>';
+			$data = ['alertMessage' => $errorAlert, 'status' => "error"];
+			echo json_encode($data);
 			exit();
 		}
 	}

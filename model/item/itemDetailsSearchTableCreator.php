@@ -2,7 +2,7 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
-	$itemDetailsSearchSql = 'SELECT * FROM item';
+	$itemDetailsSearchSql = 'SELECT i.*, v.vendorID, v.companyName FROM item i left join vendor v on i.vendorID = v.vendorID where i.status ="Active"';
 	$itemDetailsSearchStatement = $conn->prepare($itemDetailsSearchSql);
 	$itemDetailsSearchStatement->execute();
 	
@@ -15,6 +15,7 @@
 					<th>Measure</th>
 					<th>Stock</th>
 					<th>Warning Qty</th>
+					<th>Supplier</th>
 					<th>Selling Price</th>
 					<th>Buying Price</th>
 					<th>Status</th>
@@ -34,6 +35,7 @@
 					'<td>' . $row['unitOfMeasure'] . '</td>' .
 					'<td>' . $row['stock'] . '</td>' .
 					'<td>' . $row['warningQty'] . '</td>' .
+					'<td>' . $row['companyName'] . '</td>' .
 					'<td>' . $row['sellingPrice'] . '</td>' .
 					'<td>' . $row['buyingPrice'] . '</td>' .
 					'<td>' . $row['status'] . '</td>' .
@@ -53,6 +55,7 @@
 						<th>Measure</th>
 						<th>Stock</th>
 						<th>Warning Qty</th>
+						<th>Supplier</th>
 						<th>Selling Price</th>
 						<th>Buying Price</th>
 						<th>Status</th>

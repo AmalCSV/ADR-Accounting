@@ -14,12 +14,15 @@
             <?php include ('inc/unitofmeasure.html'); ?>
             </select>
          </div>
-         <div class="form-group col-md-2">
-            <label for="itemDetailsStatus">Status</label>
-            <select id="itemDetailsStatus" name="itemDetailsStatus" class="form-control chosenSelect">
-            <?php include ('inc/statusList.html'); ?>
-            </select>
-         </div>
+         <div class="form-group col-md-3">
+                  <label for="itemDetailsVendor">Vendor Name<span class="requiredIcon">*</span></label>
+                  <select id="itemDetailsVendor" name="itemDetailsVendor" class="form-control chosenSelect">
+                     <option  value="null">--Select Vendor--</option> 
+                        <?php 
+                              require('model/vendor/getVendorNames.php');
+                          ?>
+                  </select>                   
+               </div>
          <div class="form-group col-md-3">
             <label for="itemDetailsProductID" hidden>Product ID</label>
             <input class="form-control invTooltip" hidden type="number" readonly  id="itemDetailsProductID" name="itemDetailsProductID" title="This will be auto-generated when you add a new item">
@@ -65,6 +68,12 @@
                <div class="form-group col-md-4">
                   <label for="itemRaitemDetailsRackNockNo">Rack No</label>
                   <input type="text" class="form-control" name="itemDetailsRackNo" id="itemDetailsRackNo">
+               </div>
+               <div class="form-group col-md-4">
+                  <label for="itemDetailsStatus">Status</label>
+                  <select id="itemDetailsStatus" name="itemDetailsStatus" class="form-control chosenSelect">
+                     <?php include ('inc/statusList.html'); ?>
+                  </select>
                </div>
             </div>
          </div>

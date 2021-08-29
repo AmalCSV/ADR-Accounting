@@ -16,26 +16,16 @@
 		$sellingPrice = htmlentities($_POST['itemDetailsSellingPrice']);
 		$warningQuantity = htmlentities($_POST['itemDetailsWarningQty']);
 		$itemRackNo = htmlentities($_POST['itemDetailsRackNo']);
+		$itemDetailsVendorID = htmlentities($_POST['itemDetailsVendorID']);
 
 		$initialStock = 0;
 		$newStock = 0;
 		
 		// Check if mandatory fields are not empty
-		if(!empty($productId) && $productId > 0 && !empty($itemNumber) && !empty($itemName) && isset($sellingPrice) && isset($buyingPrice)){
+		if(!empty($productId) && $productId > 0 && !empty($itemNumber) && !empty($itemName) && isset($sellingPrice) && isset($buyingPrice) && $itemDetailsVendorID != "null"){
 			
 			// Sanitize item number
 			$itemNumber = filter_var($itemNumber, FILTER_SANITIZE_STRING);
-			
-			// // Validate item quantity. It has to be a number
-			// if(filter_var($itemDetailsQuantity, FILTER_VALIDATE_INT) === 0 || filter_var($itemDetailsQuantity, FILTER_VALIDATE_INT)){
-			// 	// Valid quantity
-			// } else {
-			// 	// Quantity is not a valid number
-			// 	$errorAlert = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for quantity</div>';
-			// 	$data = ['alertMessage' => $errorAlert];
-			// 	echo json_encode($data);
-			// 	exit();
-			// }
 			
 			// Validate unit price. It has to be a number or floating point value
 			if((filter_var($buyingPrice, FILTER_VALIDATE_FLOAT) === 0.0 || filter_var($buyingPrice, FILTER_VALIDATE_FLOAT))  && $buyingPrice > 0){
@@ -60,9 +50,9 @@
 			}
 			
 			// Construct the UPDATE query
-			$updateItemDetailsSql = 'UPDATE item SET itemNumber = :itemNumber, itemName = :itemName, unitOfMeasure = :unitOfMeasure, buyingPrice = :buyingPrice,  sellingPrice = :sellingPrice, warningQty = :warningQty, rackNo = :rackNo, status = :status, description = :description WHERE productID = :productID';
+			$updateItemDetailsSql = 'UPDATE item SET itemNumber = :itemNumber, itemName = :itemName, unitOfMeasure = :unitOfMeasure, buyingPrice = :buyingPrice,  sellingPrice = :sellingPrice, warningQty = :warningQty, rackNo = :rackNo, status = :status, description = :description, vendorID = :vendorID WHERE productID = :productID';
 			$updateItemDetailsStatement = $conn->prepare($updateItemDetailsSql);
-			$updateItemDetailsStatement->execute(['itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemRackNo, 'status' => $status, 'description' => $description, 'itemNumber' => $itemNumber,  'productID' => $productId]);
+			$updateItemDetailsStatement->execute(['itemName' => $itemName, 'unitOfMeasure' => $unitOfMeasure, 'buyingPrice' => $buyingPrice, 'sellingPrice' => $sellingPrice, 'warningQty' => $warningQuantity, 'rackNo' => $itemRackNo, 'status' => $status, 'description' => $description, 'itemNumber' => $itemNumber,  'productID' => $productId, 'vendorID' => $itemDetailsVendorID]);
 			
 			$successAlert = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Item details updated.</div>';
 			$data = ['alertMessage' => $successAlert, 'newStock' => $newStock];
