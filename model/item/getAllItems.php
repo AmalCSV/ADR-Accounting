@@ -4,7 +4,7 @@
 
 	// Execute the script if the POST request is submitted
 		
-		$itemDetailsSql = 'SELECT * FROM item';
+		$itemDetailsSql = 'SELECT i.*, v.vendorID, v.companyName FROM item i left join vendor v on i.vendorID = v.vendorID where i.status ="Active"';
 		$itemDetailsStatement = $conn->prepare($itemDetailsSql);
 		$itemDetailsStatement->execute();
 		

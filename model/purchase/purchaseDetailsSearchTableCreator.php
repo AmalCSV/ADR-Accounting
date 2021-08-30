@@ -33,7 +33,6 @@
 						<th>Purchase Order</th>
 						<th>Purchase Date</th>
 						<th>Vendor Name</th>
-						<th>Vendor ID</th>
 						<th>Total Price</th>
 						<th>Paid Amount</th>
 						<th> Action </th>
@@ -47,7 +46,6 @@
 						'<td>' . $row['orderNumber'] . '</td>' .
 						'<td>' . $row['orderDate'] . '</td>' .
 						'<td>' . $row['fullName'] . '</td>' .
-						'<td>' . $row['vendorID'] . '</td>' .
 						'<td>' . $row['amount'] . '</td>' .
 						'<td>' . $row['paidAmount'] . '</td>' .
 						' <td align="center">
@@ -72,7 +70,6 @@
 						<th>Purchase Order</th>
 						<th>Purchase Date</th>
 						<th>Vendor Name</th>
-						<th>Vendor ID</th>
 						<th>Total Price</th>
 						<th>Paid Amount</th>
 						<th> Action </th>
