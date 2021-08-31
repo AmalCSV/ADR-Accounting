@@ -257,7 +257,7 @@ function initPurchaseOrder() {
 	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
 	displayElements(["clearBtn","addPurchaseBtn"])
 	rowCount = 0;
-	itemData = getSelect2ItemData(itemList);
+	itemData = itemList ? getSelect2ItemData(itemList) : [];
 	$('#purchaseDetailsItem').select2({
 		placeholder: {text: "Select Item"},
 		data: itemData
