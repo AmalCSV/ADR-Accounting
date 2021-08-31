@@ -48,9 +48,12 @@ function addVendor() {
 			vendorDetailsStatus:vendorDetailsStatus,
 		},
 		success: function(data){
+			var result = $.parseJSON(data);
 			$('#vendorDetailsMessage').fadeIn();
-			$('#vendorDetailsMessage').html(data);
-			enableUpdateDeleteVendor(true);
+			$('#vendorDetailsMessage').html(result.alertMessage);
+			if(result.status == "success"){
+				enableUpdateDeleteVendor(true);
+			}
 		},
 		complete: function(data){
 			populateLastInsertedID(vendorLastInsertedIDFile, 'vendorDetailsVendorID');
@@ -60,7 +63,6 @@ function addVendor() {
 		}
 	});
 }
-
 
 
 // Function to delete vendor from db
