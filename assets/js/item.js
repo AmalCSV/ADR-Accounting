@@ -1,4 +1,4 @@
-var itemList = {};
+var itemList = [];
 
 getAllItemsDetails();
 enableUpdateDeleteButton(false);
@@ -96,8 +96,8 @@ function updateItem() {
         searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
         searchTableCreator("saleDetailsTableDiv", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
         reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
-        reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-        reportsSaleTableCreator("saleReportsTableDiv", saleReportsSearchTableCreatorFile, "saleReportsTable");
+       // reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
+       // reportsSaleTableCreator("saleReportsTableDiv", saleReportsSearchTableCreatorFile, "saleReportsTable");
       }
     });
   } else {
