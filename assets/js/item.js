@@ -1,4 +1,4 @@
-var itemList = {};
+var itemList = [];
 
 getAllItemsDetails();
 enableUpdateDeleteButton(false);
