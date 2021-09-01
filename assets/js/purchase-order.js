@@ -735,5 +735,18 @@ function updateChequeStatus(paymentId, status){
     }
   });
 
+  $(document).ready(function(){
+
+    $.ajax({
+      url: "model/item/getAllItems.php",
+      method: "POST",
+      dataType: "json",
+      success: function (data) {
+        itemList = data;
+      }
+    });
+
+    initPurchaseOrder();
+  });
 
 }
