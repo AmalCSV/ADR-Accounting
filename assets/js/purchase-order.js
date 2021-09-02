@@ -7,7 +7,7 @@ function addPurchase() {
 	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
 	var purchaseDetailsDescription = $('#purchaseDetailsDescription').val();
 	var purchaseDetailsPurchaseID = $('#purchaseDetailsPurchaseID').val();
-	var purchaseDetailsVendorName = $('#purchaseDetailsVendorName').val();
+	var vendorID = $('#purchaseDetailsVendorName').val();
 	const grandTotal= $(`#purchaseOrderTotal`).val();
 
 	const purchaseItems = [];
@@ -39,7 +39,7 @@ console.log(purchaseItems)
 			purchaseDetailsGrandTotal: grandTotal,
 			purchaseDetailsDescription: purchaseDetailsDescription,
 			purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
-			purchaseDetailsVendorName: purchaseDetailsVendorName,
+			vendorID: vendorID,
 			purchaseItems: purchaseItems,
 		},
 		success: function(data){
@@ -49,7 +49,6 @@ console.log(purchaseItems)
 		complete: function(){
 			populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
 			searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
-			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
 			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
 			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
 
@@ -109,7 +108,6 @@ function updatePurchase() {
     },
     complete: function () {
       searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
       searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
       reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
     }
@@ -256,8 +254,10 @@ function initPurchaseOrder() {
 
 	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
 	displayElements(["clearBtn","addPurchaseBtn"])
+
 	rowCount = 0;
-	itemData = itemList ? getSelect2ItemData(itemList) : [];
+	itemData = itemList && itemList.length? getSelect2ItemData(itemList): [];
+
 	$('#purchaseDetailsItem').select2({
 		placeholder: {text: "Select Item"},
 		data: itemData
