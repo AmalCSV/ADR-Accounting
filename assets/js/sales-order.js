@@ -168,7 +168,7 @@ function initSalesOrder() {
   initCustomers();
   $("#soPaymentsTab").prop("disabled", true);
 
-  itemData = getSelect2ItemData(itemList);
+  itemData = itemList ? getSelect2ItemData(itemList) : [];
   $("#saleDetailsItem").select2({data: itemData});
   salesItemSelectChange("");
   $("#addSaleButton").prop("disabled", true);

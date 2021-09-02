@@ -254,8 +254,10 @@ function initPurchaseOrder() {
 
 	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
 	displayElements(["clearBtn","addPurchaseBtn"])
-	rowCount = 0;console.log(itemList)
+
+	rowCount = 0;
 	itemData = itemList && itemList.length? getSelect2ItemData(itemList): [];
+
 	$('#purchaseDetailsItem').select2({
 		placeholder: {text: "Select Item"},
 		data: itemData
@@ -733,5 +735,18 @@ function updateChequeStatus(paymentId, status){
     }
   });
 
+  $(document).ready(function(){
+
+    $.ajax({
+      url: "model/item/getAllItems.php",
+      method: "POST",
+      dataType: "json",
+      success: function (data) {
+        itemList = data;
+      }
+    });
+
+    initPurchaseOrder();
+  });
 
 }
