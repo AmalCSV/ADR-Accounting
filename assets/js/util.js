@@ -49,3 +49,33 @@ function displayHideElements(ids) {
 		document.getElementById(id).style.display = "none";
 	});
 }
+
+// Function to create searchable datatables for customer, item, purchase, sale
+function searchTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
+	var tableContainerDivID = '#' + tableContainerDiv;
+	var tableID = '#' + table;
+	$(tableContainerDivID).load(tableCreatorFileUrl, function(){
+		// Initiate the Datatable plugin once the table is added to the DOM
+		$(tableID).DataTable();
+	});
+}
+
+// Function to populate last inserted ID
+function populateLastInsertedID(scriptPath, textBoxID){
+	$.ajax({
+		url: scriptPath,
+		method: 'POST',
+		dataType: 'json',
+		success: function(data){
+			$('#' + textBoxID).val(data);
+		}
+	});
+}
+
+// Initiate datepickers
+$('.datepicker').datepicker({
+	format: 'yyyy-mm-dd',
+	todayHighlight: true,
+	todayBtn: 'linked',
+	orientation: 'bottom left'	
+});

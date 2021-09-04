@@ -4,10 +4,10 @@
       <div class="card-body">
           <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#purchaseListTab">Purchase Orders</a>
+              <a class="nav-link active" data-toggle="tab" href="#purchaseListTab" onclick="location.reload()">Purchase Orders</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " id="purchaseOrderTab" data-toggle="tab" href="#purchaseDetailsTab">Add/Edit</a>
+              <a class="nav-link " id="purchaseOrderTab" onclick="initPurchaseOrder()" data-toggle="tab" href="#purchaseDetailsTab">Add/Edit</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="poPaymentsTab" data-toggle="tab" href="#purchasePaymentsTab" disabled>Payments</a>
@@ -63,7 +63,7 @@
                         <label for="purchaseDetailsQuantity">Quantity<span class="requiredIcon">*</span></label>
                       </div>
                       <div class="form-group col-md-2">
-                        <label for="purchaseDetailsUnitPrice">Unit Price<span class="requiredIcon">*</span></label>
+                        <label for="purchaseDetailsUnitPrice">Buying Price<span class="requiredIcon">*</span></label>
                       </div>
                       <div class="form-group col-md-2">
                         <label for="purchaseDetailsTotal">Sub Total</label>
@@ -75,14 +75,14 @@
                   <div id="poItemList">
                     <div class="form-row"> 
                             <div class="form-group col-md-3">
-                              <select id="purchaseDetailsItem" class="form-control" style="width: 100%">
+                              <select id="purchaseDetailsItem"  name="purchaseDetailsItem" class="form-control" style="width: 100%">
                               </select>
                             </div>
                             <div class="form-group col-md-1">
                               <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity" name="purchaseDetailsAvalableQuantity" value="0" readonly>
                           </div>
                             <div class="form-group col-md-2">
-                                <input type="number" class="form-control" id="purchaseDetailsQuantity" name="purchaseDetailsQuantity" value="0">
+                                <input type="number" class="form-control" id="purchaseDetailsQuantity" name="purchaseDetailsQuantity" value="0" min="1">
                             </div>
                             <div class="form-group col-md-2">
                                 <input type="text" class="form-control" id="purchaseDetailsUnitPrice" name="purchaseDetailsUnitPrice" value="0" readonly>
@@ -114,7 +114,7 @@
                 
                 <button type="button" id="addPurchaseBtn" class="btn btn-success">Add Purchase</button>
                 <!-- <button type="button" id="updatePurchaseBtn" class="btn btn-primary">Update</button> -->
-                <button type="reset" id="clearBtn" class="btn" onclick="initPurchaseOrder()">Clear</button>
+                <button type="button" id="clearBtn" class="btn" onclick="initPurchaseOrder()">Clear</button>
                 
                 <button type="button" id="sendPOBtn" class="btn btn-info" onclick="sendPO()">Submit</button>
                 <button type="button" id="closePOBtn" class="btn btn-success" onclick="closePO()">Close</button>
@@ -126,7 +126,7 @@
             <div id="purchaseListTab" class="container-fluid tab-pane fade active show">
               <br>
               <p>Use the grid below to search purchase details</p>
-              <div class="table-responsive" id="purchaseDetailsTableDiv1"></div>
+              <div class="table-responsive" id="purchaseDetailsTableDiv"></div>
             </div>
             <div id="purchasePaymentsTab" class="container-fluid tab-pane">
               <br>

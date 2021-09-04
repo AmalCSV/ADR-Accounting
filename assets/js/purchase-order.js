@@ -1,9 +1,23 @@
-var itemData = [];
+var itemList = [];
 var order = {};
 var orderItems = {};
 
+// File that creates the purchase details search table
+purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator.php';
+purchasePaymentTableCreatorFile = 'model/purchase/purchasePaymentTableCreator.php';
+// File that creates the purchase reports search table
+purchaseReportsSearchTableCreatorFile = 'model/purchase/purchaseReportsSearchTableCreator.php';
+
+// Calculate Total Purchase value in purchase details tab
+function calculateTotalInPurchaseTab(){
+	var quantityPT = $('#purchaseDetailsQuantity').val();
+	var unitPricePT = $('#purchaseDetailsUnitPrice').val();
+	$('#purchaseDetailsTotal').val(Number(quantityPT) * Number(unitPricePT));
+}
+
 // Function to call the insertPurchase.php script to insert purchase data to db
 function addPurchase() {
+  let errorText = null;
 	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
 	var purchaseDetailsDescription = $('#purchaseDetailsDescription').val();
 	var purchaseDetailsPurchaseID = $('#purchaseDetailsPurchaseID').val();
@@ -28,33 +42,48 @@ function addPurchase() {
 			total: $(`#purchaseDetailsTotal${index+1}`).val(),
 			name: $(`#purchaseDetailsItem${index+1} option:selected`).text(),
 		};
+    const duplicateItem = purchaseItems.find(x => x.id ===item.id)
+    if(duplicateItem){
+      errorText = 'Duplicate Items in the list';
+    }
 		purchaseItems.push(item);
 	}
-console.log(purchaseItems)
-	$.ajax({
-		url: 'model/purchase/insertPurchase.php',
-		method: 'POST',
-		data: {
-			purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
-			purchaseDetailsGrandTotal: grandTotal,
-			purchaseDetailsDescription: purchaseDetailsDescription,
-			purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
-			vendorID: vendorID,
-			purchaseItems: purchaseItems,
-		},
-		success: function(data){
-			$('#purchaseDetailsMessage').fadeIn();
-			$('#purchaseDetailsMessage').html(data);
-		},
-		complete: function(){
-			populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
-			searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
-			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
-			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
+ 
 
-			$('#addPurchaseBtn').prop('disabled', true);
-		}
-	});
+  if( errorText == null) {
+    $.ajax({
+      url: 'model/purchase/insertPurchase.php',
+      method: 'POST',
+      data: {
+        purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
+        purchaseDetailsGrandTotal: grandTotal,
+        purchaseDetailsDescription: purchaseDetailsDescription,
+        purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
+        vendorID: vendorID,
+        purchaseItems: purchaseItems,
+      },
+      success: function(data){
+        $('#purchaseDetailsMessage').html(data);
+        $('#purchaseDetailsMessage').fadeOut(1000).fadeIn(500, function() {
+        //  window.location.href += '#purchaseDetailsTab';
+        //  window.location.reload();
+        });
+        
+      },
+      complete: function(){
+        populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
+        searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+      //	searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
+      //	reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
+  
+        $('#addPurchaseBtn').prop('disabled', true);
+      }
+    });
+  }
+  else {
+    $('#purchaseDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
+    $('#purchaseDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  }
 }
 
 // Listen to purchase add button
@@ -103,13 +132,13 @@ function updatePurchase() {
       purchaseItems: purchaseItems
     },
     success: function (data) {
-      $("#purchaseDetailsMessage").fadeIn();
+      $("#purchaseDetailsMessage").fadeOut(1000).fadeIn(500, function() {
+        location.reload();
+      });
       $("#purchaseDetailsMessage").html(data);
     },
     complete: function () {
       searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
-      reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
     }
   });
 }
@@ -124,14 +153,14 @@ function addPurchaseItem(id, viewType) {
     `
 			<div class="form-row" id="addedRow${id}"> 
                     <div class="form-group col-md-3">
-						<select id='purchaseDetailsItem${id}' class="form-control" style="width: 100%">
+						<select id='purchaseDetailsItem${id}' name='purchaseDetailsItem${id}' class="form-control" style="width: 100%">
                         </select>
 				    </div>
 					<div class="form-group col-md-1">
                         <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0">
+                        <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0" min="1">
                     </div>
                     <div class="form-group col-md-2">
                         <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
@@ -181,14 +210,14 @@ function purchaseItemSelectChange(id) {
 }
 
 function setPOCalculationFunctions(id) {
-	$(`#purchaseDetailsItem${id}, #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
+	$(`#purchaseDetailsItem${id}, #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).keyup(function(){
 		calculateTotalInPurchase(id);
 		calculatePOGrandTotal();
 	});
 }
 
 // Calculate Total in purchase tab
-$('#purchaseDetailsQuantity, #purchaseDetailsItem, #purchaseDetailsUnitPrice').change(function(){
+$('#purchaseDetailsQuantity, #purchaseDetailsItem, #purchaseDetailsUnitPrice').keyup(function(){
 	calculateTotalInPurchaseTab();
 	calculatePOGrandTotal();
 });
@@ -247,24 +276,25 @@ function initPurchaseOrder() {
 	initPurchaseOrderItems();
   $("#poPaymentsTab").prop("disabled", true);
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
+  $('#purchaseDetailsQuantity').val('');
+  
 	document.getElementById("goodReceivedData").style.display = "none";
 	document.getElementById("addPurchaseItem").style.display = "block";
+  $('#addPurchaseItem').prop('disabled', true);
 	document.getElementById("lableActionHeader").text = '#';
 	document.getElementById("statusPO").style.display = "none";
 
 	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
 	displayElements(["clearBtn","addPurchaseBtn"])
-
+  const vendorId = $('#purchaseDetailsVendorName').val();
 	rowCount = 0;
-	itemData = itemList && itemList.length? getSelect2ItemData(itemList): [];
-
-	$('#purchaseDetailsItem').select2({
-		placeholder: {text: "Select Item"},
-		data: itemData
-	});
-
-	purchaseItemSelectChange('');
+  setPOItemList(itemList);
+  searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	$('#addPurchaseBtn').prop("disabled", true);
+  enableElements([`purchaseDetailsItem`,`purchaseDetailsQuantity`,
+   'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
+ ,'purchaseDetailsVendorName', 'purchaseDetailsItem', 'purchaseDetailsQuantity']);
+
 } 
 
 
@@ -289,7 +319,7 @@ function onSelectNumber(itemNumber, id) {
 }
 
 function initPurchaseOrderList() {
-  searchTableCreator("purchaseDetailsTableDiv1", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+  searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
 }
 
 function initPurchaseOrderItems() {
@@ -314,8 +344,25 @@ function openEditView(purchaseOrderId, viewType) {
       purchaseID: purchaseOrderId
     },
     method: "POST",
-    success: function (data) {
-      loadDataToPurchaseOrder(data, viewType);
+    success: function (poData) {
+      let {purchaseOrder} = JSON.parse(poData);
+      $.ajax({
+        url: "model/item/getAllItems.php",
+        method: "POST",
+        dataType: "json",
+        data: {
+          vendorId: purchaseOrder.vendorID
+        },
+        success: function (data) {
+          console.log(data)
+          itemList = data;
+          itemData = getSelect2ItemData(itemList);
+          $("#purchaseDetailsItem").select2({
+            data: itemData
+          });
+          loadDataToPurchaseOrder(poData, viewType);
+        }
+      });
     }
   });
 }
@@ -331,28 +378,33 @@ function loadDataToPurchaseOrder(data, viewType){
 	$('#purchaseDetailsPurchaseDate').val(purchaseOrder.orderDate);
 	$('#purchaseDetailsDescription').val(purchaseOrder.description);
 	$('#purchaseDetailsPurchaseID').val(purchaseOrder.orderNumber);
-	$('#purchaseDetailsVendorName').val(purchaseOrder.fullName);
+  $('#purchaseDetailsVendorName').val(purchaseOrder.vendorID).trigger("chosen:updated");
 	$(`#purchaseOrderTotal`).val(purchaseOrder.amount);
 	$(`#purchaseOrderId`).val(purchaseOrder.purchaseID);
-
+  rowCount =0;
 	document.getElementById("statusPO").style.display = "flex";
 	$(`#statusPOText`).text(purchaseOrder.statusText);
 
-	for (let index = 0; index < purchaseOrderItems.length; index++) {console.log(purchaseOrderItems[index])
+	for (let index = 0; index < purchaseOrderItems.length; index++) {
 		const numberText = index === 0 ? '' : index;
 		if(index>0){
 			rowCount++;
     		addPurchaseItem(rowCount, viewType);
 		}
-		$(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].itemNumber);
+
+    const itemNumberValue = purchaseOrderItems[index].itemNumber;
+    $(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].itemNumber.toString());
+    $(`#purchaseDetailsItem${numberText}`).trigger('change');
 		$(`#purchaseDetailsUnitPrice${numberText}`).val(purchaseOrderItems[index].unitPrice);
 		$(`#purchaseDetailsQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
 		$(`#purchaseDetailsTotal${numberText}`).val(purchaseOrderItems[index].totalPrice);
 		$(`#purchaseItemId${numberText}`).val(purchaseOrderItems[index].purchaseItemID);
 
 		if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
-		//	disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsUnitPrice${numberText}`,`purchaseDetailsQuantity${numberText}`,
-		//	`purchaseDetailsTotal${numberText}`]);
+			disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsQuantity${numberText}`]);
+      if(index>0){
+        $(`#deletePurchaseItem${numberText}`).prop('disabled', true);
+      }
 		}
 	}
 
@@ -438,9 +490,7 @@ function updateGoodReceived() {
       initPurchaseOrder();
       populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
       searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
       searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
-      reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
     }
   });
 }
@@ -466,7 +516,7 @@ function sendPO() {
   updatePO(2, "Pending");
 }
 
-function CancelPO() {
+function cancelPO() {
   updatePO(4, "Cancel");
 }
 
@@ -734,19 +784,50 @@ function updateChequeStatus(paymentId, status){
       searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
+}
 
-  $(document).ready(function(){
+$("#purchaseDetailsVendorName").on("change", function () {
+  const selectedValue = $(this).val();
+  initItems(selectedValue);
+});
 
+function initItems(vendorId) {
     $.ajax({
       url: "model/item/getAllItems.php",
       method: "POST",
       dataType: "json",
+      data: {
+        vendorId: vendorId
+      },
       success: function (data) {
         itemList = data;
+        setPOItemList(itemList);
       }
     });
 
-    initPurchaseOrder();
-  });
-
+    $('#addPurchaseItem').prop('disabled', !(vendorId>0));
+    $('#addPurchaseBtn').prop("disabled", !(vendorId>0));
 }
+
+function setPOItemList(items){
+	itemData = items && items.length? getSelect2ItemData(items): [];
+  $("#purchaseDetailsItem").empty().trigger("change");
+  $("#purchaseDetailsItem").select2({
+		placeholder: {text: "Select Item"},
+		data: itemData
+	});
+
+	purchaseItemSelectChange('');
+
+  for (let index = 0; index < rowCount; index++) {
+  $(`#purchaseDetailsItem${index+1}`).empty().trigger("change");
+  $(`#purchaseDetailsItem${index+1}`).select2({
+		placeholder: {text: "Select Item"},
+		data: itemData
+	});
+
+	purchaseItemSelectChange(index+1);
+  }
+}
+
+initPurchaseOrder();
