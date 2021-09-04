@@ -59,8 +59,8 @@
 						'<td>' . $row['paidAmount'] . '</td>' .
 						'<td>' . $row['statusText'] . '</td>' .
 						' <td align="right">'. optionsMenu($row['status'], $row['purchaseID']) . '
-							<i class="far fa-file" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"></i>
-							<i class="fas fa-cash-register" onclick=showPayments("'. $row['purchaseID'] .'")></i> 
+							<i class="far fa-file pointer" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"></i>
+							<i class="fas fa-cash-register pointer" onclick=showPayments("'. $row['purchaseID'] .'")></i> 
                     	</td>'.
 					'</tr>';
 	}

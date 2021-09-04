@@ -79,3 +79,25 @@ $('.datepicker').datepicker({
 	todayBtn: 'linked',
 	orientation: 'bottom left'	
 });
+
+var companyDetails = {};
+
+function fetchCompanyDetails(){
+	$.ajax({
+		url: 'model/company/populateCompanyDetails.php',
+		method: 'POST',
+		dataType: 'json',
+		success: function(data){
+			companyDetails = data;
+		},
+		error: function(data){
+			console.log(data);
+		}
+	});
+}
+
+fetchCompanyDetails();
+
+function getCompanyDetails(){
+	return companyDetails;
+}
