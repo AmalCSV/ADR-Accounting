@@ -33,8 +33,7 @@
 	<script src="assets/js/autocomplete.js"></script>
 	<script src="assets/js/item.js"></script>
 
-	<script src="assets/js/purchase-order.js"></script>
-	<script src="assets/js/sales-order.js"></script>
+	<!-- <script src="assets/js/sales-order.js"></script> -->
 	<script src="vendor/pdfmake/pdfmake.js"></script>
 	<script src="vendor/pdfmake/vfs_fonts.js"></script>
 

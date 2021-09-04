@@ -14,8 +14,20 @@
 		$newStock = 0;
 		
 		// Check if mandatory fields are not empty
-		if( isset($purchaseDetailsPurchaseID) && isset($purchaseDetailsPurchaseDate) && isset($vendorID) && isset($purchaseDetailsGrandTotal)){		
-						
+		if( isset($purchaseDetailsPurchaseID) && isset($purchaseDetailsPurchaseDate) && isset($vendorID) && isset($purchaseDetailsGrandTotal) ){	
+			if($purchaseDetailsGrandTotal == 'null' || $purchaseDetailsGrandTotal == 0){
+				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Invalid Amount.</div>';
+				exit();
+			}
+
+			if($purchaseDetailsPurchaseDate == 'null' || $purchaseDetailsPurchaseDate == ''){
+				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please select the Order date</div>';
+				exit();
+			}
+			if($vendorID == 'null'){
+				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please select a vendor</div>';
+				exit();
+			}		
 			// Get the vendorId for the given vendorName
 			$vendorIDsql = 'SELECT * FROM vendor WHERE vendorID = :vendorID';
 			$vendorIDStatement = $conn->prepare($vendorIDsql);

@@ -33,13 +33,46 @@
                 </div>
                 <div class="col-lg-10">
                     <div class="tab-content" id="v-pills-tabContent">
-                       <?php include('inc/html/purchase-order.html'); ?>
+                       <?php include('inc/html/purchase-order.php'); ?>
                     </div>
                 </div>
             </div>
         </div>
-        <?php
-	require 'inc/footer.php';
-?>
+    <!-- Footer -->
+    <footer class="footer bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Inventory System <?php echo date('Y'); ?></p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	
+	<!-- Datatables script -->
+	<script type="text/javascript" charset="utf8" src="vendor/DataTables/datatables.js"></script>
+	<script type="text/javascript" charset="utf8" src="vendor/DataTables/sumsum.js"></script>
+	
+	<!-- Chosen files for select boxes -->
+	<script src="vendor/chosen/chosen.jquery.min.js"></script>
+	<link rel="stylesheet" href="vendor/chosen/chosen.css" />
+	
+	<!-- Datepicker JS -->
+	<script src="vendor/datepicker164/js/bootstrap-datepicker.min.js"></script>
+	
+	<!-- Bootbox JS -->
+	<script src="vendor/bootbox/bootbox.min.js"></script>
+	<!-- select js -->
+	<script src='assets/lib/select2/dist/js/select2.min.js'></script>
+	<script src='assets/lib/fontawesome-5/js/all.js'></script>
+
+	<!-- New scripts -->
+	<script src="assets/js/util.js"></script>
+
+	<script src="assets/js/purchase-order.js"></script>
+	<script src="vendor/pdfmake/pdfmake.js"></script>
+	<script src="vendor/pdfmake/vfs_fonts.js"></script>
+
+	<script src="assets/js/pdfGenerator.js"></script>
     </body>
 </html>

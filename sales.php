@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                         </div>
-                       <?php include('inc/html/purchase-order.html'); ?>
+                       <?php include('inc/html/purchase-order.php'); ?>
 						<div class="tab-pane fade" id="v-pills-vendor" role="tabpanel" aria-labelledby="v-pills-vendor-tab">
                             <div class="card card-outline-secondary my-4">
                                 <div class="card-header">Vendor Details</div>
