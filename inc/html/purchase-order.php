@@ -113,7 +113,7 @@
                 <hr>
                 
                 <button type="button" id="addPurchaseBtn" class="btn btn-success">Add Purchase</button>
-                <!-- <button type="button" id="updatePurchaseBtn" class="btn btn-primary">Update</button> -->
+                <button type="button" id="updatePurchaseBtn" class="btn btn-primary" onclick="updatePurchaseOrder()">Update</button>
                 <button type="button" id="clearBtn" class="btn" onclick="initPurchaseOrder()">Clear</button>
                 
                 <button type="button" id="sendPOBtn" class="btn btn-info" onclick="sendPO()">Submit</button>

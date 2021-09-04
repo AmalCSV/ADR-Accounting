@@ -276,7 +276,7 @@ function initPurchaseOrder() {
 	initPurchaseOrderItems();
   $("#poPaymentsTab").prop("disabled", true);
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
-  $('#purchaseDetailsQuantity').val('');
+  $('#purchaseOrderTotal').val('');
   
 	document.getElementById("goodReceivedData").style.display = "none";
 	document.getElementById("addPurchaseItem").style.display = "block";
@@ -284,7 +284,7 @@ function initPurchaseOrder() {
 	document.getElementById("lableActionHeader").text = '#';
 	document.getElementById("statusPO").style.display = "none";
 
-	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
+	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn", "updatePurchaseBtn"]); //updatePurchaseBtn
 	displayElements(["clearBtn","addPurchaseBtn"])
   const vendorId = $('#purchaseDetailsVendorName').val();
 	rowCount = 0;
@@ -327,8 +327,14 @@ function initPurchaseOrderItems() {
 	$('#purchaseDetailsDescription').val('');
 	$('#purchaseDetailsPurchaseID').val('');
 	$('#purchaseDetailsVendorName').val('');
-	$(`#purchaseOrderTotal`).val('');
+	$(`#purchaseDetailsTotal`).val('');
 	$(`#purchaseOrderId`).val('');
+  
+  $("#purchaseDetailsItem").val(null).trigger("change");
+  $("#purchaseDetailsItem").select2({data:[]});
+
+  $(`#purchaseDetailsQuantity`).val('');
+  
 
 	for (let index = 0; index <= rowCount+1; index++) {
 		deletePurchaseItem(index+1);
@@ -354,7 +360,6 @@ function openEditView(purchaseOrderId, viewType) {
           vendorId: purchaseOrder.vendorID
         },
         success: function (data) {
-          console.log(data)
           itemList = data;
           itemData = getSelect2ItemData(itemList);
           $("#purchaseDetailsItem").select2({
@@ -413,7 +418,6 @@ function loadDataToPurchaseOrder(data, viewType){
 			`purchaseDetailsTotal`, 'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
 		,'purchaseDetailsVendorName']);
 
-
 		//document.getElementById("updatePurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseItem").style.display = "none";
 		switch (viewType) {
@@ -446,10 +450,13 @@ function loadDataToPurchaseOrder(data, viewType){
 			default:
 				break;
 		}
-	} else{
+	} else if (viewType === 'EDIT') {
+    displayElements(["updatePurchaseBtn" ]);
+    displayHideElements(["clearBtn", "addPurchaseBtn"]);
+  } else{
 		displayHideElements(["clearBtn", "addPurchaseBtn"]);
 		document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
-	}
+	} 
 }
 
 function openEditPurchaseOrder(purchaseOrderId) {
@@ -458,6 +465,10 @@ function openEditPurchaseOrder(purchaseOrderId) {
 
 function openViewPurchaseOrder(purchaseOrderId) {
   openEditView(purchaseOrderId, "VIEW");
+}
+
+function updatePurchaseOrder() {
+  updatePurchase();
 }
 
 function updateGoodReceived() {
