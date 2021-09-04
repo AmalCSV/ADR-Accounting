@@ -1,4 +1,4 @@
-<div id="itemDetailsTab" class="container-fluid tab-pane active">
+<div id="itemDetailsTab" class="container-fluid tab-pane">
    <br>
    <!-- Div to show the ajax message from validations/db submission -->
    <div id="itemDetailsMessage"></div>
@@ -7,7 +7,6 @@
          <div class="form-group col-md-3" style="display:inline-block">
             <label for="itemDetailsItemNumber">Item Number<span class="requiredIcon">*</span></label>
             <input type="text" class="form-control" name="itemDetailsItemNumber" id="itemDetailsItemNumber" autocomplete="off">
-            <div id="itemDetailsItemNumberSuggestionsDiv" class="customListDivWidth"></div>
          </div>
          <div class="form-group col-md-3">
             <label for="itemDetailsUnitMeasure" >Unit of Measure</label>
@@ -15,12 +14,15 @@
             <?php include ('inc/unitofmeasure.html'); ?>
             </select>
          </div>
-         <div class="form-group col-md-2">
-            <label for="itemDetailsStatus">Status</label>
-            <select id="itemDetailsStatus" name="itemDetailsStatus" class="form-control chosenSelect">
-            <?php include ('inc/statusList.html'); ?>
-            </select>
-         </div>
+         <div class="form-group col-md-3">
+                  <label for="itemDetailsVendor">Vendor Name<span class="requiredIcon">*</span></label>
+                  <select id="itemDetailsVendor" name="itemDetailsVendor" class="form-control chosenSelect">
+                     <option  value="null">--Select Vendor--</option> 
+                        <?php 
+                              require('model/vendor/getVendorNames.php');
+                          ?>
+                  </select>                   
+               </div>
          <div class="form-group col-md-3">
             <label for="itemDetailsProductID" hidden>Product ID</label>
             <input class="form-control invTooltip" hidden type="number" readonly  id="itemDetailsProductID" name="itemDetailsProductID" title="This will be auto-generated when you add a new item">
@@ -30,7 +32,6 @@
          <div class="form-group col-md-6">
             <label for="itemDetailsItemName">Item Name<span class="requiredIcon">*</span></label>
             <input type="text" class="form-control" name="itemDetailsItemName" id="itemDetailsItemName" autocomplete="off">
-            <div id="itemDetailsItemNameSuggestionsDiv" class="customListDivWidth"></div>
          </div>
          <div class="form-group col-md-3">
             <label for="itemDetailsTotalStock">Total Stock</label>
@@ -68,6 +69,12 @@
                   <label for="itemRaitemDetailsRackNockNo">Rack No</label>
                   <input type="text" class="form-control" name="itemDetailsRackNo" id="itemDetailsRackNo">
                </div>
+               <div class="form-group col-md-4">
+                  <label for="itemDetailsStatus">Status</label>
+                  <select id="itemDetailsStatus" name="itemDetailsStatus" class="form-control chosenSelect">
+                     <?php include ('inc/statusList.html'); ?>
+                  </select>
+               </div>
             </div>
          </div>
          <div class="form-group col-md-6">
@@ -92,14 +99,15 @@
    <br>							
    <form name="imageForm" id="imageForm" method="post">
       <div class="form-row">
+         <input id="itemImageProductID"  name="itemImageProductID" class="form-control" type="text" hidden></input>
          <div class="form-group col-md-3" style="display:inline-block">
             <label for="itemImageItemNumber">Item Number<span class="requiredIcon">*</span></label>
-            <input type="text" class="form-control" name="itemImageItemNumber" id="itemImageItemNumber" autocomplete="off">
+            <input type="text" class="form-control" name="itemImageItemNumber" id="itemImageItemNumber" autocomplete="off" readonly>
             <div id="itemImageItemNumberSuggestionsDiv" class="customListDivWidth"></div>
          </div>
          <div class="form-group col-md-4">
             <label for="itemImageItemName">Item Name</label>
-            <input type="text" class="form-control" name="itemImageItemName" id="itemImageItemName" readonly>
+            <input type="text" class="form-control" name="itemImageItemName" id="itemImageItemName" autocomplete="off">
          </div>
       </div>
       <br>
@@ -112,66 +120,18 @@
       <br>
       <button type="button" id="updateImageButton" class="btn btn-primary">Upload Image</button>
       <button type="button" id="deleteImageButton" class="btn btn-danger">Delete Image</button>
-      <button type="reset" class="btn">Clear</button>
+      <button type="reset" id="clearImageButton"  class="btn">Clear</button>
    </form>
 </div>
-<div  id="itemListTab" class="container-fluid tab-pane fade">
+<div  id="itemListTab" class="container-fluid tab-pane fade active show">
    <!-- Tab panes for reports sections -->
    <div class="tab-content">
-      <div id="itemReportsTab" class="container-fluid tab-pane active">
+      <div id="itemSearchTab" class="container-fluid tab-pane active">
          <br>
-         <p>Use the grid below to get reports for items</p>
-         <div class="table-responsive" id="itemReportsTableDiv"></div>
-      </div>
-      <div id="customerReportsTab" class="container-fluid tab-pane fade">
-         <br>
-         <p>Use the grid below to get reports for customers</p>
-         <div class="table-responsive" id="customerReportsTableDiv"></div>
-      </div>
-      <div id="saleReportsTab" class="container-fluid tab-pane fade">
-         <br>
-         <!-- <p>Use the grid below to get reports for sales</p> -->
-         <form>
-            <div class="form-row">
-               <div class="form-group col-md-3">
-                  <label for="saleReportStartDate">Start Date</label>
-                  <input type="text" class="form-control datepicker" id="saleReportStartDate" value="2018-05-24" name="saleReportStartDate" readonly>
-               </div>
-               <div class="form-group col-md-3">
-                  <label for="saleReportEndDate">End Date</label>
-                  <input type="text" class="form-control datepicker" id="saleReportEndDate" value="2018-05-24" name="saleReportEndDate" readonly>
-               </div>
-            </div>
-            <button type="button" id="showSaleReport" class="btn btn-dark">Show Report</button>
-            <button type="reset" id="saleFilterClear" class="btn">Clear</button>
-         </form>
-         <br><br>
-         <div class="table-responsive" id="saleReportsTableDiv"></div>
-      </div>
-      <div id="purchaseReportsTab" class="container-fluid tab-pane fade">
-         <br>
-         <!-- <p>Use the grid below to get reports for purchases</p> -->
-         <form>
-            <div class="form-row">
-               <div class="form-group col-md-3">
-                  <label for="purchaseReportStartDate">Start Date</label>
-                  <input type="text" class="form-control datepicker" id="purchaseReportStartDate" value="2018-05-24" name="purchaseReportStartDate" readonly>
-               </div>
-               <div class="form-group col-md-3">
-                  <label for="purchaseReportEndDate">End Date</label>
-                  <input type="text" class="form-control datepicker" id="purchaseReportEndDate" value="2018-05-24" name="purchaseReportEndDate" readonly>
-               </div>
-            </div>
-            <button type="button" id="showPurchaseReport" class="btn btn-dark">Show Report</button>
-            <button type="reset" id="purchaseFilterClear" class="btn">Clear</button>
-         </form>
-         <br><br>
-         <div class="table-responsive" id="purchaseReportsTableDiv"></div>
-      </div>
-      <div id="vendorReportsTab" class="container-fluid tab-pane fade">
-         <br>
-         <p>Use the grid below to get reports for vendors</p>
-         <div class="table-responsive" id="vendorReportsTableDiv"></div>
+         <p>Use the grid below to search all details of items</p>
+         <!-- <a href="#" class="itemDetailsHover" data-toggle="popover" id="10">wwwee</a> -->
+         <div class="table-responsive" id="itemDetailsTableDiv"></div>
       </div>
    </div>
 </div>
+

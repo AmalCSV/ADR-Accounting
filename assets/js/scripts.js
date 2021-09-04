@@ -1,5 +1,9 @@
+var companyImage = ""; 
+
 // File that creates the purchase details search table
 purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator.php';
+
+purchasePaymentTableCreatorFile = 'model/purchase/purchasePaymentTableCreator.php';
 
 // File that creates the customer details search table
 customerDetailsSearchTableCreatorFile = 'model/customer/customerDetailsSearchTableCreator.php';
@@ -123,72 +127,32 @@ $(document).ready(function(){
 		addVendor();
 	});
 	
-	// Listen to sale add button
-	$('#addSaleButton').on('click', function(){
-		addSale();
-	});
-	
-	// Listen to update button in customer details tab
-	$('#updateCustomerDetailsButton').on('click', function(){
-		updateCustomer();
-	});
-	
-	// Listen to update button in vendor details tab
-	$('#updateVendorDetailsButton').on('click', function(){
-		updateVendor();
-	});
 	
 	// Listen to update button in sale details tab
 	$('#updateSaleDetailsButton').on('click', function(){
 		updateSale();
 	});
 	
-	// Listen to delete button in customer details tab
-	$('#deleteCustomerButton').on('click', function(){
-		// Confirm before deleting
-		bootbox.confirm('Are you sure you want to delete?', function(result){
-			if(result){
-				deleteCustomer();
-			}
-		});
-	});
+	//Get company details
+	getCompanyDetails();
 	
-	// Listen to delete button in vendor details tab
-	$('#deleteVendorButton').on('click', function(){
-		// Confirm before deleting
-		bootbox.confirm('Are you sure you want to delete?', function(result){
-			if(result){
-				deleteVendor();
-			}
-		});
-	});
+	// // Listen to item name text box in item details tab
+	// $('#itemDetailsItemName').keyup(function(){
+	// 	showSuggestions('itemDetailsItemName', showItemNamesFile, 'itemDetailsItemNameSuggestionsDiv');
+	// });
 	
-	// Listen to item name text box in item details tab
-	$('#itemDetailsItemName').keyup(function(){
-		showSuggestions('itemDetailsItemName', showItemNamesFile, 'itemDetailsItemNameSuggestionsDiv');
-	});
+	// // Remove the item names suggestions dropdown in the item details tab
+	// // when user selects an item from it
+	// $(document).on('click', '#itemDetailsItemNamesSuggestionsList li', function(){
+	// 	$('#itemDetailsItemName').val($(this).text());
+	// 	$('#itemDetailsItemNamesSuggestionsList').fadeOut();
+	// });
 	
-	// Remove the item names suggestions dropdown in the item details tab
-	// when user selects an item from it
-	$(document).on('click', '#itemDetailsItemNamesSuggestionsList li', function(){
-		$('#itemDetailsItemName').val($(this).text());
-		$('#itemDetailsItemNamesSuggestionsList').fadeOut();
-	});
+	// // Listen to item number text box in item details tab
+	// $('#itemDetailsItemNumber').keyup(function(){
+	// 	showSuggestions('itemDetailsItemNumber', showItemNumberSuggestionsFile, 'itemDetailsItemNumberSuggestionsDiv');
+	// });
 	
-	// Listen to item number text box in item details tab
-	$('#itemDetailsItemNumber').keyup(function(){
-		showSuggestions('itemDetailsItemNumber', showItemNumberSuggestionsFile, 'itemDetailsItemNumberSuggestionsDiv');
-	});
-	
-	// Remove the item numbers suggestions dropdown in the item details tab
-	// when user selects an item from it
-	$(document).on('click', '#itemDetailsItemNumberSuggestionsList li', function(){
-		$('#itemDetailsItemNumber').val($(this).text());
-		$('#itemDetailsItemNumberSuggestionsList').fadeOut();
-		getItemDetailsToPopulate();
-	});
-	
-
 	// Listen to item number text box in sale details tab
 	$('#saleDetailsItemNumber').keyup(function(){
 		showSuggestions('saleDetailsItemNumber', showItemNumberForSaleTabFile, 'saleDetailsItemNumberSuggestionsDiv');
@@ -306,17 +270,6 @@ $(document).ready(function(){
 		getSaleDetailsToPopulate();
 	});
 
-
-	// Listen to image update button
-	$('#updateImageButton').on('click', function(){
-		processImage('imageForm', updateImageFile, 'itemImageMessage');
-	});
-	
-	// Listen to image delete button
-	$('#deleteImageButton').on('click', function(){
-		processImage('imageForm', deleteImageFile, 'itemImageMessage');
-	});
-	
 	// Initiate datepickers
 	$('.datepicker').datepicker({
 		format: 'yyyy-mm-dd',
@@ -325,11 +278,6 @@ $(document).ready(function(){
 		orientation: 'bottom left'
 	});
 
-
-	// Calculate Total in sale tab
-	$('#saleDetailsDiscount, #saleDetailsQuantity, #saleDetailsUnitPrice').change(function(){
-		calculateTotalInSaleTab();
-	});
 	
 	// Close any suggestions lists from the page when a user clicks on the page
 	$(document).on('click', function(){
@@ -338,16 +286,16 @@ $(document).ready(function(){
 
 	// Load searchable datatables for customer, purchase, item, vendor, sale
 	searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
-	searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+	//searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
 	searchTableCreator('saleDetailsTableDiv', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
 	searchTableCreator('vendorDetailsTableDiv', vendorDetailsSearchTableCreatorFile, 'vendorDetailsTable');
 	
 	// Load searchable datatables for customer, purchase, item, vendor, sale reports
 	reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
-	reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
+	//reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
 	reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
-	reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
+	//reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
 	reportsTableCreator('vendorReportsTableDiv', vendorReportsSearchTableCreatorFile, 'vendorReportsTable');
 	
 	// Initiate popovers
@@ -366,16 +314,16 @@ $(document).ready(function(){
 	// Listen to refresh buttons
 	$('#searchTablesRefresh, #reportsTablesRefresh').on('click', function(){
 		searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
-		searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+		//searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 		searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
 		searchTableCreator('vendorDetailsTableDiv', vendorDetailsSearchTableCreatorFile, 'vendorDetailsTable');
 		searchTableCreator('saleDetailsTableDiv', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
 		
 		reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
-		reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
+		//reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
 		reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
 		reportsTableCreator('vendorReportsTableDiv', vendorReportsSearchTableCreatorFile, 'vendorReportsTable');
-		reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
+		//reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
 	});
 	
 	
@@ -391,41 +339,6 @@ $(document).ready(function(){
 	
 });
 
-
-// Function to fetch data to show in popovers
-function fetchData(){
-	var fetch_data = '';
-	var element = $(this);
-	var id = element.attr('id');
-	
-	$.ajax({
-		url: 'model/item/getItemDetailsForPopover.php',
-		method: 'POST',
-		async: false,
-		data: {id:id},
-		success: function(data){
-			fetch_data = data;
-		}
-	});
-	return fetch_data;
-}
-
-
-// Function to call the script that process imageURL in DB
-function processImage(imageFormID, scriptPath, messageDivID){
-	var form = $('#' + imageFormID)[0];
-	var formData = new FormData(form);
-	$.ajax({
-		url: scriptPath,
-		method: 'POST',
-		data: formData,
-		contentType: false,
-		processData: false,
-		success: function(data){
-			$('#' + messageDivID).html(data);
-		}
-	});
-}
 
 // Function to create searchable datatables for customer, item, purchase, sale
 function searchTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
@@ -560,7 +473,6 @@ function reportsSaleTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
 			],
 			"footerCallback": function ( row, data, start, end, display ) {
 				var api = this.api(), data;
-	 
 				// Remove the formatting to get integer data for summation
 				var intVal = function ( i ) {
 					return typeof i === 'string' ?
@@ -837,7 +749,6 @@ function calculateTotalInSaleTab(){
 	$('#saleDetailsTotal').val(Number(unitPriceST) * ((100 - Number(discountST)) / 100) * Number(quantityST));
 }
 
-
 // Function to call the insertCustomer.php script to insert customer data to db
 function addCustomer() {
 	var customerDetailsCustomerFullName = $('#customerDetailsCustomerFullName').val();
@@ -872,46 +783,7 @@ function addCustomer() {
 			populateLastInsertedID(customerLastInsertedIDFile, 'customerDetailsCustomerID');
 			searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
 			reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
-		}
-	});
-}
 
-
-// Function to call the insertVendor.php script to insert vendor data to db
-function addVendor() {
-	var vendorDetailsVendorFullName = $('#vendorDetailsVendorFullName').val();
-	var vendorDetailsVendorEmail = $('#vendorDetailsVendorEmail').val();
-	var vendorDetailsVendorMobile = $('#vendorDetailsVendorMobile').val();
-	var vendorDetailsVendorPhone2 = $('#vendorDetailsVendorPhone2').val();
-	var vendorDetailsVendorAddress = $('#vendorDetailsVendorAddress').val();
-	var vendorDetailsVendorAddress2 = $('#vendorDetailsVendorAddress2').val();
-	var vendorDetailsVendorCity = $('#vendorDetailsVendorCity').val();
-	var vendorDetailsVendorDistrict = $('#vendorDetailsVendorDistrict option:selected').text();
-	var vendorDetailsStatus = $('#vendorDetailsStatus option:selected').text();
-	
-	$.ajax({
-		url: 'model/vendor/insertVendor.php',
-		method: 'POST',
-		data: {
-			vendorDetailsVendorFullName:vendorDetailsVendorFullName,
-			vendorDetailsVendorEmail:vendorDetailsVendorEmail,
-			vendorDetailsVendorMobile:vendorDetailsVendorMobile,
-			vendorDetailsVendorPhone2:vendorDetailsVendorPhone2,
-			vendorDetailsVendorAddress:vendorDetailsVendorAddress,
-			vendorDetailsVendorAddress2:vendorDetailsVendorAddress2,
-			vendorDetailsVendorCity:vendorDetailsVendorCity,
-			vendorDetailsVendorDistrict:vendorDetailsVendorDistrict,
-			vendorDetailsStatus:vendorDetailsStatus,
-		},
-		success: function(data){
-			$('#vendorDetailsMessage').fadeIn();
-			$('#vendorDetailsMessage').html(data);
-		},
-		complete: function(data){
-			populateLastInsertedID(vendorLastInsertedIDFile, 'vendorDetailsVendorID');
-			searchTableCreator('vendorDetailsTableDiv', vendorDetailsSearchTableCreatorFile, 'vendorDetailsTable');
-			reportsTableCreator('vendorReportsTableDiv', vendorReportsSearchTableCreatorFile, 'vendorReportsTable');
-			$('#purchaseDetailsVendorName').load('model/vendor/getVendorNames.php');
 		}
 	});
 }
@@ -979,7 +851,7 @@ function getItemDetailsToPopulateForSaleTab(){
 			$('#saleDetailsTotalStock').val(data.stock);
 			$('#saleDetailsUnitPrice').val(data.unitPrice);
 
-			newImgUrl = 'data/item_images/' + data.itemNumber + '/' + data.imageURL;
+			newImgUrl = 'data/item_images/' + data.productID + '/' + data.imageURL;
 			
 			// Set the item image
 			if(data.imageURL == 'imageNotAvailable.jpg' || data.imageURL == ''){
@@ -1072,136 +944,6 @@ function showSuggestions(textBoxID, scriptPath, suggestionsDivID){
 	}
 }
 
-
-// Function to delete item from db
-function deleteCustomer(){
-	// Get the customerID entered by the user
-	var customerDetailsCustomerID = $('#customerDetailsCustomerID').val();
-	
-	// Call the deleteCustomer.php script only if there is a value in the
-	// item number textbox
-	if(customerDetailsCustomerID != ''){
-		$.ajax({
-			url: 'model/customer/deleteCustomer.php',
-			method: 'POST',
-			data: {customerDetailsCustomerID:customerDetailsCustomerID},
-			success: function(data){
-				$('#customerDetailsMessage').fadeIn();
-				$('#customerDetailsMessage').html(data);
-			},
-			complete: function(){
-				searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
-				reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
-			}
-		});
-	}
-}
-
-
-// Function to delete vendor from db
-function deleteVendor(){
-	// Get the vendorID entered by the user
-	var vendorDetailsVendorID = $('#vendorDetailsVendorID').val();
-	
-	// Call the deleteVendor.php script only if there is a value in the
-	// vendor ID textbox
-	if(vendorDetailsVendorID != ''){
-		$.ajax({
-			url: 'model/vendor/deleteVendor.php',
-			method: 'POST',
-			data: {vendorDetailsVendorID:vendorDetailsVendorID},
-			success: function(data){
-				$('#vendorDetailsMessage').fadeIn();
-				$('#vendorDetailsMessage').html(data);
-			},
-			complete: function(){
-				searchTableCreator('vendorDetailsTableDiv', vendorDetailsSearchTableCreatorFile, 'vendorDetailsTable');
-				reportsTableCreator('vendorReportsTableDiv', vendorReportsSearchTableCreatorFile, 'vendorReportsTable');
-			}
-		});
-	}
-}
-
-
-// Function to send customerID so that customer details can be pulled from db
-// to be displayed on customer details tab
-function getCustomerDetailsToPopulate(){
-	// Get the customerID entered in the text box
-	var customerDetailsCustomerID = $('#customerDetailsCustomerID').val();
-	
-	// Call the populateItemDetails.php script to get item details
-	// relevant to the itemNumber which the user entered
-	$.ajax({
-		url: 'model/customer/populateCustomerDetails.php',
-		method: 'POST',
-		data: {customerID:customerDetailsCustomerID},
-		dataType: 'json',
-		success: function(data){
-			//$('#customerDetailsCustomerID').val(data.customerID);
-			$('#customerDetailsCustomerFullName').val(data.fullName);
-			$('#customerDetailsCustomerMobile').val(data.mobile);
-			$('#customerDetailsCustomerPhone2').val(data.phone2);
-			$('#customerDetailsCustomerEmail').val(data.email);
-			$('#customerDetailsCustomerAddress').val(data.address);
-			$('#customerDetailsCustomerAddress2').val(data.address2);
-			$('#customerDetailsCustomerCity').val(data.city);
-			$('#customerDetailsCustomerDistrict').val(data.district).trigger("chosen:updated");
-			$('#customerDetailsStatus').val(data.status).trigger("chosen:updated");
-		}
-	});
-}
-
-
-// Function to send customerID so that customer details can be pulled from db
-// to be displayed on sale details tab
-function getCustomerDetailsToPopulateSaleTab(){
-	// Get the customerID entered in the text box
-	var customerDetailsCustomerID = $('#saleDetailsCustomerID').val();
-	
-	// Call the populateCustomerDetails.php script to get customer details
-	// relevant to the customerID which the user entered
-	$.ajax({
-		url: 'model/customer/populateCustomerDetails.php',
-		method: 'POST',
-		data: {customerID:customerDetailsCustomerID},
-		dataType: 'json',
-		success: function(data){
-			//$('#saleDetailsCustomerID').val(data.customerID);
-			$('#saleDetailsCustomerName').val(data.fullName);
-		}
-	});
-}
-
-
-// Function to send vendorID so that vendor details can be pulled from db
-// to be displayed on vendor details tab
-function getVendorDetailsToPopulate(){
-	// Get the vendorID entered in the text box
-	var vendorDetailsVendorID = $('#vendorDetailsVendorID').val();
-	
-	// Call the populateVendorDetails.php script to get vendor details
-	// relevant to the vendorID which the user entered
-	$.ajax({
-		url: 'model/vendor/populateVendorDetails.php',
-		method: 'POST',
-		data: {vendorDetailsVendorID:vendorDetailsVendorID},
-		dataType: 'json',
-		success: function(data){
-			//$('#vendorDetailsVendorID').val(data.vendorID);
-			$('#vendorDetailsVendorFullName').val(data.fullName);
-			$('#vendorDetailsVendorMobile').val(data.mobile);
-			$('#vendorDetailsVendorPhone2').val(data.phone2);
-			$('#vendorDetailsVendorEmail').val(data.email);
-			$('#vendorDetailsVendorAddress').val(data.address);
-			$('#vendorDetailsVendorAddress2').val(data.address2);
-			$('#vendorDetailsVendorCity').val(data.city);
-			$('#vendorDetailsVendorDistrict').val(data.district).trigger("chosen:updated");
-			$('#vendorDetailsStatus').val(data.status).trigger("chosen:updated");
-		}
-	});
-}
-
-
 // Function to send purchaseID so that purchase details can be pulled from db
 // to be displayed on purchase details tab
 function getPurchaseDetailsToPopulate(){
@@ -1231,7 +973,6 @@ function getPurchaseDetailsToPopulate(){
 	});
 }
 
-
 // Function to send saleID so that sale details can be pulled from db
 // to be displayed on sale details tab
 function getSaleDetailsToPopulate(){
@@ -1259,89 +1000,6 @@ function getSaleDetailsToPopulate(){
 		complete: function(){
 			calculateTotalInSaleTab();
 			getItemStockToPopulate('saleDetailsItemNumber', getItemStockFile, 'saleDetailsTotalStock');
-		}
-	});
-}
-
-// Function to call the upateCustomerDetails.php script to UPDATE customer data in db
-function updateCustomer() {
-	var customerDetailsCustomerID = $('#customerDetailsCustomerID').val();
-	var customerDetailsCustomerFullName = $('#customerDetailsCustomerFullName').val();
-	var customerDetailsCustomerMobile = $('#customerDetailsCustomerMobile').val();
-	var customerDetailsCustomerPhone2 = $('#customerDetailsCustomerPhone2').val();
-	var customerDetailsCustomerAddress = $('#customerDetailsCustomerAddress').val();
-	var customerDetailsCustomerEmail = $('#customerDetailsCustomerEmail').val();
-	var customerDetailsCustomerAddress2 = $('#customerDetailsCustomerAddress2').val();
-	var customerDetailsCustomerCity = $('#customerDetailsCustomerCity').val();
-	var customerDetailsCustomerDistrict = $('#customerDetailsCustomerDistrict').val();
-	var customerDetailsStatus = $('#customerDetailsStatus option:selected').text();
-	
-	$.ajax({
-		url: 'model/customer/updateCustomerDetails.php',
-		method: 'POST',
-		data: {
-			customerDetailsCustomerID:customerDetailsCustomerID,
-			customerDetailsCustomerFullName:customerDetailsCustomerFullName,
-			customerDetailsCustomerMobile:customerDetailsCustomerMobile,
-			customerDetailsCustomerPhone2:customerDetailsCustomerPhone2,
-			customerDetailsCustomerAddress:customerDetailsCustomerAddress,
-			customerDetailsCustomerEmail:customerDetailsCustomerEmail,
-			customerDetailsCustomerAddress2:customerDetailsCustomerAddress2,
-			customerDetailsCustomerCity:customerDetailsCustomerCity,
-			customerDetailsCustomerDistrict:customerDetailsCustomerDistrict,
-			customerDetailsStatus:customerDetailsStatus,
-		},
-		success: function(data){
-			$('#customerDetailsMessage').fadeIn();
-			$('#customerDetailsMessage').html(data);
-		},
-		complete: function(){
-			searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
-			reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
-			searchTableCreator('saleDetailsTableDiv', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
-			reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
-		}
-	});
-}
-
-
-// Function to call the upateVendorDetails.php script to UPDATE vendor data in db
-function updateVendor() {
-	var vendorDetailsVendorID = $('#vendorDetailsVendorID').val();
-	var vendorDetailsVendorFullName = $('#vendorDetailsVendorFullName').val();
-	var vendorDetailsVendorMobile = $('#vendorDetailsVendorMobile').val();
-	var vendorDetailsVendorPhone2 = $('#vendorDetailsVendorPhone2').val();
-	var vendorDetailsVendorAddress = $('#vendorDetailsVendorAddress').val();
-	var vendorDetailsVendorEmail = $('#vendorDetailsVendorEmail').val();
-	var vendorDetailsVendorAddress2 = $('#vendorDetailsVendorAddress2').val();
-	var vendorDetailsVendorCity = $('#vendorDetailsVendorCity').val();
-	var vendorDetailsVendorDistrict = $('#vendorDetailsVendorDistrict').val();
-	var vendorDetailsStatus = $('#vendorDetailsStatus option:selected').text();
-	
-	$.ajax({
-		url: 'model/vendor/updateVendorDetails.php',
-		method: 'POST',
-		data: {
-			vendorDetailsVendorID:vendorDetailsVendorID,
-			vendorDetailsVendorFullName:vendorDetailsVendorFullName,
-			vendorDetailsVendorMobile:vendorDetailsVendorMobile,
-			vendorDetailsVendorPhone2:vendorDetailsVendorPhone2,
-			vendorDetailsVendorAddress:vendorDetailsVendorAddress,
-			vendorDetailsVendorEmail:vendorDetailsVendorEmail,
-			vendorDetailsVendorAddress2:vendorDetailsVendorAddress2,
-			vendorDetailsVendorCity:vendorDetailsVendorCity,
-			vendorDetailsVendorDistrict:vendorDetailsVendorDistrict,
-			vendorDetailsStatus:vendorDetailsStatus,
-		},
-		success: function(data){
-			$('#vendorDetailsMessage').fadeIn();
-			$('#vendorDetailsMessage').html(data);
-		},
-		complete: function(){
-			searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
-			searchTableCreator('vendorDetailsTableDiv', vendorDetailsSearchTableCreatorFile, 'vendorDetailsTable');
-			reportsPurchaseTableCreator('purchaseReportsTableDiv', purchaseReportsSearchTableCreatorFile, 'purchaseReportsTable');
-			reportsTableCreator('vendorReportsTableDiv', vendorReportsSearchTableCreatorFile, 'vendorReportsTable');
 		}
 	});
 }
@@ -1380,9 +1038,36 @@ function updateSale() {
 		complete: function(){			
 			getItemStockToPopulate('saleDetailsItemNumber', getItemStockFile, 'saleDetailsTotalStock');
 			searchTableCreator('saleDetailsTableDiv', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
-			reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
+			//reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
 			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
 			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
 		}
 	});
+}
+
+
+function getCompanyDetails(){
+	$.ajax({
+		url: 'model/company/populateCompanyDetails.php',
+		method: 'POST',
+		dataType: 'json',
+		success: function(data){
+			companyImage = data.logo;
+		},
+		error: function(data){
+			console.log(data);
+		}
+	});
+
+	// $.ajax({
+	// 	url: 'model/distributor/getDistributors.php',
+	// 	method: 'POST',
+	// 	dataType: 'json',
+	// 	success: function(data){
+	// 		console.log(data);
+	// 	},
+	// 	error: function(data){
+	// 		console.log(data);
+	// 	}
+	// });
 }

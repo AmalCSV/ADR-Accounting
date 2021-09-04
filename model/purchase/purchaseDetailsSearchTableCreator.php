@@ -2,11 +2,36 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 	
+	abstract class poStatus {
+		const created = 1;
+		const pending = 2;
+		const close = 3;
+		const cancel = 4;
+	}
+
+	function optionsMenu($status, $purchaseID) {
+		if( $status == poStatus::pending) { 
+			return '<i class="far fa-clipboard"  onclick="openGoodReceive(' . $purchaseID . ')"></i>';
+		} else if ($status == poStatus::created){
+			return '<i class="fas fa-edit" onclick="openEditPurchaseOrder(' . $purchaseID . ')"></i>';
+		}
+		return '';	
+	}
+
 	$uPrice = 0;
 	$qty = 0;
 	$totalPrice = 0;
 	
-	$purchaseDetailsSearchSql = ' SELECT po.*,v.fullName FROM purchaseOrder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false';
+	$purchaseDetailsSearchSql = " SELECT po.*,
+			CASE
+            WHEN po.status = 1 THEN 'Created'
+            WHEN po.status = 2 THEN 'Pending'
+            WHEN po.status = 3 THEN 'Close'
+            WHEN po.status = 4 THEN 'Cancel'
+            ELSE ''
+        END AS statusText,
+	v.companyName as fullName FROM purchaseorder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false";
+
 	$purchaseDetailsSearchStatement = $conn->prepare($purchaseDetailsSearchSql);
 	$purchaseDetailsSearchStatement->execute();
 
@@ -16,8 +41,9 @@
 						<th>Purchase Order</th>
 						<th>Purchase Date</th>
 						<th>Vendor Name</th>
-						<th>Vendor ID</th>
 						<th>Total Price</th>
+						<th>Paid Amount</th>
+						<th>Status</th>
 						<th> Action </th>
 					</tr>
 				</thead>
@@ -29,18 +55,12 @@
 						'<td>' . $row['orderNumber'] . '</td>' .
 						'<td>' . $row['orderDate'] . '</td>' .
 						'<td>' . $row['fullName'] . '</td>' .
-						'<td>' . $row['vendorID'] . '</td>' .
 						'<td>' . $row['amount'] . '</td>' .
-						' <td align="center">
-							<div class="dropdown">
-								<a class="btn btn-secondary" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="navbar-toggler-icon"></i>
-								</a>    
-								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<a class="dropdown-item" onclick="openEditPurchaseOrder(' . $row['purchaseID'] . ')">Edit</a>
-									<a class="dropdown-item" onclick="openGoodReceive(' . $row['purchaseID'] . ')">Good Receive</a>
-								</div>
-							</div>
+						'<td>' . $row['paidAmount'] . '</td>' .
+						'<td>' . $row['statusText'] . '</td>' .
+						' <td align="right">'. optionsMenu($row['status'], $row['purchaseID']) . '
+							<i class="far fa-file" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"></i>
+							<i class="fas fa-cash-register" onclick=showPayments("'. $row['purchaseID'] .'")></i> 
                     	</td>'.
 					'</tr>';
 	}
@@ -53,13 +73,15 @@
 						<th>Purchase Order</th>
 						<th>Purchase Date</th>
 						<th>Vendor Name</th>
-						<th>Vendor ID</th>
 						<th>Total Price</th>
+						<th>Paid Amount</th>
+						<th>Status</th>
 						<th> Action </th>
 						</tr>
 					</tfoot>
 				</table>';
 	echo $output;
+
 ?>
 
 

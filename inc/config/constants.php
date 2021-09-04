@@ -11,10 +11,10 @@
 	define('DB_HOST', '127.0.0.1');
 	
 	// DB user
-	define('DB_USER', 'mspx');
+	define('DB_USER', 'root');
 	
 	// DB password
-	define('DB_PASSWORD', 'Lola9070');
+	define('DB_PASSWORD', '');
 	//define('DB_PASSWORD', 'root');
 	
 	// DB name

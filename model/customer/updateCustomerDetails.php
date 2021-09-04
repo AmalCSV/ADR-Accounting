@@ -7,6 +7,7 @@
 		
 		$customerDetailsCustomerID = htmlentities($_POST['customerDetailsCustomerID']);
 		$customerDetailsCustomerFullName = htmlentities($_POST['customerDetailsCustomerFullName']);
+		$customerDetailsCustomerCompanyName = htmlentities($_POST['customerDetailsCustomerCompanyName']);
 		$customerDetailsCustomerMobile = htmlentities($_POST['customerDetailsCustomerMobile']);
 		$customerDetailsCustomerPhone2 = htmlentities($_POST['customerDetailsCustomerPhone2']);
 		$customerDetailsCustomerEmail = htmlentities($_POST['customerDetailsCustomerEmail']);
@@ -17,15 +18,24 @@
 		$customerDetailsStatus = htmlentities($_POST['customerDetailsStatus']);
 		
 		// Check if mandatory fields are not empty
-		if(isset($customerDetailsCustomerFullName) && isset($customerDetailsCustomerMobile) && isset($customerDetailsCustomerAddress)) {
+		if(isset($customerDetailsCustomerCompanyName) && isset($customerDetailsCustomerMobile) && isset($customerDetailsCustomerAddress)) {
 			
 			// Validate mobile number
-			if(filter_var($customerDetailsCustomerMobile, FILTER_VALIDATE_INT) === 0 || filter_var($customerDetailsCustomerMobile, FILTER_VALIDATE_INT)) {
-				// Mobile number is valid
+			if( preg_match('/^\d{10}$/', $customerDetailsCustomerMobile) && strlen($customerDetailsCustomerMobile) == 10) {
+				// Valid mobile number
 			} else {
-				// Mobile number is not valid
-				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid mobile number</div>';
+				// Mobile is wrong
+				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid phone number</div>';
 				exit();
+			}
+			
+			// Validate second phone number only if it's provided by user
+			if(!empty($customerDetailsCustomerPhone2)){
+				if(!(preg_match('/^\d{10}$/', $customerDetailsCustomerPhone2) && strlen($customerDetailsCustomerPhone2) == 10)) {
+					// Phone number 2 is not valid
+					echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid mobile number 2</div>';
+					exit();
+				}
 			}
 			
 			// Check if CustomerID field is empty. If so, display an error message
@@ -33,17 +43,6 @@
 			if(empty($customerDetailsCustomerID)){
 				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter the CustomerID to update that customer.</div>';
 				exit();
-			}
-			
-			// Validate second phone number only if it's provided by user
-			if(!empty($customerDetailsCustomerPhone2)){
-				if(filter_var($customerDetailsCustomerPhone2, FILTER_VALIDATE_INT) === 0 || filter_var($customerDetailsCustomerPhone2, FILTER_VALIDATE_INT)) {
-					// Phone number 2 is valid
-				} else {
-					// Phone number 2 is not valid
-					echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter a valid number for phone number 2.</div>';
-					exit();
-				}
 			}
 			
 			// Validate email only if it's provided by user
@@ -64,14 +63,9 @@
 				
 				// CustomerID is available in DB. Therefore, we can go ahead and UPDATE its details
 				// Construct the UPDATE query
-				$updateCustomerDetailsSql = 'UPDATE customer SET fullName = :fullName, email = :email, mobile = :mobile, phone2 = :phone2, address = :address, address2 = :address2, city = :city, district = :district, status = :status WHERE customerID = :customerID';
+				$updateCustomerDetailsSql = 'UPDATE customer SET companyName = :companyName, contactPerson = :contactPerson, email = :email, mobile = :mobile, phone2 = :phone2, address = :address, address2 = :address2, city = :city, district = :district, status = :status WHERE customerID = :customerID';
 				$updateCustomerDetailsStatement = $conn->prepare($updateCustomerDetailsSql);
-				$updateCustomerDetailsStatement->execute(['fullName' => $customerDetailsCustomerFullName, 'email' => $customerDetailsCustomerEmail, 'mobile' => $customerDetailsCustomerMobile, 'phone2' => $customerDetailsCustomerPhone2, 'address' => $customerDetailsCustomerAddress, 'address2' => $customerDetailsCustomerAddress2, 'city' => $customerDetailsCustomerCity, 'district' => $customerDetailsCustomerDistrict, 'status' => $customerDetailsStatus, 'customerID' => $customerDetailsCustomerID]);
-				
-				// UPDATE customer name in sale table too
-				$updateCustomerInSaleTableSql = 'UPDATE sale SET customerName = :customerName WHERE customerID = :customerID';
-				$updateCustomerInSaleTableStatement = $conn->prepare($updateCustomerInSaleTableSql);
-				$updateCustomerInSaleTableStatement->execute(['customerName' => $customerDetailsCustomerFullName, 'customerID' => $customerDetailsCustomerID]);
+				$updateCustomerDetailsStatement->execute(['companyName' => $customerDetailsCustomerCompanyName,'contactPerson' => $customerDetailsCustomerFullName, 'email' => $customerDetailsCustomerEmail, 'mobile' => $customerDetailsCustomerMobile, 'phone2' => $customerDetailsCustomerPhone2, 'address' => $customerDetailsCustomerAddress, 'address2' => $customerDetailsCustomerAddress2, 'city' => $customerDetailsCustomerCity, 'district' => $customerDetailsCustomerDistrict, 'status' => $customerDetailsStatus, 'customerID' => $customerDetailsCustomerID]);
 				
 				echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Customer details updated.</div>';
 				exit();

@@ -10,7 +10,8 @@
 				<thead>
 					<tr>
 						<th>Customer ID</th>
-						<th>Full Name</th>
+						<th>Company Name</th>
+						<th>Contact Person</th>
 						<th>Email</th>
 						<th>Mobile</th>
 						<th>Phone 2</th>
@@ -19,6 +20,7 @@
 						<th>City</th>
 						<th>District</th>
 						<th>Status</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>';
@@ -27,7 +29,8 @@
 	while($row = $customerDetailsSearchStatement->fetch(PDO::FETCH_ASSOC)){
 		$output .= '<tr>' .
 						'<td>' . $row['customerID'] . '</td>' .
-						'<td>' . $row['fullName'] . '</td>' .
+						'<td>' . $row['companyName'] . '</td>' .
+						'<td>' . $row['contactPerson'] . '</td>' .
 						'<td>' . $row['email'] . '</td>' .
 						'<td>' . $row['mobile'] . '</td>' .
 						'<td>' . $row['phone2'] . '</td>' .
@@ -36,6 +39,7 @@
 						'<td>' . $row['city'] . '</td>' .
 						'<td>' . $row['district'] . '</td>' .
 						'<td>' . $row['status'] . '</td>' .
+						'<td>' . '<button onclick=showEditCustomer("'. $row['customerID'] .'") type="button" class="btn btn-primary btn-sm">Edit</button>'. '</td>' .
 					'</tr>';
 	}
 	
@@ -45,7 +49,8 @@
 					<tfoot>
 						<tr>
 							<th>Customer ID</th>
-							<th>Full Name</th>
+							<th>Company Name</th>
+							<th>Contact Person</th>
 							<th>Email</th>
 							<th>Mobile</th>
 							<th>Phone 2</th>
@@ -54,6 +59,7 @@
 							<th>City</th>
 							<th>District</th>
 							<th>Status</th>
+							<th>Actions</th>
 						</tr>
 					</tfoot>
 				</table>';

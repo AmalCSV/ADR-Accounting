@@ -13,14 +13,14 @@
 			$itemNumber = filter_var($itemNumber, FILTER_SANITIZE_STRING);
 
 			// Check if the item is in the database
-			$itemSql = 'SELECT itemNumber FROM item WHERE itemNumber=:itemNumber';
+			$itemSql = 'SELECT itemNumber FROM item WHERE productID=:itemNumber';
 			$itemStatement = $conn->prepare($itemSql);
 			$itemStatement->execute(['itemNumber' => $itemNumber]);
 			
 			if($itemStatement->rowCount() > 0){
 				
 				// Item exists in DB. Hence start the DELETE process
-				$deleteItemSql = 'DELETE FROM item WHERE itemNumber=:itemNumber';
+				$deleteItemSql = 'DELETE FROM item WHERE productID=:itemNumber';
 				$deleteItemStatement = $conn->prepare($deleteItemSql);
 				$deleteItemStatement->execute(['itemNumber' => $itemNumber]);
 
