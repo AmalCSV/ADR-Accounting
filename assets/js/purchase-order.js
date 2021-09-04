@@ -262,7 +262,7 @@ function validateAddPurchases(netAmount) {
 }
 
 
-function initPurchaseOrder() {
+function initPurchaseOrder(isClear) {
 	const currentDate =  new Date().toISOString().slice(0, 10);
 	$.ajax({
 		url: 'model/purchase/nextPurchaseID.php',
@@ -276,7 +276,7 @@ function initPurchaseOrder() {
 	initPurchaseOrderItems();
   $("#poPaymentsTab").prop("disabled", true);
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
-  $('#purchaseDetailsQuantity').val('');
+  $('#purchaseOrderTotal').val('');
   
 	document.getElementById("goodReceivedData").style.display = "none";
 	document.getElementById("addPurchaseItem").style.display = "block";
@@ -284,16 +284,19 @@ function initPurchaseOrder() {
 	document.getElementById("lableActionHeader").text = '#';
 	document.getElementById("statusPO").style.display = "none";
 
-	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
+	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn", "updatePurchaseBtn"]); //updatePurchaseBtn
 	displayElements(["clearBtn","addPurchaseBtn"])
   const vendorId = $('#purchaseDetailsVendorName').val();
 	rowCount = 0;
-  setPOItemList(itemList);
+ 
+    setPOItemList(isClear? null: itemList);
+  
+ 
   searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	$('#addPurchaseBtn').prop("disabled", true);
   enableElements([`purchaseDetailsItem`,`purchaseDetailsQuantity`,
    'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
- ,'purchaseDetailsVendorName', 'purchaseDetailsItem', 'purchaseDetailsQuantity']);
+ ,'purchaseDetailsVendorName', 'purchaseDetailsQuantity']);
 
 } 
 
@@ -327,8 +330,13 @@ function initPurchaseOrderItems() {
 	$('#purchaseDetailsDescription').val('');
 	$('#purchaseDetailsPurchaseID').val('');
 	$('#purchaseDetailsVendorName').val('');
-	$(`#purchaseOrderTotal`).val('');
+	$(`#purchaseDetailsTotal`).val('');
 	$(`#purchaseOrderId`).val('');
+  
+  $("#purchaseDetailsItem").select2({data: [{id: '', text: ''}]});
+
+  $(`#purchaseDetailsQuantity`).val('');
+  
 
 	for (let index = 0; index <= rowCount+1; index++) {
 		deletePurchaseItem(index+1);
@@ -354,7 +362,6 @@ function openEditView(purchaseOrderId, viewType) {
           vendorId: purchaseOrder.vendorID
         },
         success: function (data) {
-          console.log(data)
           itemList = data;
           itemData = getSelect2ItemData(itemList);
           $("#purchaseDetailsItem").select2({
@@ -413,7 +420,6 @@ function loadDataToPurchaseOrder(data, viewType){
 			`purchaseDetailsTotal`, 'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
 		,'purchaseDetailsVendorName']);
 
-
 		//document.getElementById("updatePurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseItem").style.display = "none";
 		switch (viewType) {
@@ -446,10 +452,13 @@ function loadDataToPurchaseOrder(data, viewType){
 			default:
 				break;
 		}
-	} else{
+	} else if (viewType === 'EDIT') {
+    displayElements(["updatePurchaseBtn" ]);
+    displayHideElements(["clearBtn", "addPurchaseBtn"]);
+  } else{
 		displayHideElements(["clearBtn", "addPurchaseBtn"]);
 		document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
-	}
+	} 
 }
 
 function openEditPurchaseOrder(purchaseOrderId) {
@@ -458,6 +467,10 @@ function openEditPurchaseOrder(purchaseOrderId) {
 
 function openViewPurchaseOrder(purchaseOrderId) {
   openEditView(purchaseOrderId, "VIEW");
+}
+
+function updatePurchaseOrder() {
+  updatePurchase();
 }
 
 function updateGoodReceived() {
