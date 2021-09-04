@@ -262,7 +262,7 @@ function validateAddPurchases(netAmount) {
 }
 
 
-function initPurchaseOrder() {
+function initPurchaseOrder(isClear) {
 	const currentDate =  new Date().toISOString().slice(0, 10);
 	$.ajax({
 		url: 'model/purchase/nextPurchaseID.php',
@@ -288,12 +288,15 @@ function initPurchaseOrder() {
 	displayElements(["clearBtn","addPurchaseBtn"])
   const vendorId = $('#purchaseDetailsVendorName').val();
 	rowCount = 0;
-  setPOItemList(itemList);
+ 
+    setPOItemList(isClear? null: itemList);
+  
+ 
   searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	$('#addPurchaseBtn').prop("disabled", true);
   enableElements([`purchaseDetailsItem`,`purchaseDetailsQuantity`,
    'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
- ,'purchaseDetailsVendorName', 'purchaseDetailsItem', 'purchaseDetailsQuantity']);
+ ,'purchaseDetailsVendorName', 'purchaseDetailsQuantity']);
 
 } 
 
@@ -330,8 +333,7 @@ function initPurchaseOrderItems() {
 	$(`#purchaseDetailsTotal`).val('');
 	$(`#purchaseOrderId`).val('');
   
-  $("#purchaseDetailsItem").val(null).trigger("change");
-  $("#purchaseDetailsItem").select2({data:[]});
+  $("#purchaseDetailsItem").select2({data: [{id: '', text: ''}]});
 
   $(`#purchaseDetailsQuantity`).val('');
   
