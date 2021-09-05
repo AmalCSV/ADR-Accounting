@@ -97,54 +97,69 @@ $("#addPurchaseBtn").on("click", function () {
 
 // Function to call the updatePurchase.php script to update purchase data to db
 function updatePurchase() {
-  var purchaseDetailsPurchaseDate = $("#purchaseDetailsPurchaseDate").val();
-  var purchaseDetailsDescription = $("#purchaseDetailsDescription").val();
-  var purchaseDetailsPurchaseID = $("#purchaseDetailsPurchaseID").val();
-  var purchaseDetailsVendorName = $("#purchaseDetailsVendorName").val();
-  const grandTotal = $(`#purchaseOrderTotal`).val();
+  let errorText = null;
+	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
+	var purchaseDetailsDescription = $('#purchaseDetailsDescription').val();
+	var purchaseDetailsPurchaseID = $('#purchaseDetailsPurchaseID').val();
+	var vendorID = $('#purchaseDetailsVendorName').val();
+  const purchaseOrderId = $('#purchaseOrderId').val();
+	const grandTotal= $(`#purchaseOrderTotal`).val();
 
-  const purchaseItems = [];
-  let item = {
-    id: $("#purchaseDetailsItem").val(),
-    buyingPrice: $("#purchaseDetailsUnitPrice").val(),
-    quntity: $("#purchaseDetailsQuantity").val(),
-    total: $(`#purchaseDetailsTotal`).val(),
-    name: $(`#purchaseDetailsItem option:selected`).text()
-  };
-  purchaseItems.push(item);
+	const purchaseItems = [];
+	let item = {
+		id: $('#purchaseDetailsItem').val(),
+		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
+		quntity: $('#purchaseDetailsQuantity').val(),
+		total: $(`#purchaseDetailsTotal`).val(),
+		name: $(`#purchaseDetailsItem option:selected`).text(),
+	};
+	purchaseItems.push(item);
 
-  for (let index = 0; index < rowCount; index++) {
-    item = {
-      id: $(`#purchaseDetailsItem${index + 1}`).val(),
-      buyingPrice: $(`#purchaseDetailsUnitPrice${index + 1}`).val(),
-      quntity: $(`#purchaseDetailsQuantity${index + 1}`).val(),
-      total: $(`#purchaseDetailsTotal${index + 1}`).val(),
-      name: $(`#purchaseDetailsItem${index + 1} option:selected`).text()
-    };
-    purchaseItems.push(item);
+	for (let index = 0; index < rowCount; index++) {
+		item = {
+			id: $(`#purchaseDetailsItem${index+1}`).val(),
+			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
+			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
+			total: $(`#purchaseDetailsTotal${index+1}`).val(),
+			name: $(`#purchaseDetailsItem${index+1} option:selected`).text(),
+		};
+    const duplicateItem = purchaseItems.find(x => x.id ===item.id)
+    if(duplicateItem){
+      errorText = 'Duplicate Items in the list';
+      return;
+    }
+		purchaseItems.push(item);
+	}
+
+  if(errorText == null && !!purchaseItems.find(x => !x.quntity || x.quntity == 0)){
+    errorText = 'Quantity 0 item in the list';
   }
 
-  $.ajax({
-    url: "model/purchase/updatePurchase.php",
-    method: "POST",
-    data: {
-      purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
-      purchaseDetailsGrandTotal: grandTotal,
-      purchaseDetailsDescription: purchaseDetailsDescription,
-      purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
-      purchaseDetailsVendorName: purchaseDetailsVendorName,
-      purchaseItems: purchaseItems
-    },
-    success: function (data) {
-      $("#purchaseDetailsMessage").fadeOut(1000).fadeIn(500, function() {
-        location.reload();
-      });
-      $("#purchaseDetailsMessage").html(data);
-    },
-    complete: function () {
-      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-    }
-  });
+  if( errorText == null) {
+    $.ajax({
+      url: "model/purchase/updatePurchase.php",
+      method: "POST",
+      data: {
+        purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
+        purchaseDetailsGrandTotal: grandTotal,
+        purchaseDetailsDescription: purchaseDetailsDescription,
+        purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
+        vendorID: vendorID,
+        purchaseItems: purchaseItems,
+        purchaseOrderId: purchaseOrderId,
+      },
+      success: function (data) {
+        $("#purchaseDetailsMessage").fadeOut(1000).fadeIn(500, function() {});
+        $("#purchaseDetailsMessage").html(data);
+      },
+      complete: function () {
+        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+      }
+    });
+  } else {
+    $('#purchaseDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
+    $('#purchaseDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  }
 }
 
 // Listen to update button in purchase details tab
@@ -507,7 +522,6 @@ function updateGoodReceived() {
       initPurchaseOrder();
       populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
       searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
 }
