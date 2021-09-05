@@ -9,19 +9,20 @@
             $insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
             $insertPurchaseStatement->execute(['goodReceived' => $item['goodReceived'], 'purchaseItemID' => $item['id']]);
             
-            $newItemCurrentStockSql = 'SELECT * FROM item WHERE productID = :itemNumber';
+            $newItemCurrentStockSql = 'SELECT stock FROM item WHERE productID = :itemNumber';
             $newItemCurrentStockStatement = $conn->prepare($newItemCurrentStockSql);
             $newItemCurrentStockStatement->execute(['itemNumber' => $item['itemNumber']]);
             
             // Calculate the new stock value for new item using the existing stock in item table
-            $newItemRow = $newItemCurrentStockStatement->fetch(PDO::FETCH_ASSOC);
+            while($newItemRow = $newItemCurrentStockStatement->fetch(PDO::FETCH_ASSOC)){
             $originalQuantityForNewItem = $newItemRow['stock'];
             $newItemNewStock = $originalQuantityForNewItem + $item['goodReceived'];
-            
+
             // UPDATE the stock for new item in item table
-            $newItemStockUpdateSql = 'UPDATE item SET stock = :stock WHERE itemNumber = :itemNumber';
+            $newItemStockUpdateSql = 'UPDATE item SET stock = :stock WHERE productID = :itemNumber';
             $newItemStockUpdateStatement = $conn->prepare($newItemStockUpdateSql);
             $newItemStockUpdateStatement->execute(['stock' => $newItemNewStock, 'itemNumber' => $item['itemNumber']]);
+            }
         }
 
         echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Good receive added successfully.</div>';
