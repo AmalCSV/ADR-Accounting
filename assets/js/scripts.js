@@ -1045,29 +1045,3 @@ function updateSale() {
 	});
 }
 
-
-function getCompanyDetails(){
-	$.ajax({
-		url: 'model/company/populateCompanyDetails.php',
-		method: 'POST',
-		dataType: 'json',
-		success: function(data){
-			companyImage = data.logo;
-		},
-		error: function(data){
-			console.log(data);
-		}
-	});
-
-	// $.ajax({
-	// 	url: 'model/distributor/getDistributors.php',
-	// 	method: 'POST',
-	// 	dataType: 'json',
-	// 	success: function(data){
-	// 		console.log(data);
-	// 	},
-	// 	error: function(data){
-	// 		console.log(data);
-	// 	}
-	// });
-}

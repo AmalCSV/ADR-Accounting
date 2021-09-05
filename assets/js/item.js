@@ -119,6 +119,7 @@ function enableUpdateDeleteButton(enable) {
 
 function getAllItemsDetails() {
   // relevant to the itemNumber which the user entered
+
   $.ajax({
     url: "model/item/getAllItems.php",
     method: "POST",
@@ -279,6 +280,7 @@ $("#itemClear").on("click", function () {
   $("#itemDetailsItemName").prop("readonly", false);
   $("#itemDetailsStatus").val("Active").trigger("chosen:updated");
   $("#itemDetailsUnitMeasure").val("Units").trigger("chosen:updated");
+  $('#itemDetailsVendor').val('null').trigger("chosen:updated");
   $("#imageContainer").empty();
   $("#itemDetailsMessage").html("");
   enableUpdateDeleteButton(false);
@@ -300,6 +302,7 @@ $("#deleteItem").on("click", function () {
 });
 
 $(document).ready(function () {
+
   // Listen to update button in item details tab
   $("#updateItemDetailsButton").on("click", function () {
     updateItem();

@@ -408,7 +408,7 @@ function loadDataToPurchaseOrder(data, viewType){
 	$(`#purchaseOrderTotal`).val(purchaseOrder.amount);
 	$(`#purchaseOrderId`).val(purchaseOrder.purchaseID);
   rowCount =0;
-	document.getElementById("statusPO").style.display = "flex";
+	document.getElementById("statusPO").style.display = "inline-block";
 	$(`#statusPOText`).text(purchaseOrder.statusText);
 
 	for (let index = 0; index < purchaseOrderItems.length; index++) {
@@ -564,8 +564,34 @@ $("#but_read").click(function () {
 });
 
 function printPurchaseOrderPdf() {
-  downloadOrderPdf("PO", order, orderItems);
+  getVendorDetails();
 }
+
+function getVendorDetails(){
+// Get the vendorID entered in the text box
+var vendorID = $('#purchaseDetailsVendorName').val();
+let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
+	
+$.ajax({
+  url: 'model/vendor/populateVendorDetails.php',
+  method: 'POST',
+  data: {vendorDetailsVendorID:vendorID},
+  dataType: 'json',
+  success: function(vendorDetails){
+    try{
+      downloadOrderPdf("PO", order, orderItems, vendorDetails);
+    }
+    catch(err){
+      $("#purchaseDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " +  err.message + "</div>");
+    }
+  },
+  error:  function(data){
+    $("#purchaseDetailsMessage").fadeIn();
+    $("#purchaseDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + "</div>");
+  }
+});
+}
+
 
 function showPayments(purchaseOrderId) {
   $("#poPaymentsTab").prop("disabled", false);
@@ -689,8 +715,6 @@ function insertPayment() {
         showPayments(orderId);
         initPurchaseOrderPaymentList(orderId);
         searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-        reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-        searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
       }
     });
   } else {
@@ -747,8 +771,6 @@ function deletePayment(paymentId){
       showPayments(orderId);
       initPurchaseOrderPaymentList(orderId);
       searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
 
@@ -812,7 +834,6 @@ function updateChequeStatus(paymentId, status){
       initPurchaseOrderPaymentList(orderId);
       searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
       reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
 }
@@ -862,3 +883,4 @@ function setPOItemList(items){
 }
 
 initPurchaseOrder();
+

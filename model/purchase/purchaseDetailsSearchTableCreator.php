@@ -11,9 +11,9 @@
 
 	function optionsMenu($status, $purchaseID) {
 		if( $status == poStatus::pending) { 
-			return '<i class="far fa-clipboard"  onclick="openGoodReceive(' . $purchaseID . ')"></i>';
+			return '<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Good Receive"><i class="fas fa-boxes" onclick="openGoodReceive(' . $purchaseID . ')"></i></button>';
 		} else if ($status == poStatus::created){
-			return '<i class="fas fa-edit" onclick="openEditPurchaseOrder(' . $purchaseID . ')"></i>';
+			return '<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"> <i class="fas fa-edit" onclick="openEditPurchaseOrder(' . $purchaseID . ')"></i></button>';
 		}
 		return '';	
 	}
@@ -38,13 +38,13 @@
 	$output = '<table id="purchaseDetailsTable" class="table table-sm table-striped table-bordered table-hover" style="width:100%">
 				<thead>
 					<tr>
-						<th>Purchase Order</th>
-						<th>Purchase Date</th>
+						<th>PO No</th>
+						<th>Order Date</th>
 						<th>Vendor Name</th>
 						<th>Total Price</th>
 						<th>Paid Amount</th>
 						<th>Status</th>
-						<th> Action </th>
+						<th style="width: 90px;"> Action </th>
 					</tr>
 				</thead>
 				<tbody>';
@@ -59,8 +59,8 @@
 						'<td>' . $row['paidAmount'] . '</td>' .
 						'<td>' . $row['statusText'] . '</td>' .
 						' <td align="right">'. optionsMenu($row['status'], $row['purchaseID']) . '
-							<i class="far fa-file" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"></i>
-							<i class="fas fa-cash-register" onclick=showPayments("'. $row['purchaseID'] .'")></i> 
+							<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="View"> <i class="fa fa-eye pointer" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"></i></button>
+							<button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Payments"> <i class="fa fa-dollar-sign pointer" onclick=showPayments("'. $row['purchaseID'] .'")></i></button>
                     	</td>'.
 					'</tr>';
 	}
@@ -70,8 +70,8 @@
 	$output .= '</tbody>
 					<tfoot>
 						<tr>
-						<th>Purchase Order</th>
-						<th>Purchase Date</th>
+						<th>PO No</th>
+						<th>Order Date</th>
 						<th>Vendor Name</th>
 						<th>Total Price</th>
 						<th>Paid Amount</th>

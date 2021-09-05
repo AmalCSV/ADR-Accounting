@@ -57,6 +57,7 @@ function searchTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
 	$(tableContainerDivID).load(tableCreatorFileUrl, function(){
 		// Initiate the Datatable plugin once the table is added to the DOM
 		$(tableID).DataTable();
+		$("[data-toggle=tooltip]").tooltip();
 	});
 }
 
@@ -79,3 +80,25 @@ $('.datepicker').datepicker({
 	todayBtn: 'linked',
 	orientation: 'bottom left'	
 });
+
+var companyDetails = {};
+
+function fetchCompanyDetails(){
+	$.ajax({
+		url: 'model/company/populateCompanyDetails.php',
+		method: 'POST',
+		dataType: 'json',
+		success: function(data){
+			companyDetails = data;
+		},
+		error: function(data){
+			console.log(data);
+		}
+	});
+}
+
+fetchCompanyDetails();
+
+function getCompanyDetails(){
+	return companyDetails;
+}
