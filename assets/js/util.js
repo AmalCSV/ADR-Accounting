@@ -57,6 +57,7 @@ function searchTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
 	$(tableContainerDivID).load(tableCreatorFileUrl, function(){
 		// Initiate the Datatable plugin once the table is added to the DOM
 		$(tableID).DataTable();
+		$("[data-toggle=tooltip]").tooltip();
 	});
 }
 

@@ -28,18 +28,21 @@
                   </div>
                   <div class="form-group col-md-3">
                       <label>Purchase Date<span class="requiredIcon">*</span></label>
-                      <input type="text" class="form-control datepicker" id="purchaseDetailsPurchaseDate" name="purchaseDetailsPurchaseDate" readonly>
+                      <input style="height:38px;" type="text" class="form-control datepicker" id="purchaseDetailsPurchaseDate" name="purchaseDetailsPurchaseDate" readonly>
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-5">
                       <label for="purchaseDetailsVendorName">Vendor Name<span class="requiredIcon">*</span></label>
-                      <select id="purchaseDetailsVendorName" name="purchaseDetailsVendorName" class="form-control chosenSelect">
-                        <option  value="null">--Select Vendor--</option> 
-                        <?php 
-                              require('model/vendor/getVendorNames.php');
-                          ?>
-                      </select>
+                      <div style="display:flex;">
+                        <select id="purchaseDetailsVendorName" name="purchaseDetailsVendorName" class="form-control chosenSelect">
+                          <option  value="null">--Select Vendor--</option> 
+                          <?php 
+                                require('model/vendor/getVendorNames.php');
+                            ?>
+                        </select>
+                        <button type="button" class="btn btn-primary btn-md ml-2" onclick="window.location.href = 'vendors.php';"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                        </div>
                     </div>
-                  <div class="form-group col-md-3" id="statusPO">
+                  <div class="form-group col-md-2" id="statusPO">
                     <label>Status</label>
                     <h4><span id="statusPOText" class="badge badge-info">Status</span></h4>
                   </div>
@@ -47,7 +50,7 @@
                 <div class="form-row">
                   <div class="form-group col-md-12">
                     <label for="purchaseDetailsDescription">Note</label>
-                    <textarea rows="4" class="form-control" id="purchaseDetailsDescription" name="purchaseDetailsDescription"  autocomplete="off"></textarea>
+                    <textarea rows="1" class="form-control" id="purchaseDetailsDescription" name="purchaseDetailsDescription"  autocomplete="off"></textarea>
                 </div>
                 </div>
                 <hr>
@@ -133,26 +136,26 @@
               <input type="hidden" id="paymentOrderId" name="paymentOrderId">
               <div id="PaymentDetailsMessage"></div>
               <div class="form-row">
-                <div class="form-group col-md-3" style="display:inline-block">
+                <div class="form-group col-md-4" style="display:inline-block">
                   <label for="totalAmount" style="display : inline-flex"> Order No  : <span id="poNumber"></span> </label>
                 </div>
-                <div class="form-group col-md-3" style="display:inline-block">
+                <div class="form-group col-md-4" style="display:inline-block">
                   <label for="totalAmount"  style="display : inline-flex"> Vendor : <span id="vendor"></span>  </label>
                 </div>
-                <div class="form-group col-md-3" style="display:inline-block">
+                <div class="form-group col-md-4" style="display:inline-block">
                   <label for="totalAmount"  style="display : inline-flex"> Payment Status : <span style="font-weight: 700;" id="paymentStatus"></span>  </label>
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-3" style="display:inline-block">
+                <div class="form-group col-md-4" style="display:inline-block">
                   <label for="totalAmount"> Total Amount</label>
                   <h3 ><span id="totalAmount" class="badge bg-primary text-white"></span></h3>  
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                   <label for="paidAmount"> Paid Amount </label>
                   <h3><span id="paidAmount" class="badge bg-success text-white"></span></h3>
                 </div>
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-4">
                   <label for="creditAmount"> Credit</label>
                   <h3><span id="creditAmount" class="badge bg-warning text-white"></span></h3>
                 </div>
@@ -161,13 +164,13 @@
              <h5>Settle this  bill</h5>
               <form id="poPaymentForm"> 
                 <div class="form-row">
-                  <div class="form-group col-md-2">
+                  <div class="form-group col-md-3">
                      <label for="paymentAmount">Amount<span class="requiredIcon">*</span></label>
                      <input type="text" class="form-control" name="paymentAmount" id="paymentAmount" pattern="[0-9]{1,10}" autocomplete="off">
                   </div>
                   <div class="form-group col-md-2">
                      <label for="paymentAmount">Date<span class="requiredIcon">*</span></label>
-                    <input type="text" class="form-control datepicker" name="paymentDate" id="paymentDate" value="2018-05-24" readonly="">
+                    <input style="height:38px;" type="text" class="form-control datepicker" name="paymentDate" id="paymentDate" value="2018-05-24" readonly="">
                   </div>
                 <div class="form-group col-md-2">
                   <label for="paymentAmount">Payment Type<span class="requiredIcon">*</span></label>
@@ -176,21 +179,21 @@
                     <option value="Cheque">Cheque</option>
                   </select>
                 </div>
-                <div class="form-group col-md-2 d-none" id="chequeNoDiv">
+                <div class="form-group col-md-3 d-none" id="chequeNoDiv">
                   <label for="chequeNo">Cheque No<span class="requiredIcon">*</label>
                   <input type="text" class="form-control" name="chequeNo" id="chequeNo" autocomplete="off">
                 </div>
                 <div class="form-group col-md-2 d-none" id="chequeDateDiv">
                     <label for="chequeDate">Realisation Date</label>
-                    <input type="text" class="form-control datepicker" name="chequeDate" id="chequeDate" value="2018-05-24" readonly="">
+                    <input style="height:38px;" type="text" class="form-control datepicker" name="chequeDate" id="chequeDate" value="2018-05-24" readonly="">
                 </div>
              </div>
              <div  class="form-row">
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-7">
                 <label for="paymentNote" >Note</label>
-                <input type="text" id=paymentNote class="form-control"></input>
+                <textarea rows="1" id=paymentNote class="form-control"></textarea>
               </div>
-              <div class="form-group col-md-2" style="text-align: right; margin-top: 30px;">
+              <div class="form-group col-md-4" style="text-align: left; margin-top: 30px;">
                 <button type="reset" id="clearPaymentFormBtn" class="btn">Clear</button>
                 <button type="button" id="addItem" class="btn btn-success" onclick="addPayment()">Add Payment</button>
               </div>
@@ -198,7 +201,7 @@
               </form>
               <br>
               <br>
-              <p>Payment History</p>
+              <p style="font-weight: 700;">Payment History</p>
               <div class="table-responsive" id="purchasePaymentsTableDiv"></div>
 
             </div>

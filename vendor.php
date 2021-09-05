@@ -40,20 +40,22 @@
                         <input type="email" class="form-control" id="vendorDetailsVendorEmail" name="vendorDetailsVendorEmail" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="vendorDetailsVendorAddress">Address<span class="requiredIcon">*</span></label>
-                    <input type="text" class="form-control" id="vendorDetailsVendorAddress" name="vendorDetailsVendorAddress" />
-                </div>
-                <div class="form-group">
-                    <label for="vendorDetailsVendorAddress2">Address 2</label>
-                    <input type="text" class="form-control" id="vendorDetailsVendorAddress2" name="vendorDetailsVendorAddress2" />
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="vendorDetailsVendorAddress">Address<span class="requiredIcon">*</span></label>
+                        <input type="text" class="form-control" id="vendorDetailsVendorAddress" name="vendorDetailsVendorAddress" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="vendorDetailsVendorAddress2">Address 2</label>
+                        <input type="text" class="form-control" id="vendorDetailsVendorAddress2" name="vendorDetailsVendorAddress2" />
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="vendorDetailsVendorCity">City</label>
                         <input type="text" class="form-control" id="vendorDetailsVendorCity" name="vendorDetailsVendorCity" />
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label for="vendorDetailsVendorDistrict">District</label>
                         <select id="vendorDetailsVendorDistrict" name="vendorDetailsVendorDistrict" class="form-control chosenSelect">
                             <?php include('inc/districtList.html'); ?>

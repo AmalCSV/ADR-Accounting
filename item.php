@@ -4,7 +4,7 @@
    <div id="itemDetailsMessage"></div>
    <form>
       <div class="form-row">
-         <div class="form-group col-md-3" style="display:inline-block">
+         <div class="form-group col-md-4" style="display:inline-block">
             <label for="itemDetailsItemNumber">Item Number<span class="requiredIcon">*</span></label>
             <input type="text" class="form-control" name="itemDetailsItemNumber" id="itemDetailsItemNumber" autocomplete="off">
          </div>
@@ -14,38 +14,45 @@
             <?php include ('inc/unitofmeasure.html'); ?>
             </select>
          </div>
-         <div class="form-group col-md-3">
-                  <label for="itemDetailsVendor">Vendor Name<span class="requiredIcon">*</span></label>
-                  <select id="itemDetailsVendor" name="itemDetailsVendor" class="form-control chosenSelect">
-                     <option  value="null">--Select Vendor--</option> 
-                        <?php 
-                              require('model/vendor/getVendorNames.php');
-                          ?>
-                  </select>                   
-               </div>
+         <div class="form-group col-md-5">
+            <label for="itemDetailsVendor">Vendor Name<span class="requiredIcon">*</span></label>
+            <div style="display:flex;">
+            <select id="itemDetailsVendor" name="itemDetailsVendor" class="form-control chosenSelect">
+               <option  value="null">--Select Vendor--</option> 
+                  <?php 
+                        require('model/vendor/getVendorNames.php');
+                     ?>
+            </select>                   
+            <button type="button" class="btn btn-primary btn-md ml-2" onclick="window.location.href = 'vendors.php';"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </div>
+         </div>
          <div class="form-group col-md-3">
             <label for="itemDetailsProductID" hidden>Product ID</label>
             <input class="form-control invTooltip" hidden type="number" readonly  id="itemDetailsProductID" name="itemDetailsProductID" title="This will be auto-generated when you add a new item">
          </div>
       </div>
       <div class="form-row">
-         <div class="form-group col-md-6">
+         <div class="form-group col-md-7">
             <label for="itemDetailsItemName">Item Name<span class="requiredIcon">*</span></label>
             <input type="text" class="form-control" name="itemDetailsItemName" id="itemDetailsItemName" autocomplete="off">
          </div>
-         <div class="form-group col-md-3">
+         <div class="form-group col-md-5">
             <label for="itemDetailsTotalStock">Total Stock</label>
             <input type="text" class="form-control" name="itemDetailsTotalStock" id="itemDetailsTotalStock" readonly>
          </div>
       </div>
       <div  class="form-row">
-         <div class="form-group col-md-6">
-            <div class="form-row">
+         <div class="form-group col-md-12">
+         <div class="form-row">
                <div class="form-group col-md-12" style="display:inline-block">
                   <!-- <label for="itemDetailsDescription">Description</label> -->
-                  <textarea rows="4" class="form-control" placeholder="Description" name="itemDetailsDescription" id="itemDetailsDescription"></textarea>
+                  <textarea rows="2" class="form-control" placeholder="Description" name="itemDetailsDescription" id="itemDetailsDescription"></textarea>
                </div>
             </div>
+         </div>
+      </div>
+      <div  class="form-row">
+         <div class="form-group col-md-9">
             <div class="form-row">
                <div class="form-group col-md-4">
                   <label for="itemDetailsBuyingPrice">Buying price</label><span class="requiredIcon">*</span></label>
@@ -77,9 +84,9 @@
                </div>
             </div>
          </div>
-         <div class="form-group col-md-6">
+         <div class="form-group col-md-3">
             <div class="row">
-               <div class="form-group col-md-6">
+               <div class="form-group col-md-12">
                   <div id="imageContainer"></div>
                </div>
             </div>

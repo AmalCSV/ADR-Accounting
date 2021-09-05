@@ -9,7 +9,7 @@
 	$output = '<table id="itemDetailsTable" class="table table-sm table-striped table-bordered table-hover" style="width:100%">
 				<thead>
 					<tr>
-					<th>Product ID</th>
+					<th class="d-none">Product ID</th>
 					<th>Item Number</th>
 					<th>Item Name</th>
 					<th>Measure</th>
@@ -29,7 +29,7 @@
 	while($row = $itemDetailsSearchStatement->fetch(PDO::FETCH_ASSOC)){
 		
 		$output .= '<tr>' .
-					'<td>' . $row['productID'] . '</td>' .
+					'<td class="d-none">' . $row['productID'] . '</td>' .
 					'<td>' . $row['itemNumber'] . '</td>' .
 					'<td><a href="#" class="itemDetailsHover" data-toggle="popover" id="' . $row['productID'] . '">' . $row['itemName'] . '</a></td>' .
 					'<td>' . $row['unitOfMeasure'] . '</td>' .
@@ -40,7 +40,7 @@
 					'<td>' . $row['buyingPrice'] . '</td>' .
 					'<td>' . $row['status'] . '</td>' .
 					'<td>' . $row['rackNo'] . '</td>' .
-					'<td>' . '<button onclick=showEditItem("'. $row['productID'] .'") type="button" class="btn btn-primary btn-sm">Edit</button>'. '</td>' .
+					'<td>' . '<button onclick=showEditItem("'. $row['productID'] .'") type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit  fa-sm"></i></button>'. '</td>' .
 								'</tr>';
 	}
 	
@@ -49,7 +49,7 @@
 	$output .= '</tbody>
 					<tfoot>
 						<tr>
-						<th>Product ID</th>
+						<th class="d-none">Product ID</th>
 						<th>Item Number</th>
 						<th>Item Name</th>
 						<th>Measure</th>

@@ -40,20 +40,22 @@
                   <input type="email" class="form-control" id="customerDetailsCustomerEmail" name="customerDetailsCustomerEmail">
                </div>
             </div>
-            <div class="form-group">
-               <label for="customerDetailsCustomerAddress">Address<span class="requiredIcon">*</span></label>
-               <input type="text" class="form-control" id="customerDetailsCustomerAddress" name="customerDetailsCustomerAddress">
-            </div>
-            <div class="form-group">
-               <label for="customerDetailsCustomerAddress2">Address 2</label>
-               <input type="text" class="form-control" id="customerDetailsCustomerAddress2" name="customerDetailsCustomerAddress2">
+            <div  class="form-row">
+               <div class="form-group col-md-6">
+                  <label for="customerDetailsCustomerAddress">Address<span class="requiredIcon">*</span></label>
+                  <input type="text" class="form-control" id="customerDetailsCustomerAddress" name="customerDetailsCustomerAddress">
+               </div>
+               <div class="form-group col-md-6">
+                  <label for="customerDetailsCustomerAddress2">Address 2</label>
+                  <input type="text" class="form-control" id="customerDetailsCustomerAddress2" name="customerDetailsCustomerAddress2">
+               </div>
             </div>
             <div class="form-row">
                <div class="form-group col-md-6">
                   <label for="customerDetailsCustomerCity">City</label>
                   <input type="text" class="form-control" id="customerDetailsCustomerCity" name="customerDetailsCustomerCity">
                </div>
-               <div class="form-group col-md-4">
+               <div class="form-group col-md-6">
                   <label for="customerDetailsCustomerDistrict">District</label>
                   <select id="customerDetailsCustomerDistrict" name="customerDetailsCustomerDistrict" class="form-control chosenSelect">
                   <?php include('inc/districtList.html'); ?>
