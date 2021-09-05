@@ -10,8 +10,6 @@
 		$purchaseDetailsDescription = htmlentities($_POST['purchaseDetailsDescription']);
 		$purchaseItems = $_POST['purchaseItems'];
 
-		$initialStock = 0;
-		$newStock = 0;
 		
 		// Check if mandatory fields are not empty
 		if( isset($purchaseDetailsPurchaseID) && isset($purchaseDetailsPurchaseDate) && isset($vendorID) && isset($purchaseDetailsGrandTotal) ){	

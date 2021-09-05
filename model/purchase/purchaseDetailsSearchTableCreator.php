@@ -30,7 +30,7 @@
             WHEN po.status = 4 THEN 'Cancel'
             ELSE ''
         END AS statusText,
-	v.companyName as fullName FROM purchaseorder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false";
+	v.companyName as fullName FROM purchaseorder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false ORDER BY po.orderNumber DESC";
 
 	$purchaseDetailsSearchStatement = $conn->prepare($purchaseDetailsSearchSql);
 	$purchaseDetailsSearchStatement->execute();
