@@ -45,10 +45,14 @@ function addPurchase() {
     const duplicateItem = purchaseItems.find(x => x.id ===item.id)
     if(duplicateItem){
       errorText = 'Duplicate Items in the list';
+      return;
     }
 		purchaseItems.push(item);
 	}
- 
+
+  if(errorText == null && !!purchaseItems.find(x => !x.quntity || x.quntity == 0)){
+    errorText = 'Quantity 0 item in the list';
+  }
 
   if( errorText == null) {
     $.ajax({
