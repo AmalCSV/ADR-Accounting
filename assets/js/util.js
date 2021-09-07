@@ -14,7 +14,7 @@ function getSelect2ItemData(list= []) {
 	return list.map( x=> {
 		return {
 			id: x.productID,
-			text: x.itemName
+			text: `${x.itemNumber} - ${x.itemName}`
 		  }
 	});
 }
@@ -56,7 +56,9 @@ function searchTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
 	var tableID = '#' + table;
 	$(tableContainerDivID).load(tableCreatorFileUrl, function(){
 		// Initiate the Datatable plugin once the table is added to the DOM
-		$(tableID).DataTable();
+		$(tableID).DataTable({
+			"order": [[ 0, "desc" ]]
+		});
 		$("[data-toggle=tooltip]").tooltip();
 	});
 }
