@@ -7,6 +7,7 @@
 		const pending = 2;
 		const close = 3;
 		const cancel = 4;
+		const goodsReceived = 5;
 	}
 
 	function optionsMenu($status, $purchaseID) {
@@ -28,9 +29,10 @@
             WHEN po.status = 2 THEN 'Pending'
             WHEN po.status = 3 THEN 'Close'
             WHEN po.status = 4 THEN 'Cancel'
+			WHEN po.status = 5 THEN 'Goods Received'
             ELSE ''
         END AS statusText,
-	v.companyName as fullName FROM purchaseorder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false ORDER BY po.orderNumber DESC";
+	v.companyName as fullName FROM purchaseorder po inner join vendor v on po.vendorID=v.vendorID where isDeleted = false ORDER BY po.purchaseID DESC";
 
 	$purchaseDetailsSearchStatement = $conn->prepare($purchaseDetailsSearchSql);
 	$purchaseDetailsSearchStatement->execute();

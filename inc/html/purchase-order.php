@@ -118,12 +118,12 @@
                 <button type="button" id="addPurchaseBtn" class="btn btn-success">Add Purchase</button>
                 <button type="button" id="updatePurchaseBtn" class="btn btn-primary" onclick="updatePurchaseOrder()">Update</button>
                 <button type="button" id="clearBtn" class="btn" onclick="initPurchaseOrder(true)">Clear</button>
-                
-                <button type="button" id="sendPOBtn" class="btn btn-info" onclick="sendPO()">Submit</button>
-                <button type="button" id="closePOBtn" class="btn btn-success" onclick="closePO()">Close</button>
-                <button type="button" id="goodReceivedBtn" class="btn btn-info" onclick="updateGoodReceived()">Good Receive</button>
-                <button type="button" id="cancelPOBtn" class="btn btn-danger" onclick="cancelPO()">Cancel</button>
                 <button type="button" id="printPdfBtn" class="btn btn-secondary" onclick="printPurchaseOrderPdf()">Print</button>
+                <button type="button" id="sendPOBtn" class="btn btn-info" onclick="sendPO()">Submit</button>
+                <button type="button" id="goodReceivedBtn" class="btn btn-info" onclick="updateGoodReceived()">Goods Receive</button>
+                <button type="button" id="closePOBtn" class="btn btn-success" onclick="closePO()">Close</button>
+                
+                <button type="button" id="cancelPOBtn" class="btn btn-danger" onclick="cancelPO()">Cancel</button>
               </form>
             </div>
             <div id="purchaseListTab" class="container-fluid tab-pane fade active show">

@@ -57,9 +57,9 @@
 			}
 
 			foreach ($purchaseItems as $item) {
-				$insertPurchaseSql = 'INSERT INTO purchaseitem(itemNumber, purchaseDate, itemName, unitPrice, quantity, vendorName, vendorID, purchaseOrderID, totalPrice) VALUES(:itemNumber, :purchaseDate, :itemName, :unitPrice, :quantity, :vendorName, :vendorID, :purchaseOrderID, :totalPrice)';
+				$insertPurchaseSql = 'INSERT INTO purchaseitem(itemNumber, purchaseDate, itemName, unitPrice, quantity, vendorName, vendorID, purchaseOrderID, totalPrice,productID) VALUES(:itemNumber, :purchaseDate, :itemName, :unitPrice, :quantity, :vendorName, :vendorID, :purchaseOrderID, :totalPrice, :productID)';
 				$insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
-				$insertPurchaseStatement->execute(['itemNumber' => $item['id'], 'purchaseDate' => $purchaseDetailsPurchaseDate, 'itemName' => $item['name'], 'unitPrice' => $item['buyingPrice'], 'quantity' => $item['quntity'], 'vendorName' => $vendorName, 'vendorID' => $vendorID, 'purchaseOrderID' => $purchaseOrderId, 'totalPrice'=> $item['total']]);		
+				$insertPurchaseStatement->execute(['itemNumber' => $item['itemNumber'], 'purchaseDate' => $purchaseDetailsPurchaseDate, 'itemName' => $item['name'], 'unitPrice' => $item['buyingPrice'], 'quantity' => $item['quntity'], 'vendorName' => $vendorName, 'vendorID' => $vendorID, 'purchaseOrderID' => $purchaseOrderId, 'totalPrice'=> $item['total'],'productID' => $item['id']]);		
 			}
 
 			echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Purchase details added successfully.</div>';
