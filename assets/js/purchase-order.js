@@ -517,11 +517,12 @@ function updateGoodReceived() {
     };
     items.push(item);
   }
-
+  const purchaseId = $(`#purchaseOrderId`).val();
   $.ajax({
     url: "model/goodReceive/insertGoodReceive.php",
     data: {
-      items: items
+      items: items,
+      purchaseId: purchaseId
     },
     method: "POST",
     success: function (data) {
@@ -529,6 +530,7 @@ function updateGoodReceived() {
       $("#purchaseDetailsMessage").html(data);
       populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
       searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+      $(`#statusPOText`).text('Goods Received');
     }
   });
 }
@@ -547,7 +549,7 @@ function updatePO(statusId, status) {
           $("#purchaseDetailsMessage").fadeIn();
           $("#purchaseDetailsMessage").html(data);
           $(`#statusPOText`).text(status);
-          resolve(data)
+          resolve(purchaseId)
         },
         error: function () {
           reject(data);
@@ -558,17 +560,13 @@ function updatePO(statusId, status) {
 }
 
 function sendPO() {
-  updatePO(2, "Pending").then(function () {
-    displayElements(["goodReceivedBtn", "closePOBtn","cancelPOBtn"]);
-    displayHideElements(["sendPOBtn",  "addPurchaseBtn", "clearBtn"]);
-    document.getElementById("goodReceivedData").style.display = "block";
-    document.getElementById("lableActionHeader").text = "Received";
+  updatePO(2, "Pending").then(function (purchaseId) {
+    openGoodReceive(purchaseId)
   });
 }
 
 function cancelPO() {
   updatePO(4, "Cancel").then(function () {
-    //displayElements(["goodReceivedBtn", "closePOBtn","cancelPOBtn"]);
     displayHideElements(["sendPOBtn",  "addPurchaseBtn", "clearBtn", "goodReceivedBtn", "closePOBtn","cancelPOBtn", "printPdfBtn"]);
   });
 }
@@ -895,7 +893,7 @@ function nextViewSelector(purchaseOrderId, currentViewType ) {
     case 'EDIT':
       openEditView(purchaseOrderId, 'EDIT');
       break;
-    case 'SUBMIT':
+
     case 'GOOD_RECEIVED':
 
       break;

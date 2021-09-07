@@ -2,10 +2,11 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 
-	if(isset($_POST['items'])) {
+	if(isset($_POST['items']) && isset($_POST['purchaseId'])) {
         $goodReceivedItems = $_POST['items'];
+        $purchaseId = $_POST['purchaseId'];
         foreach ($goodReceivedItems as $item) {
-            $insertPurchaseSql = 'UPDATE purchaseitem SET goodReceivedQuantity = :goodReceived, status = 5 WHERE purchaseItemID = :purchaseItemID';
+            $insertPurchaseSql = 'UPDATE purchaseitem SET goodReceivedQuantity = :goodReceived WHERE purchaseItemID = :purchaseItemID';
             $insertPurchaseStatement = $conn->prepare($insertPurchaseSql);
             $insertPurchaseStatement->execute(['goodReceived' => $item['goodReceived'], 'purchaseItemID' => $item['id']]);
             
@@ -24,12 +25,15 @@
             $newItemStockUpdateStatement->execute(['stock' => $newItemNewStock, 'itemNumber' => $item['itemNumber']]);
             }
         }
-
+        $poUpdateSql = 'UPDATE purchaseorder SET status = 5 WHERE purchaseID = :purchaseId';
+        $poUpdateStatement = $conn->prepare($poUpdateSql);
+        $poUpdateStatement->execute(['purchaseId' => $purchaseId]);
+        
         echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Good receive added successfully.</div>';
         exit();
     } else {
     // One or more mandatory fields are empty. Therefore, display a the error message
     echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter valid amount</div>';
     exit();
-}	
+    }
 ?>
