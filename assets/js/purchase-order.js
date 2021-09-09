@@ -184,7 +184,7 @@ $("#updatePurchaseDetailsButton").on("click", function () {
   updatePurchase();
 });
 
-function addPurchaseItem(id, viewType) {
+function addPurchaseItem(id, viewType, status) {
   $("#poItemList").append(
     `
 			<div class="form-row" id="addedRow${id}"> 
@@ -205,7 +205,7 @@ function addPurchaseItem(id, viewType) {
                         <input type="text" class="form-control" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
 						<input type="hidden" id="purchaseItemId${id}" name="purchaseItemId${id}">
 					</div>
-					${viewType === "GOOD_RECEIVED"
+					${viewType === "GOOD_RECEIVED" || (viewType === 'VIEW' && status === 5)
     ? `<div class="form-group col-md-1">
 						<input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity${id}" name="purchaseDetailsGoodReceivedQuantity${id}" value="0">
 					</div>`
@@ -418,8 +418,8 @@ function loadDataToPurchaseOrder(data, viewType) {
 	for (let index = 0; index < purchaseOrderItems.length; index++) {
 		const numberText = index === 0 ? '' : index;
 		if(index>0){
-			rowCount++;
-    		addPurchaseItem(rowCount, viewType);
+			rowCount++;console.log(viewType, purchaseOrder.status)
+    		addPurchaseItem(rowCount, viewType, purchaseOrder.status);
 		}
 
     $(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].productID.toString());
@@ -469,6 +469,10 @@ function loadDataToPurchaseOrder(data, viewType) {
 						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
 						displayElements(["cancelPOBtn"]);
 						break;
+          case '5': //goods received
+						displayElements(["cancelPOBtn", "closePOBtn"]);
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "addPurchaseBtn", "printPdfBtn", "clearBtn" ]);	
+						break;
 					default: // cancel
 						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "cancelPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
 						break;
@@ -517,6 +521,7 @@ function updateGoodReceived() {
     };
     items.push(item);
   }
+
   const purchaseId = $(`#purchaseOrderId`).val();
   $.ajax({
     url: "model/goodReceive/insertGoodReceive.php",
@@ -525,12 +530,16 @@ function updateGoodReceived() {
       purchaseId: purchaseId
     },
     method: "POST",
-    success: function (data) {
+    success: function (data) { console.log(data)
+      const result = JSON.parse(data);
       $("#purchaseDetailsMessage").fadeIn();
-      $("#purchaseDetailsMessage").html(data);
-      populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
-      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      $(`#statusPOText`).text('Goods Received');
+      $("#purchaseDetailsMessage").html(result.alertMessage);
+      if(result.status === 'success'){
+        populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
+        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+        $(`#statusPOText`).text('Goods Received');
+        displayHideElements(["goodReceivedBtn"]);
+      }
     }
   });
 }
@@ -573,7 +582,7 @@ function cancelPO() {
 
 function closePO() {
   updatePO(3, "Close").then(function () {
-    
+    displayHideElements(["sendPOBtn",  "addPurchaseBtn", "clearBtn", "goodReceivedBtn", "closePOBtn","cancelPOBtn", "printPdfBtn"]); 
   });
 }
 

@@ -11,7 +11,7 @@
 	}
 
 	function optionsMenu($status, $purchaseID) {
-		if( $status == poStatus::pending) { 
+		if( $status == poStatus::pending && $status != poStatus::goodsReceived ) { 
 			return '<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Good Receive"><i class="fas fa-boxes" onclick="openGoodReceive(' . $purchaseID . ')"></i></button>';
 		} else if ($status == poStatus::created){
 			return '<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"> <i class="fas fa-edit" onclick="openEditPurchaseOrder(' . $purchaseID . ')"></i></button>';
