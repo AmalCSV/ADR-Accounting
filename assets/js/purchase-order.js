@@ -894,19 +894,31 @@ function setPOItemList(items){
 
 initPurchaseOrder();
 
-function nextViewSelector(purchaseOrderId, currentViewType ) {
-  switch (currentViewType) {
-    case 'ADD':
-      openEditView(purchaseOrderId, 'EDIT');
-      break;
-    case 'EDIT':
-      openEditView(purchaseOrderId, 'EDIT');
-      break;
+function printPurchaseOrderPdf() {
+  getVendorDetails();
+}
 
-    case 'GOOD_RECEIVED':
-
-      break;
-    default:
-      break;
+function getVendorDetails(){
+// Get the vendorID entered in the text box
+var vendorID = $('#purchaseDetailsVendorName').val();
+let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
+	
+$.ajax({
+  url: 'model/vendor/populateVendorDetails.php',
+  method: 'POST',
+  data: {vendorDetailsVendorID:vendorID},
+  dataType: 'json',
+  success: function(vendorDetails){
+    try{
+      downloadOrderPdf("PO", order, orderItems, vendorDetails);
+    }
+    catch(err){
+      $("#purchaseDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " +  err.message + "</div>");
+    }
+  },
+  error:  function(data){
+    $("#purchaseDetailsMessage").fadeIn();
+    $("#purchaseDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + "</div>");
   }
+});
 }
