@@ -1,7 +1,7 @@
 <div class="tab-pane fade show active" id="v-pills-purchase" role="tabpanel" aria-labelledby="v-pills-purchase-tab">
     <div class="card card-outline-secondary my-4">
       <div class="card-header">Purchase Details</div>
-      <div class="card-body">
+      <div class="card-body pl-1 pt-1 pr-1">
           <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
               <a class="nav-link active" data-toggle="tab" href="#purchaseListTab" onclick="location.reload()">Purchase Orders</a>
@@ -14,7 +14,7 @@
             </li>
           </ul>
           <!-- Tab panes -->
-          <div class="tab-content">
+          <div class="tab-content  mt-minus-15">
             <div id="purchaseDetailsTab" class="container-fluid tab-pane">
               <br>
               <div id="purchaseDetailsMessage"></div>
