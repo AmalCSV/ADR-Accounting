@@ -77,7 +77,7 @@ function login(){
 			$('#loginMessage').html(data);
 			
 			if(data.indexOf('Redirecting') >= 0){
-				window.location = 'index.php';
+				window.location = 'items.php';
 			}
 		}
 	});

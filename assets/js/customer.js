@@ -48,12 +48,12 @@ function addCustomer() {
 		success: function(data){
 			$('#customerDetailsMessage').fadeIn();
 			$('#customerDetailsMessage').html(data);
-			enableUpdateDeleteButton(true);
+			enableUpdateDeleteButtonCustomer(true);
 		},
 		complete: function(data){
 			populateLastInsertedID(customerLastInsertedIDFile, 'customerDetailsCustomerID');
 			searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
-			reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
+			// reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
 		}
 	});
 }
@@ -96,8 +96,8 @@ function updateCustomer() {
 		},
 		complete: function(){
 			searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
-			reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
-			searchTableCreator('saleDetailsTableDiv', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
+			// reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
+			// searchTableCreator('saleDetailsTableDiv', saleDetailsSearchTableCreatorFile, 'saleDetailsTable');
 			//reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
 		}
 	});
@@ -116,12 +116,13 @@ function deleteCustomer(){
 			method: 'POST',
 			data: {customerDetailsCustomerID:customerDetailsCustomerID},
 			success: function(data){
+				$("#clearCustomer").trigger("click");
 				$('#customerDetailsMessage').fadeIn();
 				$('#customerDetailsMessage').html(data);
 			},
 			complete: function(){
 				searchTableCreator('customerDetailsTableDiv', customerDetailsSearchTableCreatorFile, 'customerDetailsTable');
-				reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
+				// reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
 			}
 		});
 	}

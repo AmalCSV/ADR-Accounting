@@ -134,8 +134,6 @@
    <div class="tab-content">
       <div id="itemSearchTab" class="container-fluid tab-pane active pl-1 pr-1">
          <br>
-         <p>Use the grid below to search all details of items</p>
-         <!-- <a href="#" class="itemDetailsHover" data-toggle="popover" id="10">wwwee</a> -->
          <div class="table-responsive" id="itemDetailsTableDiv"></div>
       </div>
    </div>

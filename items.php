@@ -221,5 +221,6 @@
         <?php
 	require 'inc/footer.php';
 ?>
+<script src="assets/js/item.js"></script>
     </body>
 </html>
