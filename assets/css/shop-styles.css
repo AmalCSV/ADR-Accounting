@@ -172,3 +172,7 @@ div {
 .btn{
   line-height: 1 !important;
 }
+
+select.form-control:not([size]):not([multiple]){
+  height: calc(2rem + 1px);
+}
