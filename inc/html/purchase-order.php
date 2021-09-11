@@ -82,20 +82,20 @@
                               </select>
                             </div>
                             <div class="form-group col-md-1">
-                              <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity" name="purchaseDetailsAvalableQuantity" value="0" readonly>
+                              <input type="number" class="form-control price-al" id="purchaseDetailsAvalableQuantity" name="purchaseDetailsAvalableQuantity" value="0" readonly>
                           </div>
                             <div class="form-group col-md-2">
-                                <input type="number" class="form-control" id="purchaseDetailsQuantity" name="purchaseDetailsQuantity" value="0" min="1">
+                                <input type="number" class="form-control price-al" id="purchaseDetailsQuantity" name="purchaseDetailsQuantity" value="0" min="1">
                             </div>
                             <div class="form-group col-md-2">
-                                <input type="text" class="form-control" id="purchaseDetailsUnitPrice" name="purchaseDetailsUnitPrice" value="0" readonly>
+                                <input type="text" class="form-control price-al" id="purchaseDetailsUnitPrice" name="purchaseDetailsUnitPrice" value="0" readonly>
                             </div>
                             <div class="form-group col-md-2">
                                 <input type="hidden" id="purchaseItemId" name="purchaseItemId">
-                                <input type="text" class="form-control" id="purchaseDetailsTotal" name="purchaseDetailsTotal" readonly>
+                                <input type="text" class="form-control price-al" id="purchaseDetailsTotal" name="purchaseDetailsTotal" readonly>
                             </div>
                             <div class="form-group col-md-1" id="goodReceivedData">
-                              <input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity" name="purchaseDetailsGoodReceivedQuantity" value="0">
+                              <input type="number" class="form-control price-al" id="purchaseDetailsGoodReceivedQuantity" name="purchaseDetailsGoodReceivedQuantity" value="0">
                             </div>
                             <div class="form-group col-md-1"> 
                             </div>
@@ -109,7 +109,7 @@
                         <label style="float:right">Total </label>
                       </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseOrderTotal" name="purchaseOrderTotal" readonly>
+                        <input type="text" class="form-control price-al" id="purchaseOrderTotal" name="purchaseOrderTotal" readonly>
                       </div>
                   </div>
                 </div>

@@ -193,21 +193,21 @@ function addPurchaseItem(id, viewType, status) {
                         </select>
 				    </div>
 					<div class="form-group col-md-1">
-                        <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
+                        <input type="number" class="form-control price-al" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0" min="1">
+                        <input type="number" class="form-control price-al" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0" min="1">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
+                        <input type="text" class="form-control price-al" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
+                        <input type="text" class="form-control price-al" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
 						<input type="hidden" id="purchaseItemId${id}" name="purchaseItemId${id}">
 					</div>
 					${viewType === "GOOD_RECEIVED" || (viewType === 'VIEW' && status === 5)
     ? `<div class="form-group col-md-1">
-						<input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity${id}" name="purchaseDetailsGoodReceivedQuantity${id}" value="0">
+						<input type="number" class="form-control price-al" id="purchaseDetailsGoodReceivedQuantity${id}" name="purchaseDetailsGoodReceivedQuantity${id}" value="0">
 					</div>`
     : `
 					<div class="form-group col-md-1">
