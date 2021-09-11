@@ -19,15 +19,15 @@
 				<thead>
 					<tr>
 					<th class="d-none">Product ID</th>
-					<th style="min-width:50px !important;">Item No</th>
-					<th style="min-width:150px !important;">Item Name</th>
-					<th style="width:100px !important;">Supplier</th>
+					<th style="min-width:100px !important;">Item No</th>
+					<th style="min-width:165px !important;">Item Name</th>
+					<th style="width:165px !important;">Supplier</th>
 					<th>Stock</th>
 					<th>W Qty</th>
 					<th>Selling Price</th>
 					<th>Buying Price</th>
 					<th>Status</th>
-					<th>Rack</th>
+					<th style="min-width:100px !important;">Rack</th>
 					<th></th>
 					</tr>
 				</thead>
