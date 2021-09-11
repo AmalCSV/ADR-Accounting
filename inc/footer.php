@@ -24,21 +24,19 @@
 	<script src="vendor/bootbox/bootbox.min.js"></script>
 	<!-- select js -->
 	<script src='assets/lib/select2/dist/js/select2.min.js'></script>
+	<script src='assets/lib/fontawesome-5/js/all.js'></script>
 	<!-- Custom scripts -->
 	<script src="assets/js/scripts.js"></script>
 	<script src="assets/js/login.js"></script>
 	<!-- New scripts -->
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/autocomplete.js"></script>
-	<script src="assets/js/item.js"></script>
+	
 
-	<script src="assets/js/purchase-order.js"></script>
-	<script src="assets/js/sales-order.js"></script>
+	<!-- <script src="assets/js/sales-order.js"></script> -->
 	<script src="vendor/pdfmake/pdfmake.js"></script>
 	<script src="vendor/pdfmake/vfs_fonts.js"></script>
 
 	<script src="assets/js/pdfGenerator.js"></script>
 	
-	<script src="assets/js/customer.js"></script>
-	<script src="assets/js/vendor.js"></script>
 

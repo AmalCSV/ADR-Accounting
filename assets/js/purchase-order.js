@@ -1,9 +1,28 @@
-var itemData = [];
+var itemList = [];
 var order = {};
 var orderItems = {};
 
+// File that creates the purchase details search table
+purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator.php';
+purchasePaymentTableCreatorFile = 'model/purchase/purchasePaymentTableCreator.php';
+// File that creates the purchase reports search table
+purchaseReportsSearchTableCreatorFile = 'model/purchase/purchaseReportsSearchTableCreator.php';
+
+function getItem(id) {
+  const item = itemList.find(x => x.productID === id);
+  return item;
+}
+
+// Calculate Total Purchase value in purchase details tab
+function calculateTotalInPurchaseTab(){
+	var quantityPT = $('#purchaseDetailsQuantity').val();
+	var unitPricePT = $('#purchaseDetailsUnitPrice').val();
+	$('#purchaseDetailsTotal').val(Number(quantityPT) * Number(unitPricePT));
+}
+
 // Function to call the insertPurchase.php script to insert purchase data to db
 function addPurchase() {
+  let errorText = null;
 	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
 	var purchaseDetailsDescription = $('#purchaseDetailsDescription').val();
 	var purchaseDetailsPurchaseID = $('#purchaseDetailsPurchaseID').val();
@@ -11,50 +30,75 @@ function addPurchase() {
 	const grandTotal= $(`#purchaseOrderTotal`).val();
 
 	const purchaseItems = [];
+  
+  let itemId = $('#purchaseDetailsItem').val();
+  let itemData = itemId ? getItem(itemId) : {};
 	let item = {
-		id: $('#purchaseDetailsItem').val(),
+		id: itemId,
 		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
 		quntity: $('#purchaseDetailsQuantity').val(),
 		total: $(`#purchaseDetailsTotal`).val(),
-		name: $(`#purchaseDetailsItem option:selected`).text(),
+		name: itemData.itemName,
+    itemNumber: itemData.itemNumber,
 	};
 	purchaseItems.push(item);
 
 	for (let index = 0; index < rowCount; index++) {
+    itemId = $(`#purchaseDetailsItem${index+1}`).val();
+    itemData = itemId ? getItem(itemId) : {};
 		item = {
-			id: $(`#purchaseDetailsItem${index+1}`).val(),
+			id: itemId,
 			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
 			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
 			total: $(`#purchaseDetailsTotal${index+1}`).val(),
-			name: $(`#purchaseDetailsItem${index+1} option:selected`).text(),
+			name: itemData.itemName,
+      itemNumber: itemData.itemNumber,
 		};
+    const duplicateItem = purchaseItems.find(x => x.id ===item.id)
+    if(duplicateItem){
+      errorText = 'Duplicate Items in the list';
+    }
 		purchaseItems.push(item);
 	}
-console.log(purchaseItems)
-	$.ajax({
-		url: 'model/purchase/insertPurchase.php',
-		method: 'POST',
-		data: {
-			purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
-			purchaseDetailsGrandTotal: grandTotal,
-			purchaseDetailsDescription: purchaseDetailsDescription,
-			purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
-			vendorID: vendorID,
-			purchaseItems: purchaseItems,
-		},
-		success: function(data){
-			$('#purchaseDetailsMessage').fadeIn();
-			$('#purchaseDetailsMessage').html(data);
-		},
-		complete: function(){
-			populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
-			searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
-			searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
-			reportsTableCreator('itemReportsTableDiv', itemReportsSearchTableCreatorFile, 'itemReportsTable');
 
-			$('#addPurchaseBtn').prop('disabled', true);
-		}
-	});
+  if(errorText == null && !!purchaseItems.find(x => !x.quntity || x.quntity == 0)){
+    errorText = 'Quantity 0 item in the list';
+  }
+
+  if( errorText == null) {
+    $.ajax({
+      url: 'model/purchase/insertPurchase.php',
+      method: 'POST',
+      data: {
+        purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
+        purchaseDetailsGrandTotal: grandTotal,
+        purchaseDetailsDescription: purchaseDetailsDescription,
+        purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
+        vendorID: vendorID,
+        purchaseItems: purchaseItems,
+      },
+      success: function(data){
+        const result = $.parseJSON(data);
+        $('#purchaseDetailsMessage').html(result.alertMessage);
+        $('#purchaseDetailsMessage').fadeOut(1000).fadeIn(500, function() {
+        //  window.location.href += '#purchaseDetailsTab';
+        //  window.location.reload();
+        });
+        if(result.status ==='success'){
+          openEditView(result.purchaseId, 'EDIT')
+        }
+      },
+      complete: function(){
+        //populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
+        searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');  
+       // $('#addPurchaseBtn').prop('disabled', true);
+      }
+    });
+  }
+  else {
+    $('#purchaseDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
+    $('#purchaseDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  }
 }
 
 // Listen to purchase add button
@@ -64,54 +108,75 @@ $("#addPurchaseBtn").on("click", function () {
 
 // Function to call the updatePurchase.php script to update purchase data to db
 function updatePurchase() {
-  var purchaseDetailsPurchaseDate = $("#purchaseDetailsPurchaseDate").val();
-  var purchaseDetailsDescription = $("#purchaseDetailsDescription").val();
-  var purchaseDetailsPurchaseID = $("#purchaseDetailsPurchaseID").val();
-  var purchaseDetailsVendorName = $("#purchaseDetailsVendorName").val();
-  const grandTotal = $(`#purchaseOrderTotal`).val();
+  let errorText = null;
+	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
+	var purchaseDetailsDescription = $('#purchaseDetailsDescription').val();
+	var purchaseDetailsPurchaseID = $('#purchaseDetailsPurchaseID').val();
+	var vendorID = $('#purchaseDetailsVendorName').val();
+  const purchaseOrderId = $('#purchaseOrderId').val();
+	const grandTotal= $(`#purchaseOrderTotal`).val();
 
-  const purchaseItems = [];
-  let item = {
-    id: $("#purchaseDetailsItem").val(),
-    buyingPrice: $("#purchaseDetailsUnitPrice").val(),
-    quntity: $("#purchaseDetailsQuantity").val(),
-    total: $(`#purchaseDetailsTotal`).val(),
-    name: $(`#purchaseDetailsItem option:selected`).text()
-  };
-  purchaseItems.push(item);
+	const purchaseItems = [];
+  let itemId = $('#purchaseDetailsItem').val();
+  let itemData = itemId ? getItem(itemId) : {};
+	let item = {
+		id: itemId,
+		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
+		quntity: $('#purchaseDetailsQuantity').val(),
+		total: $(`#purchaseDetailsTotal`).val(),
+    name: itemData.itemName,
+    itemNumber: itemData.itemNumber,
+	};
+	purchaseItems.push(item);
 
-  for (let index = 0; index < rowCount; index++) {
-    item = {
-      id: $(`#purchaseDetailsItem${index + 1}`).val(),
-      buyingPrice: $(`#purchaseDetailsUnitPrice${index + 1}`).val(),
-      quntity: $(`#purchaseDetailsQuantity${index + 1}`).val(),
-      total: $(`#purchaseDetailsTotal${index + 1}`).val(),
-      name: $(`#purchaseDetailsItem${index + 1} option:selected`).text()
-    };
-    purchaseItems.push(item);
+	for (let index = 0; index < rowCount; index++) {
+    itemId = $(`#purchaseDetailsItem${index+1}`).val();
+    itemData = itemId ? getItem(itemId) : {};
+		item = {
+			id: itemId,
+			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
+			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
+			total: $(`#purchaseDetailsTotal${index+1}`).val(),
+      name: itemData.itemName,
+      itemNumber: itemData.itemNumber,
+		};
+    const duplicateItem = purchaseItems.find(x => x.id ===item.id)
+    if(duplicateItem){
+      errorText = 'Duplicate Items in the list';
+      return;
+    }
+		purchaseItems.push(item);
+	}
+
+  if(errorText == null && !!purchaseItems.find(x => !x.quntity || x.quntity == 0)){
+    errorText = 'Quantity 0 item in the list';
   }
 
-  $.ajax({
-    url: "model/purchase/updatePurchase.php",
-    method: "POST",
-    data: {
-      purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
-      purchaseDetailsGrandTotal: grandTotal,
-      purchaseDetailsDescription: purchaseDetailsDescription,
-      purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
-      purchaseDetailsVendorName: purchaseDetailsVendorName,
-      purchaseItems: purchaseItems
-    },
-    success: function (data) {
-      $("#purchaseDetailsMessage").fadeIn();
-      $("#purchaseDetailsMessage").html(data);
-    },
-    complete: function () {
-      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
-      reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
-    }
-  });
+  if( errorText == null) {
+    $.ajax({
+      url: "model/purchase/updatePurchase.php",
+      method: "POST",
+      data: {
+        purchaseDetailsPurchaseDate: purchaseDetailsPurchaseDate,
+        purchaseDetailsGrandTotal: grandTotal,
+        purchaseDetailsDescription: purchaseDetailsDescription,
+        purchaseDetailsPurchaseID: purchaseDetailsPurchaseID,
+        vendorID: vendorID,
+        purchaseItems: purchaseItems,
+        purchaseOrderId: purchaseOrderId,
+      },
+      success: function (data) {
+        $("#purchaseDetailsMessage").fadeOut(1000).fadeIn(500, function() {});
+        $("#purchaseDetailsMessage").html(data);
+      },
+      complete: function () {
+        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+      }
+    });
+  } else {
+    $('#purchaseDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
+    $('#purchaseDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  }
 }
 
 // Listen to update button in purchase details tab
@@ -119,30 +184,30 @@ $("#updatePurchaseDetailsButton").on("click", function () {
   updatePurchase();
 });
 
-function addPurchaseItem(id, viewType) {
+function addPurchaseItem(id, viewType, status) { console.log(viewType, status)
   $("#poItemList").append(
     `
 			<div class="form-row" id="addedRow${id}"> 
                     <div class="form-group col-md-3">
-						<select id='purchaseDetailsItem${id}' class="form-control" style="width: 100%">
+						<select id='purchaseDetailsItem${id}' name='purchaseDetailsItem${id}' class="form-control" style="width: 100%">
                         </select>
 				    </div>
 					<div class="form-group col-md-1">
-                        <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
+                        <input type="number" class="form-control price-al" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0">
+                        <input type="number" class="form-control price-al" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0" min="1">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
+                        <input type="text" class="form-control price-al" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
+                        <input type="text" class="form-control price-al" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
 						<input type="hidden" id="purchaseItemId${id}" name="purchaseItemId${id}">
 					</div>
-					${viewType === "GOOD_RECEIVED"
+					${viewType === "GOOD_RECEIVED" || (viewType == 'VIEW' && (status == 5 || status == 3))
     ? `<div class="form-group col-md-1">
-						<input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity${id}" name="purchaseDetailsGoodReceivedQuantity${id}" value="0">
+						<input type="number" class="form-control price-al" id="purchaseDetailsGoodReceivedQuantity${id}" name="purchaseDetailsGoodReceivedQuantity${id}" value="0">
 					</div>`
     : `
 					<div class="form-group col-md-1">
@@ -181,14 +246,22 @@ function purchaseItemSelectChange(id) {
 }
 
 function setPOCalculationFunctions(id) {
-	$(`#purchaseDetailsItem${id}, #purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).change(function(){
+	$(`#purchaseDetailsQuantity${id}, #purchaseDetailsUnitPrice${id}`).keyup(function(){
+		calculateTotalInPurchase(id);
+		calculatePOGrandTotal();
+	});
+  $(`#purchaseDetailsItem${id}`).change(function(){
 		calculateTotalInPurchase(id);
 		calculatePOGrandTotal();
 	});
 }
 
 // Calculate Total in purchase tab
-$('#purchaseDetailsQuantity, #purchaseDetailsItem, #purchaseDetailsUnitPrice').change(function(){
+$('#purchaseDetailsQuantity, #purchaseDetailsUnitPrice').keyup(function(){
+	calculateTotalInPurchaseTab();
+	calculatePOGrandTotal();
+});
+$('#purchaseDetailsItem').change(function(){
 	calculateTotalInPurchaseTab();
 	calculatePOGrandTotal();
 });
@@ -233,7 +306,7 @@ function validateAddPurchases(netAmount) {
 }
 
 
-function initPurchaseOrder() {
+function initPurchaseOrder(isClear) {
 	const currentDate =  new Date().toISOString().slice(0, 10);
 	$.ajax({
 		url: 'model/purchase/nextPurchaseID.php',
@@ -247,47 +320,32 @@ function initPurchaseOrder() {
 	initPurchaseOrderItems();
   $("#poPaymentsTab").prop("disabled", true);
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
+  $('#purchaseOrderTotal').val('');
+  
 	document.getElementById("goodReceivedData").style.display = "none";
 	document.getElementById("addPurchaseItem").style.display = "block";
+  $('#addPurchaseItem').prop('disabled', true);
 	document.getElementById("lableActionHeader").text = '#';
 	document.getElementById("statusPO").style.display = "none";
 
-	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn"]); //updatePurchaseBtn
+	displayHideElements(["cancelPOBtn","sendPOBtn","closePOBtn", "goodReceivedBtn", "printPdfBtn", "updatePurchaseBtn"]); //updatePurchaseBtn
 	displayElements(["clearBtn","addPurchaseBtn"])
-	rowCount = 0;console.log(itemList)
-	itemData = itemList && itemList.length? getSelect2ItemData(itemList): [];
-	$('#purchaseDetailsItem').select2({
-		placeholder: {text: "Select Item"},
-		data: itemData
-	});
-
-	purchaseItemSelectChange('');
+  const vendorId = $('#purchaseDetailsVendorName').val();
+	rowCount = 0;
+ 
+    setPOItemList(isClear? null: itemList);
+  
+ 
+  searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	$('#addPurchaseBtn').prop("disabled", true);
+  enableElements([`purchaseDetailsItem`,`purchaseDetailsQuantity`,
+   'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
+ ,'purchaseDetailsVendorName', 'purchaseDetailsQuantity']);
+
 } 
 
-
-function onSelectName(itemName, id) {
-	if (itemName && itemName != "") {
-	  const data = itemList.find(x => x.itemName == itemName);
-	  if (data) {
-		$(`#${id}`).val(data.itemNumber);
-		selectItem(data);
-	  }
-	}
-}
-
-function onSelectNumber(itemNumber, id) {
-  if (itemNumber && itemNumber != "") {
-    var data = itemList.find(x => x.itemNumber == itemNumber);
-    if (data) {
-      $(`#${id}`).val(data.itemName);
-      selectItem(data);
-    }
-  }
-}
-
 function initPurchaseOrderList() {
-  searchTableCreator("purchaseDetailsTableDiv1", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+  searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
 }
 
 function initPurchaseOrderItems() {
@@ -295,9 +353,13 @@ function initPurchaseOrderItems() {
 	$('#purchaseDetailsDescription').val('');
 	$('#purchaseDetailsPurchaseID').val('');
 	$('#purchaseDetailsVendorName').val('');
-	$(`#purchaseOrderTotal`).val('');
+	$(`#purchaseDetailsTotal`).val('');
 	$(`#purchaseOrderId`).val('');
+  
+  $("#purchaseDetailsItem").select2({data: [{id: '', text: ''}]});
 
+  $(`#purchaseDetailsQuantity`).val('');
+  
 	for (let index = 0; index <= rowCount+1; index++) {
 		deletePurchaseItem(index+1);
 	}
@@ -312,8 +374,24 @@ function openEditView(purchaseOrderId, viewType) {
       purchaseID: purchaseOrderId
     },
     method: "POST",
-    success: function (data) {
-      loadDataToPurchaseOrder(data, viewType);
+    success: function (poData) {
+      let {purchaseOrder} = JSON.parse(poData);
+      $.ajax({
+        url: "model/item/getAllItems.php",
+        method: "POST",
+        dataType: "json",
+        data: {
+          vendorId: purchaseOrder.vendorID
+        },
+        success: function (data) {
+          itemList = data;
+          itemData = getSelect2ItemData(itemList);
+          $("#purchaseDetailsItem").select2({
+            data: itemData
+          });
+          loadDataToPurchaseOrder(poData, viewType);
+        }
+      });
     }
   });
 }
@@ -322,69 +400,110 @@ function openGoodReceive(purchaseOrderId) {
 	openEditView(purchaseOrderId, 'GOOD_RECEIVED');
 }
 
-function loadDataToPurchaseOrder(data, viewType){
+function loadDataToPurchaseOrder(data, viewType) {
 	let {purchaseOrder, purchaseOrderItems} = JSON.parse(data);
 	order = purchaseOrder;
 	orderItems = purchaseOrderItems;
 	$('#purchaseDetailsPurchaseDate').val(purchaseOrder.orderDate);
 	$('#purchaseDetailsDescription').val(purchaseOrder.description);
 	$('#purchaseDetailsPurchaseID').val(purchaseOrder.orderNumber);
-	$('#purchaseDetailsVendorName').val(purchaseOrder.fullName);
+  $('#purchaseDetailsVendorName').val(purchaseOrder.vendorID).trigger("chosen:updated");
 	$(`#purchaseOrderTotal`).val(purchaseOrder.amount);
 	$(`#purchaseOrderId`).val(purchaseOrder.purchaseID);
-
-	document.getElementById("statusPO").style.display = "flex";
+  rowCount =0;
+	document.getElementById("statusPO").style.display = "inline-block";
 	$(`#statusPOText`).text(purchaseOrder.statusText);
 
-	for (let index = 0; index < purchaseOrderItems.length; index++) {console.log(purchaseOrderItems[index])
+	for (let index = 0; index < purchaseOrderItems.length; index++) {
 		const numberText = index === 0 ? '' : index;
 		if(index>0){
 			rowCount++;
-    		addPurchaseItem(rowCount, viewType);
+    		addPurchaseItem(rowCount, viewType, purchaseOrder.status);
 		}
-		$(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].itemNumber);
+
+    $(`#purchaseDetailsItem${numberText}`).val(purchaseOrderItems[index].productID.toString());
+    $(`#purchaseDetailsItem${numberText}`).trigger('change');
 		$(`#purchaseDetailsUnitPrice${numberText}`).val(purchaseOrderItems[index].unitPrice);
 		$(`#purchaseDetailsQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
 		$(`#purchaseDetailsTotal${numberText}`).val(purchaseOrderItems[index].totalPrice);
 		$(`#purchaseItemId${numberText}`).val(purchaseOrderItems[index].purchaseItemID);
 
 		if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
-		//	disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsUnitPrice${numberText}`,`purchaseDetailsQuantity${numberText}`,
-		//	`purchaseDetailsTotal${numberText}`]);
+			disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsQuantity${numberText}`]);
+      if(index>0){
+        if(viewType !== 'GOOD_RECEIVED'){
+         switch (purchaseOrder.status) {
+          case '4':
+            displayHideElements([`deletePurchaseItem${numberText}`]);
+            break;
+          case '3':
+          case '5':
+            disableElements([`purchaseDetailsGoodReceivedQuantity${numberText}`]);
+            $(`#purchaseDetailsGoodReceivedQuantity${numberText}`).val(purchaseOrderItems[index].goodReceivedQuantity);
+          break;
+        }
+        } else {
+          switch (purchaseOrder.status.toString()) {
+            case '1': //created
+              disableElements([`deletePurchaseItem${numberText}`]);
+            break;
+          }
+        }
+        
+      }
+      if(viewType === 'GOOD_RECEIVED'){
+        $(`#purchaseDetailsGoodReceivedQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
+      } 
 		}
+    else if (viewType === 'EDIT') {
+      if(index>0){
+        if(purchaseOrderItems.length !== index+1){
+          disableElements([`deletePurchaseItem${numberText}`]);
+        }
+      }
+    }
 	}
-
+  calculatePOGrandTotal();
 	if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
 		disableElements([`purchaseDetailsItem`,`purchaseDetailsUnitPrice`,`purchaseDetailsQuantity`,
 			`purchaseDetailsTotal`, 'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
 		,'purchaseDetailsVendorName']);
 
-
 		//document.getElementById("updatePurchaseBtn").disabled = true;
 		document.getElementById("addPurchaseItem").style.display = "none";
 		switch (viewType) {
-			case 'GOOD_RECEIVED':
-				displayElements(["goodReceivedBtn"]);
-				displayHideElements(["cancelPOBtn", "sendPOBtn", "closePOBtn", "addPurchaseBtn", "clearBtn"]);
-				document.getElementById("goodReceivedData").style.display = "block";
-				document.getElementById("lableActionHeader").text = "Received";
+			case 'GOOD_RECEIVED': // goods received
+      displayElements(["goodReceivedBtn", "cancelPOBtn"]);
+      displayHideElements(["sendPOBtn",  "addPurchaseBtn", "clearBtn"]);
+      document.getElementById("goodReceivedData").style.display = "block";
+      document.getElementById("lableActionHeader").innerText = "Receiving Quantity";
 				break;
 		
 			case 'VIEW':
 				switch (purchaseOrder.status) {
-					case '1':
+					case '1': //created
 						displayHideElements(["goodReceivedBtn", "closePOBtn", "addPurchaseBtn", "clearBtn" ]);
 						displayElements(["sendPOBtn", "cancelPOBtn", "printPdfBtn"]);
 						break;
-					case '2':
-						displayElements(["cancelPOBtn", "closePOBtn"]);
-						displayHideElements(["goodReceivedBtn", "sendPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);	
+					case '2': //pending
+						displayElements(["cancelPOBtn", "closePOBtn", "printPdfBtn"]);
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "addPurchaseBtn", "clearBtn" ]);	
 						break;
-					case '3':
+					case '3': // close
 						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
 						displayElements(["cancelPOBtn"]);
+            document.getElementById("goodReceivedData").style.display = "block";
+            $(`#purchaseDetailsGoodReceivedQuantity`).val(purchaseOrderItems[0].goodReceivedQuantity);
+            disableElements([`purchaseDetailsGoodReceivedQuantity`]);
 						break;
-					default:
+          case '5': //goods received
+						displayElements(["cancelPOBtn", "closePOBtn"]);
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "addPurchaseBtn", "printPdfBtn", "clearBtn" ]);
+            document.getElementById("goodReceivedData").style.display = "block";
+            $(`#purchaseDetailsGoodReceivedQuantity`).val(purchaseOrderItems[0].goodReceivedQuantity);
+            disableElements([`purchaseDetailsGoodReceivedQuantity`]);
+						break;
+					default: // cancel
 						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "cancelPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
 						break;
 				}
@@ -392,10 +511,15 @@ function loadDataToPurchaseOrder(data, viewType){
 			default:
 				break;
 		}
-	} else{
+	} else if (viewType === 'EDIT') {
+    disableElements([`purchaseDetailsVendorName`]);
+    enableElements(['addPurchaseItem']);
+    displayElements(["updatePurchaseBtn","sendPOBtn","printPdfBtn", "cancelPOBtn" ]);
+    displayHideElements(["clearBtn", "addPurchaseBtn"]);
+  } else{
 		displayHideElements(["clearBtn", "addPurchaseBtn"]);
 		document.getElementById("cancelPOBtn").disabled = purchaseOrder.status === 3;
-	}
+	} 
 }
 
 function openEditPurchaseOrder(purchaseOrderId) {
@@ -404,6 +528,10 @@ function openEditPurchaseOrder(purchaseOrderId) {
 
 function openViewPurchaseOrder(purchaseOrderId) {
   openEditView(purchaseOrderId, "VIEW");
+}
+
+function updatePurchaseOrder() {
+  updatePurchase();
 }
 
 function updateGoodReceived() {
@@ -421,55 +549,74 @@ function updateGoodReceived() {
       id: $(`#purchaseItemId${index + 1}`).val(),
       goodReceived: $(`#purchaseDetailsGoodReceivedQuantity${index + 1}`).val()
     };
+
+   // if()
     items.push(item);
   }
 
+  const purchaseId = $(`#purchaseOrderId`).val();
   $.ajax({
     url: "model/goodReceive/insertGoodReceive.php",
     data: {
-      items: items
+      items: items,
+      purchaseId: purchaseId
     },
     method: "POST",
-    success: function (data) {
+    success: function (data) { 
+      const result = JSON.parse(data);
       $("#purchaseDetailsMessage").fadeIn();
-      $("#purchaseDetailsMessage").html(data);
-      initPurchaseOrder();
-      populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
-      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
-      reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
+      $("#purchaseDetailsMessage").html(result.alertMessage);
+      if(result.status === 'success'){
+        populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
+        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+        $(`#statusPOText`).text('Goods Received');
+        displayHideElements(["goodReceivedBtn"]);
+        displayElements(["closePOBtn"]);
+      }
     }
   });
 }
 
 function updatePO(statusId, status) {
   const purchaseId = $(`#purchaseOrderId`).val();
-  $.ajax({
-    url: "model/purchase/updateStatus.php",
-    data: {
-      purchaseID: purchaseId,
-      statusId: statusId
-    },
-    method: "POST",
-    success: function (data) {
-      $("#purchaseDetailsMessage").fadeIn();
-      $("#purchaseDetailsMessage").html(data);
-      $(`#statusPOText`).text(status);
-    }
-  });
+  return new Promise((resolve, reject) => {
+      $.ajax({
+        url: "model/purchase/updateStatus.php",
+        data: {
+          purchaseID: purchaseId,
+          statusId: statusId
+        },
+        method: "POST",
+        success: function (data) {
+          $("#purchaseDetailsMessage").fadeIn();
+          $("#purchaseDetailsMessage").html(data);
+          $(`#statusPOText`).text(status);
+          resolve(purchaseId)
+        },
+        error: function () {
+          reject(data);
+        }
+
+      });
+    });
 }
 
 function sendPO() {
-  updatePO(2, "Pending");
+  updatePO(2, "Pending").then(function (purchaseId) {
+    openGoodReceive(purchaseId)
+  });
 }
 
-function CancelPO() {
-  updatePO(4, "Cancel");
+function cancelPO() {
+  updatePO(4, "Cancel").then(function () {
+    displayHideElements(["sendPOBtn",  "addPurchaseBtn", "clearBtn", "goodReceivedBtn", "closePOBtn","cancelPOBtn", "printPdfBtn"]);
+  });
 }
 
 function closePO() {
-  updatePO(3, "Close");
+  updatePO(3, "Close").then(function () {
+    displayHideElements(["sendPOBtn",  "addPurchaseBtn", "clearBtn", "goodReceivedBtn", "closePOBtn","cancelPOBtn", "printPdfBtn"]); 
+  });
 }
 
 // Read selected option
@@ -503,16 +650,19 @@ function showPayments(purchaseOrderId) {
 
 function loadPayments(data) {
   const {purchaseOrder} = JSON.parse(data);
-  let credit = parseFloat(purchaseOrder.amount) - parseFloat(purchaseOrder.paidAmount);
+  let paidAmount =  purchaseOrder.paidAmount === null ? 0.00 : parseFloat(purchaseOrder.paidAmount); 
 
+  let credit = parseFloat(purchaseOrder.amount) - paidAmount;
   $("#paymentOrderId").val(purchaseOrder.purchaseID);
   $("#totalAmount").html(purchaseOrder.amount);
   $("#creditAmount").html(credit);
-  $("#paidAmount").html(purchaseOrder.paidAmount);
+  $("#paidAmount").html(paidAmount);
   $("#poNumber").html(purchaseOrder.orderNumber);
   $("#vendor").html(purchaseOrder.fullName);
   let status = purchaseOrder.amount == purchaseOrder.paidAmount ? " Settled" : " Need to pay"
   $("#paymentStatus").html(status);
+	const currentDate =  new Date().toISOString().slice(0, 10);
+	$('#paymentDate').val(currentDate);
   
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
 }
@@ -732,6 +882,79 @@ function updateChequeStatus(paymentId, status){
       searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
+}
 
+$("#purchaseDetailsVendorName").on("change", function () {
+  const selectedValue = $(this).val();
+  initItems(selectedValue);
+});
 
+function initItems(vendorId) {
+    $.ajax({
+      url: "model/item/getAllItems.php",
+      method: "POST",
+      dataType: "json",
+      data: {
+        vendorId: vendorId
+      },
+      success: function (data) {
+        itemList = data;
+        setPOItemList(itemList);
+      }
+    });
+
+    $('#addPurchaseItem').prop('disabled', !(vendorId>0));
+    $('#addPurchaseBtn').prop("disabled", !(vendorId>0));
+}
+
+function setPOItemList(items){
+	itemData = items && items.length? getSelect2ItemData(items): [];
+  $("#purchaseDetailsItem").empty().trigger("change");
+  $("#purchaseDetailsItem").select2({
+		placeholder: {text: "Select Item"},
+		data: itemData
+	});
+
+	purchaseItemSelectChange('');
+
+  for (let index = 0; index < rowCount; index++) {
+  $(`#purchaseDetailsItem${index+1}`).empty().trigger("change");
+  $(`#purchaseDetailsItem${index+1}`).select2({
+		placeholder: {text: "Select Item"},
+		data: itemData
+	});
+
+	purchaseItemSelectChange(index+1);
+  }
+}
+
+initPurchaseOrder();
+
+function printPurchaseOrderPdf() {
+  getVendorDetails();
+}
+
+function getVendorDetails(){
+// Get the vendorID entered in the text box
+var vendorID = $('#purchaseDetailsVendorName').val();
+let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
+	
+$.ajax({
+  url: 'model/vendor/populateVendorDetails.php',
+  method: 'POST',
+  data: {vendorDetailsVendorID:vendorID},
+  dataType: 'json',
+  success: function(vendorDetails){
+    try{
+      downloadOrderPdf("PO", order, orderItems, vendorDetails);
+    }
+    catch(err){
+      $("#purchaseDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " +  err.message + "</div>");
+    }
+  },
+  error:  function(data){
+    $("#purchaseDetailsMessage").fadeIn();
+    $("#purchaseDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + "</div>");
+  }
+});
 }

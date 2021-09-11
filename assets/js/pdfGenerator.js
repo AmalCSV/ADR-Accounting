@@ -1,4 +1,4 @@
-function getOrderHeader(orderType, orderNumber, date) {
+function getOrderHeader(orderType, orderNumber, date, companyImage) {
   let headerContent = [];
   let header = {
     columns: [
@@ -6,8 +6,7 @@ function getOrderHeader(orderType, orderNumber, date) {
         image: companyImage,
         width: 75,
         height: 50
-      },
-      {
+      }, {
         columns: [
           {
             text: orderType,
@@ -17,12 +16,12 @@ function getOrderHeader(orderType, orderNumber, date) {
             bold: true,
             alignment: "right",
             margin: [0, 0, 0, 15]
-          },
-          {text: "\n\n"}
+          }, {
+            text: "\n\n"
+          }
         ],
         width: 880
-      },
-      
+      }
     ]
   };
   headerContent.push(header);
@@ -74,7 +73,7 @@ function getOrderHeader(orderType, orderNumber, date) {
   return headerContent;
 }
 
-function getFromToPO(fromCompany, toCompany, fromAddres, toAddress) {
+function getFromToPO(orderPdf) {
   let fromTo = [
     {
       columns: [
@@ -86,7 +85,7 @@ function getFromToPO(fromCompany, toCompany, fromAddres, toAddress) {
           alignment: "left",
           margin: [0, 20, 0, 5]
         }, {
-          text: "Supplier",
+          text: "Vendor",
           color: "#aaaaab",
           bold: true,
           fontSize: 11,
@@ -97,27 +96,29 @@ function getFromToPO(fromCompany, toCompany, fromAddres, toAddress) {
     }, {
       columns: [
         {
-          text: toCompany,
+          text: orderPdf.toCompany,
           bold: true,
           color: "#333333",
           fontSize: 11,
-          alignment: "left"
+          alignment: "left",
+          margin: [0, 0, 0, 5]
         }, {
-          text: fromCompany,
+          text: orderPdf.fromCompany,
           bold: true,
           color: "#333333",
           fontSize: 11,
-          alignment: "left"
+          alignment: "left",
+          margin: [0, 0, 0, 5]
         }
       ]
     }, {
       columns: [
         {
-          text: toAddress,
+          text: orderPdf.toAddress,
           fontSize: 11,
           style: "invoiceBillingAddress"
         }, {
-          text: fromAddres,
+          text: orderPdf.fromAddress,
           fontSize: 11,
           style: "invoiceBillingAddress"
         }
@@ -125,14 +126,14 @@ function getFromToPO(fromCompany, toCompany, fromAddres, toAddress) {
     }, {
       columns: [
         {
-          text: "Namal Gamage",
+          text: orderPdf.toContactPerson,
           fontSize: 11,
           margin: [
             0, 4, 0, 4
           ],
           style: "invoiceBillingAddress"
         }, {
-          text: "J.C.P Perera",
+          text:  orderPdf.fromContactPerson,
           fontSize: 11,
           margin: [
             0, 4, 0, 4
@@ -143,11 +144,11 @@ function getFromToPO(fromCompany, toCompany, fromAddres, toAddress) {
     }, {
       columns: [
         {
-          text: "0712384000",
+          text: orderPdf.toMobile,
           fontSize: 11,
           style: "invoiceBillingAddress"
         }, {
-          text: "0712384000",
+          text: orderPdf.fromMobile,
           fontSize: 11,
           style: "invoiceBillingAddress"
         }
@@ -159,7 +160,6 @@ function getFromToPO(fromCompany, toCompany, fromAddres, toAddress) {
 }
 
 function getItemTable(items) {
-
   let layout = {
     layout: {
       defaultBorder: false,
@@ -203,7 +203,7 @@ function getItemTable(items) {
     table: {
       headerRows: 1,
       widths: [
-        20, "*", 80, 80, 80
+        80, 110, 50, 80, 90
       ],
       body: getItemsDetails(items)
     }
@@ -212,7 +212,7 @@ function getItemTable(items) {
   return layout;
 }
 
-function getItemsDetails(items){
+function getItemsDetails(items) {
   let tableHeader = [];
   let firstRow = [
     {
@@ -235,16 +235,18 @@ function getItemsDetails(items){
       border: [
         false, true, false, true
       ],
+      alignment:"center",
       fontSize: 11
     }, {
-      text: "Unit Price(Rs)",
+      text: "Unit Price (Rs)",
       fillColor: "#eaf2f5",
       border: [
         false, true, false, true
       ],
-      fontSize: 11
+      fontSize: 11,
+      alignment:"center"
     }, {
-      text: "Item Total(Rs)",
+      text: "Item Total (Rs)",
       border: [
         false, true, false, true
       ],
@@ -255,7 +257,7 @@ function getItemsDetails(items){
   ];
   tableHeader.push(firstRow);
 
-  if(items && items.length >0 ){
+  if (items && items.length > 0) {
     for (let i = 0; i < items.length; i++) {
       let itemContent = [
         {
@@ -266,17 +268,17 @@ function getItemsDetails(items){
           style: "itemDetails"
         }, {
           text: items[i].quantity,
-          style: "itemDetails"
+          style: "itemPrice"
         }, {
           text: items[i].unitPrice,
-          style: "itemDetails"
+          style: "itemPrice"
         }, {
           text: items[i].totalPrice,
           style: "itemPrice"
         }
       ];
       tableHeader.push(itemContent);
-    };
+    }
   }
   return tableHeader;
 }
@@ -322,12 +324,12 @@ function getTotal(subtotal, discount, totalPrice) {
     table: {
       headerRows: 1,
       widths: [
-        "*", "auto"
+        "*", 80
       ],
       body: [
         [
           {
-            text: "Payment Subtotal",
+            text: "Subtotal of goods",
             border: [
               false, true, false, true
             ],
@@ -345,19 +347,20 @@ function getTotal(subtotal, discount, totalPrice) {
         ],
         [
           {
-            text: "Discount",
+            text: discount ? "Discount" : '\n',
             border: [
               false, false, false, true
             ],
             alignment: "right",
             margin: [0, 2, 0, 2]
           }, {
-            text: discount,
+            text: discount ? discount : '\n',
             border: [
               false, false, false, true
             ],
             fillColor: "#f5f5f5",
             alignment: "right",
+            fontSize: 13,
             margin: [0, 2, 0, 2]
           }
         ],
@@ -365,7 +368,7 @@ function getTotal(subtotal, discount, totalPrice) {
           {
             text: "Total Amount",
             bold: true,
-            fontSize: 14,
+            fontSize: 13,
             alignment: "right",
             border: [
               false, false, false, true
@@ -374,7 +377,7 @@ function getTotal(subtotal, discount, totalPrice) {
           }, {
             text: totalPrice,
             bold: true,
-            fontSize: 14,
+            fontSize: 13,
             alignment: "right",
             border: [
               false, false, false, true
@@ -402,18 +405,37 @@ function getNotes(note) {
   return notes;
 }
 
-function downloadOrderPdf(orderType, order, items){
+function downloadOrderPdf(orderType, order, items, secondParty) {
   let content = [];
- let type = "";
-  if(orderType === "PO"){
-    type = "PURCHASE ORDER";
+  let type = "";
+
+  let company = getCompanyDetails();
+
+  let orderPdf = {
+    fromCompany : "",
+    fromAddress : "",
+    toCompany: "",
+    toAddress : ""
   }
-  else{
+  if (orderType === "PO") {
+    type = "PURCHASE ORDER";
+    orderPdf = {
+      fromCompany : secondParty.companyName,
+      fromAddress : secondParty.address + ", " + (secondParty.address2 != "" ? secondParty.address2  + ", " : "") + secondParty.city,
+      fromContactPerson :  secondParty.contactPerson,
+      fromMobile : secondParty.mobile,
+      toCompany: company.companyName,
+      toAddress : company.address + ", " + (company.address2 != "" ? (company.address2  + ", ") : "") + company.city,
+      toContactPerson : company.fullName,
+      toMobile : company.mobile,
+    }
+
+  } else {
     type = "SALES ORDER";
   }
 
-  let header = getOrderHeader(type, order.orderNumber, order.orderDate);
-  let fromTo = getFromToPO("ABC Pvt Ltd", "Anthony Distributors", "No:12, 1 st Lane, Badulla", "No84/21, Nawala");
+  let header = getOrderHeader(type, order.orderNumber, order.orderDate, company.logo);
+  let fromTo = getFromToPO(orderPdf);
   let newLine = {
     alignment: "justify",
     margin: [
@@ -444,10 +466,10 @@ function downloadOrderPdf(orderType, order, items){
   content.push({text: "\n\n"});
   content.push({text: "\n"});
 
-  let itemTotal = getTotal(order.amount, "0%", "Rs. " + order.amount);
+  let itemTotal = getTotal(order.amount, order.discount, "Rs. " + order.amount);
   content.push(itemTotal);
 
-  let notes = getNotes("Some notes goes here \n Notes second line");
+  let notes = getNotes(order.description);
   content.push(notes);
   content.push([
     {
@@ -458,11 +480,13 @@ function downloadOrderPdf(orderType, order, items){
     }
   ]);
   content.push({text: "\n"});
-  content.push({text: "Payments\n"});
-  content.push(paymentSection());
-  downloadpdf(content, order.orderNumber);
 
-};
+  if (orderType === "SO") {
+    content.push({text: "Payments\n\n"});
+    content.push(paymentSection());
+  }
+  downloadpdf(content, order.orderNumber);
+}
 
 function downloadpdf(con, docName) {
   let content = con;
@@ -555,7 +579,8 @@ function downloadpdf(con, docName) {
         margin: [0, 50, 0, 3]
       },
       notesText: {
-        fontSize: 10
+        fontSize: 10,
+        margin: [0, 10, 0, 40]
       },
       itemDetails: {
         fontSize: 11,
@@ -594,7 +619,7 @@ function downloadpdf(con, docName) {
 
 function paymentSection() {
   return {
-    style: 'tableExample',
+    style: "tableExample",
     layout: {
       hLineWidth: function (i, node) {
         return 1;
@@ -603,11 +628,11 @@ function paymentSection() {
         return 1;
       },
       hLineColor: function (i, node) {
-        return 'gray';
+        return "gray";
       },
       vLineColor: function (i, node) {
-        return 'gray';
-      },
+        return "gray";
+      }
     },
     table: {
       headerRows: 1,
@@ -616,11 +641,21 @@ function paymentSection() {
       ],
       heights: 80,
       body: [
-        ['Date', 'Amount', 'Type (Cash or cheque)', 'Cheque No', 'Cheque Date'],
-        [' ', ' ', '', '', ''],
-        [' ', ' ', '', '', ''],
-        [' ', ' ', '', '', ''],
-        [' ', ' ', '', '', ''],
+        [
+          "Date", "Amount", "Type (Cash or cheque)", "Cheque No", "Cheque Date"
+        ],
+        [
+          " ", " ", "", "", ""
+        ],
+        [
+          " ", " ", "", "", ""
+        ],
+        [
+          " ", " ", "", "", ""
+        ],
+        [
+          " ", " ", "", "", ""
+        ]
       ]
     }
   };

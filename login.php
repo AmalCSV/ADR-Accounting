@@ -3,7 +3,7 @@
 	
 	// Check if user is already logged in
 	if(isset($_SESSION['loggedIn'])){
-		header('Location: index.php');
+		header('Location: items.php');
 		exit();
 	}
 	
