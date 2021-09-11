@@ -203,7 +203,7 @@ function getItemTable(items) {
     table: {
       headerRows: 1,
       widths: [
-        20, "*", 80, 80, 80
+        80, "*", 60, 70, 70
       ],
       body: getItemsDetails(items)
     }
@@ -239,6 +239,7 @@ function getItemsDetails(items) {
     }, {
       text: "Unit Price(Rs)",
       fillColor: "#eaf2f5",
+      alignment: "right",
       border: [
         false, true, false, true
       ],
@@ -322,7 +323,7 @@ function getTotal(subtotal, discount, totalPrice) {
     table: {
       headerRows: 1,
       widths: [
-        "*", "auto"
+        "*", 70
       ],
       body: [
         [
