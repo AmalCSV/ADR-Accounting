@@ -27,8 +27,8 @@
 					<th>Selling Price</th>
 					<th>Buying Price</th>
 					<th>Status</th>
-					<th>Rack</th>
 					<th style="min-width:100px !important;">Rack</th>
+					<th></th>
 					</tr>
 				</thead>
 				<tbody>';
