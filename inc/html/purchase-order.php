@@ -28,7 +28,7 @@
                   </div>
                   <div class="form-group col-md-3">
                       <label>Purchase Date<span class="requiredIcon">*</span></label>
-                      <input style="height:38px;" type="text" class="form-control datepicker" id="purchaseDetailsPurchaseDate" name="purchaseDetailsPurchaseDate" readonly>
+                      <input style="height:32px;" type="text" class="form-control datepicker" id="purchaseDetailsPurchaseDate" name="purchaseDetailsPurchaseDate" readonly>
                   </div>
                   <div class="form-group col-md-5">
                       <label for="purchaseDetailsVendorName">Vendor Name<span class="requiredIcon">*</span></label>
@@ -128,7 +128,6 @@
             </div>
             <div id="purchaseListTab" class="container-fluid tab-pane fade active show">
               <br>
-              <p>Use the grid below to search purchase details</p>
               <div class="table-responsive" id="purchaseDetailsTableDiv"></div>
             </div>
             <div id="purchasePaymentsTab" class="container-fluid tab-pane">
