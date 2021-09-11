@@ -1,4 +1,10 @@
 var itemData = [];
+var itemList = [];
+// File that creates the sale details search table
+saleDetailsSearchTableCreatorFile = 'model/sale/saleDetailsSearchTableCreator.php';
+// File that creates the sale reports search table
+saleReportsSearchTableCreatorFile = 'model/sale/saleReportsSearchTableCreator.php';
+
 // Function to call the insertSale.php script to insert sale data to db
 function addSale() {
   var saleDetailsSaleID = $("#saleDetailsSaleID").val();
@@ -54,6 +60,21 @@ function addSale() {
       reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
     }
   });
+}
+
+function initItems(vendorId) {
+  $.ajax({
+    url: "model/item/getAllItems.php",
+    method: "POST",
+    dataType: "json",
+    data: {
+      vendorId: vendorId
+    },
+    success: function (data) {
+      itemList = data;
+    }
+  });
+
 }
 
 function addSalesItem(id, viewType) {
@@ -470,3 +491,5 @@ function updateSOChequeStatus(paymentId, status) {
     }
   });
 }
+
+initSalesOrder();

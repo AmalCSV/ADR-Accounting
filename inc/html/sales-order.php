@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="v-pills-sale" role="tabpanel" aria-labelledby="v-pills-sale-tab">
+<div class="tab-pane fade show active" id="v-pills-sale" role="tabpanel" aria-labelledby="v-pills-sale-tab">
   <div class="card card-outline-secondary my-4">
     <div class="card-header">Sale Details</div>
     <div class="card-body">
