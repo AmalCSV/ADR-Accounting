@@ -57,8 +57,8 @@
 						'<td>' . $row['orderNumber'] . '</td>' .
 						'<td>' . $row['orderDate'] . '</td>' .
 						'<td>' . $row['fullName'] . '</td>' .
-						'<td>' . $row['amount'] . '</td>' .
-						'<td>' . $row['paidAmount'] . '</td>' .
+						'<td class="text-right">' . $row['amount'] . '</td>' .
+						'<td class="text-right">' . $row['paidAmount'] . '</td>' .
 						'<td>' . $row['statusText'] . '</td>' .
 						' <td align="right">'. optionsMenu($row['status'], $row['purchaseID']) . '
 							<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="View"> <i class="fa fa-eye pointer" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"></i></button>
