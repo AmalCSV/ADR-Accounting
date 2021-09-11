@@ -21,7 +21,7 @@ function calculateTotalInPurchaseTab(){
 }
 
 // Function to call the insertPurchase.php script to insert purchase data to db
-function addPurchase() {console.log(333)
+function addPurchase() {
   let errorText = null;
 	var purchaseDetailsPurchaseDate = $('#purchaseDetailsPurchaseDate').val();
 	var purchaseDetailsDescription = $('#purchaseDetailsDescription').val();
@@ -360,7 +360,6 @@ function initPurchaseOrderItems() {
 
   $(`#purchaseDetailsQuantity`).val('');
   
-
 	for (let index = 0; index <= rowCount+1; index++) {
 		deletePurchaseItem(index+1);
 	}
@@ -418,7 +417,7 @@ function loadDataToPurchaseOrder(data, viewType) {
 	for (let index = 0; index < purchaseOrderItems.length; index++) {
 		const numberText = index === 0 ? '' : index;
 		if(index>0){
-			rowCount++;console.log(viewType, purchaseOrder.status)
+			rowCount++;
     		addPurchaseItem(rowCount, viewType, purchaseOrder.status);
 		}
 
@@ -432,12 +431,28 @@ function loadDataToPurchaseOrder(data, viewType) {
 		if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
 			disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsQuantity${numberText}`]);
       if(index>0){
-        $(`#deletePurchaseItem${numberText}`).prop('disabled', true);
+        if(viewType !== 'GOOD_RECEIVED'){
+          displayHideElements([`deletePurchaseItem${numberText}`]);
+        } else {
+          switch (purchaseOrder.status) {
+            case '1': //created
+              disableElements([`deletePurchaseItem${numberText}`]);
+            break;
+          }
+        }
+        
       }
       if(viewType === 'GOOD_RECEIVED'){
         $(`#purchaseDetailsGoodReceivedQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
       }
 		}
+    else if (viewType === 'EDIT') {
+      if(index>0){
+        if(purchaseOrderItems.length !== index+1){
+          disableElements([`deletePurchaseItem${numberText}`]);
+        }
+      }
+    }
 	}
   calculatePOGrandTotal();
 	if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
@@ -519,6 +534,8 @@ function updateGoodReceived() {
       id: $(`#purchaseItemId${index + 1}`).val(),
       goodReceived: $(`#purchaseDetailsGoodReceivedQuantity${index + 1}`).val()
     };
+
+   // if()
     items.push(item);
   }
 
@@ -530,7 +547,7 @@ function updateGoodReceived() {
       purchaseId: purchaseId
     },
     method: "POST",
-    success: function (data) { console.log(data)
+    success: function (data) { 
       const result = JSON.parse(data);
       $("#purchaseDetailsMessage").fadeIn();
       $("#purchaseDetailsMessage").html(result.alertMessage);
