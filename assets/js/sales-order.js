@@ -5,6 +5,11 @@ saleDetailsSearchTableCreatorFile = 'model/sale/saleDetailsSearchTableCreator.ph
 // File that creates the sale reports search table
 saleReportsSearchTableCreatorFile = 'model/sale/saleReportsSearchTableCreator.php';
 
+function getItem(id) {
+  const item = itemList.find(x => x.productID === id);
+  return item;
+}
+
 // Function to call the insertSale.php script to insert sale data to db
 function addSale() {
   var saleDetailsSaleID = $("#saleDetailsSaleID").val();
@@ -79,11 +84,11 @@ function initItems(vendorId) {
 
 function addSalesItem(id, viewType) {
   $("#salesItemList").append(`
-			<div class="form-row" id="addedRow${id}"> 
+			      <div class="form-row" id="addedRow${id}"> 
                     <div class="form-group col-md-4">
-						<select id='saleDetailsItem${id}' class="form-control">
+						            <select id='saleDetailsItem${id}' class="form-control" style="width: 100%">
                         </select>
-				    </div>
+				            </div>
                     <div class="form-group col-md-2">
                         <input type="number" class="form-control" id="saleDetailsQuantity${id}" name="saleDetailsQuantity${id}" value="0">
                     </div>

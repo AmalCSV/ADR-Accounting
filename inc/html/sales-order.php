@@ -24,19 +24,31 @@
                 <label for="saleDetailsSaleID">Sale ID</label>
                 <input type="text" class="form-control invTooltip" id="saleDetailsSaleID" name="saleDetailsSaleID"/>
               </div>
-              <div class="form-group col-md-3">
+              <div class="form-group col-md-2">
                 <label for="saleDetailsSaleDate">Sale Date<span class="requiredIcon">*</span></label>
                 <input type="text" class="form-control datepicker" id="saleDetailsSaleDate" name="saleDetailsSaleDate" readonly="readonly"/>
               </div>
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
+                      <label for="purchaseDetailsVendorName">Vendor Name<span class="requiredIcon">*</span></label>
+                      <div style="display:flex;">
+                        <select id="purchaseDetailsVendorName" name="purchaseDetailsVendorName" class="form-control chosenSelect">
+                          <option  value="null">--Select Vendor--</option> 
+                          <?php 
+                                require('model/vendor/getVendorNames.php');
+                            ?>
+                        </select>
+                        <button type="button" class="btn btn-primary btn-md ml-2" onclick="window.location.href = 'vendors.php';"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                      </div>
+              </div>
+              <div class="form-group col-md-3">
                 <label for="saleDetailsCustomerName" class="col-md-12">Customer</label>
-                <select id="saleDetailsCustomerName" class="col-md-12 form-control" style="min-width:300px;"></select>
+                <select id="saleDetailsCustomerName" class="ol-md-12 form-control" style="width: 100%"></select>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-10">
                 <label for="salesDescription">Note</label>
-                <textarea rows="4" class="form-control" id="salesDescription" name="salesDescription" autocomplete="off"></textarea>
+                <textarea rows="1" class="form-control" id="salesDescription" name="salesDescription" autocomplete="off"></textarea>
               </div>
             </div>
             <div class="form-row">
@@ -47,7 +59,7 @@
                 <label>Quantity<span class="requiredIcon">*</span></label>
               </div>
               <div class="form-group col-md-2">
-                <label>Unit Price<span class="requiredIcon">*</span></label>
+                <label>Selling Price<span class="requiredIcon">*</span></label>
               </div>
               <div class="form-group col-md-2">
                 <label>Sub Total</label>
@@ -59,7 +71,7 @@
             <div id="salesItemList">
               <div class="form-row">
                 <div class="form-group col-md-4">
-                  <select id="saleDetailsItem" class="col-md-12 form-control"></select>
+                  <select id="saleDetailsItem" class="form-control" style="width: 100%"></select>
                 </div>
                 <div class="form-group col-md-2">
                   <input type="number" class="form-control" id="saleDetailsQuantity" name="saleDetailsQuantity" value="0"/>
@@ -71,12 +83,14 @@
                   <input type="text" class="form-control" id="saleDetailsTotal" name="saleDetailsTotal" readonly="readonly"/>
                 </div>
                 <div class="form-group col-md-1">
-                  <button type="button" id="saleDetailsItemAdd" class="btn btn-info">Add</button>
                 </div>
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-8">
+              <div class="form-group col-md-4">
+                  <button type="button" id="saleDetailsItemAdd"  class="btn btn-info">Add Item Row</button>
+              </div>
+              <div class="form-group col-md-4">
                 <label style="float:right">Total Before Discount</label>
               </div>
               <div class="form-group col-md-2">
