@@ -128,7 +128,6 @@
             </div>
             <div id="purchaseListTab" class="container-fluid tab-pane fade active show">
               <br>
-              <p>Use the grid below to search purchase details</p>
               <div class="table-responsive" id="purchaseDetailsTableDiv"></div>
             </div>
             <div id="purchasePaymentsTab" class="container-fluid tab-pane">

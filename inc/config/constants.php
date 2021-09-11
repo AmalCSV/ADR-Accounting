@@ -14,7 +14,7 @@
 	define('DB_USER', 'root');
 	
 	// DB password
-	define('DB_PASSWORD', '');
+	define('DB_PASSWORD', 'root');
 	//define('DB_PASSWORD', 'root');
 	
 	// DB name
