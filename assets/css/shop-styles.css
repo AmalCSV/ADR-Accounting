@@ -180,3 +180,8 @@ select.form-control:not([size]):not([multiple]){
 .price-al{
   text-align: right;
 }
+
+.payment-info{
+  font-weight: 600;
+  display : 'inline-flex';
+}

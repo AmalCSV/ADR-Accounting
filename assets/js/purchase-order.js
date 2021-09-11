@@ -650,16 +650,19 @@ function showPayments(purchaseOrderId) {
 
 function loadPayments(data) {
   const {purchaseOrder} = JSON.parse(data);
-  let credit = parseFloat(purchaseOrder.amount) - parseFloat(purchaseOrder.paidAmount);
+  let paidAmount =  purchaseOrder.paidAmount === null ? 0.00 : parseFloat(purchaseOrder.paidAmount); 
 
+  let credit = parseFloat(purchaseOrder.amount) - paidAmount;
   $("#paymentOrderId").val(purchaseOrder.purchaseID);
   $("#totalAmount").html(purchaseOrder.amount);
   $("#creditAmount").html(credit);
-  $("#paidAmount").html(purchaseOrder.paidAmount);
+  $("#paidAmount").html(paidAmount);
   $("#poNumber").html(purchaseOrder.orderNumber);
   $("#vendor").html(purchaseOrder.fullName);
   let status = purchaseOrder.amount == purchaseOrder.paidAmount ? " Settled" : " Need to pay"
   $("#paymentStatus").html(status);
+	const currentDate =  new Date().toISOString().slice(0, 10);
+	$('#paymentDate').val(currentDate);
   
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
 }

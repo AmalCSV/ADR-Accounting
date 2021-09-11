@@ -203,7 +203,7 @@ function getItemTable(items) {
     table: {
       headerRows: 1,
       widths: [
-        80, "*", 60, 70, 70
+        80, 110, 50, 80, 90
       ],
       body: getItemsDetails(items)
     }
@@ -235,17 +235,18 @@ function getItemsDetails(items) {
       border: [
         false, true, false, true
       ],
+      alignment:"center",
       fontSize: 11
     }, {
-      text: "Unit Price(Rs)",
+      text: "Unit Price (Rs)",
       fillColor: "#eaf2f5",
-      alignment: "right",
       border: [
         false, true, false, true
       ],
-      fontSize: 11
+      fontSize: 11,
+      alignment:"center"
     }, {
-      text: "Item Total(Rs)",
+      text: "Item Total (Rs)",
       border: [
         false, true, false, true
       ],
@@ -267,10 +268,10 @@ function getItemsDetails(items) {
           style: "itemDetails"
         }, {
           text: items[i].quantity,
-          style: "itemDetails"
+          style: "itemPrice"
         }, {
           text: items[i].unitPrice,
-          style: "itemDetails"
+          style: "itemPrice"
         }, {
           text: items[i].totalPrice,
           style: "itemPrice"
@@ -323,12 +324,12 @@ function getTotal(subtotal, discount, totalPrice) {
     table: {
       headerRows: 1,
       widths: [
-        "*", 70
+        "*", 80
       ],
       body: [
         [
           {
-            text: "Payment Subtotal",
+            text: "Subtotal of goods",
             border: [
               false, true, false, true
             ],
@@ -359,6 +360,7 @@ function getTotal(subtotal, discount, totalPrice) {
             ],
             fillColor: "#f5f5f5",
             alignment: "right",
+            fontSize: 13,
             margin: [0, 2, 0, 2]
           }
         ],
@@ -366,7 +368,7 @@ function getTotal(subtotal, discount, totalPrice) {
           {
             text: "Total Amount",
             bold: true,
-            fontSize: 14,
+            fontSize: 13,
             alignment: "right",
             border: [
               false, false, false, true
@@ -375,7 +377,7 @@ function getTotal(subtotal, discount, totalPrice) {
           }, {
             text: totalPrice,
             bold: true,
-            fontSize: 14,
+            fontSize: 13,
             alignment: "right",
             border: [
               false, false, false, true
@@ -578,7 +580,7 @@ function downloadpdf(con, docName) {
       },
       notesText: {
         fontSize: 10,
-        margin: [0, 10, 0, 50]
+        margin: [0, 10, 0, 40]
       },
       itemDetails: {
         fontSize: 11,
