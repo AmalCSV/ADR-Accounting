@@ -29,11 +29,15 @@
         $poUpdateStatement = $conn->prepare($poUpdateSql);
         $poUpdateStatement->execute(['purchaseId' => $purchaseId]);
         
-        echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Good receive added successfully.</div>';
+        $message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Good receive added successfully.</div>';
+		$data = ['alertMessage' => $message, 'status' => "success"];
+		echo json_encode($data);
         exit();
     } else {
     // One or more mandatory fields are empty. Therefore, display a the error message
-    echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter valid amount</div>';
+    $message = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter valid amount</div>';
+	$data = ['alertMessage' => $message, 'status' => "error"];
+	echo json_encode($data);
     exit();
     }
 ?>
