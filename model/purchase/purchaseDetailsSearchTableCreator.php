@@ -57,12 +57,12 @@
 						'<td>' . $row['orderNumber'] . '</td>' .
 						'<td>' . $row['orderDate'] . '</td>' .
 						'<td>' . $row['fullName'] . '</td>' .
-						'<td>' . $row['amount'] . '</td>' .
-						'<td>' . $row['paidAmount'] . '</td>' .
+						'<td class="price-al">' . $row['amount'] . '</td>' .
+						'<td class="price-al">' . $row['paidAmount'] . '</td>' .
 						'<td>' . $row['statusText'] . '</td>' .
 						' <td align="right">'. optionsMenu($row['status'], $row['purchaseID']) . '
-							<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="View"> <i class="fa fa-eye pointer" onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"></i></button>
-							<button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Payments"> <i class="fa fa-dollar-sign pointer" onclick=showPayments("'. $row['purchaseID'] .'")></i></button>
+							<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="View"  onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"> <i class="fa fa-eye pointer"></i></button>
+							<button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Payments" onclick=showPayments("'. $row['purchaseID'] .'")> <i class="fa fa-dollar-sign pointer"></i></button>
                     	</td>'.
 					'</tr>';
 	}
@@ -78,7 +78,7 @@
 						<th>Total Price</th>
 						<th>Paid Amount</th>
 						<th>Status</th>
-						<th> Action </th>
+						<th>Action </th>
 						</tr>
 					</tfoot>
 				</table>';

@@ -172,3 +172,16 @@ div {
 .btn{
   line-height: 1 !important;
 }
+
+select.form-control:not([size]):not([multiple]){
+  height: calc(2rem + 1px);
+}
+
+.price-al{
+  text-align: right;
+}
+
+.payment-info{
+  font-weight: 600;
+  display : 'inline-flex';
+}

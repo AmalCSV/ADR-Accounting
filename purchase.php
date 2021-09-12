@@ -31,7 +31,7 @@
                         <a class="nav-link" id="v-pills-reports-tab" href="reports.php" role="tab" aria-controls="v-pills-reports" aria-selected="false">Reports</a>
                     </div>
                 </div>
-                <div class="col-lg-10 pl-1 pr-1">
+                <div class="col-lg-11 pl-1 pr-1">
                     <div class="tab-content mt-minus-15" id="v-pills-tabContent">
                        <?php include('inc/html/purchase-order.php'); ?>
                     </div>
