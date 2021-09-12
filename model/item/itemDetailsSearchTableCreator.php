@@ -26,8 +26,8 @@
 					<th>W Qty</th>
 					<th>Selling Price</th>
 					<th>Buying Price</th>
-					<th>Status</th>
 					<th>Rack</th>
+					<th>Status</th>
 					<th></th>
 					</tr>
 				</thead>
@@ -45,8 +45,8 @@
 					'<td class="text-right pr-1">' . $row['warningQty'] . '</td>' .
 					'<td class="text-right pr-1">' . $row['sellingPrice'] . '</td>' .
 					'<td class="text-right pr-1">' . $row['buyingPrice'] . '</td>' .
-					'<td>' . $row['status'] . '</td>' .
 					'<td>' . $row['rackNo'] . '</td>' .
+					'<td>' . $row['status'] . '</td>' .
 					'<td>' . '<button onclick=showEditItem("'. $row['productID'] .'") type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit  fa-sm"></i></button>'. '</td>' .
 							
 					'</tr>';
@@ -65,8 +65,8 @@
 						<th>W Qty</th>
 						<th>Selling Price</th>
 						<th>Buying Price</th>
-						<th>Status</th>
 						<th>Rack</th>
+						<th>Status</th>
 						<th></th>
 						</tr>
 					</tfoot>
