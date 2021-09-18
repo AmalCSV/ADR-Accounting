@@ -29,9 +29,9 @@
                 <input type="text" class="form-control datepicker" id="saleDetailsSaleDate" name="saleDetailsSaleDate" readonly="readonly"/>
               </div>
               <div class="form-group col-md-3">
-                      <label for="purchaseDetailsVendorName">Vendor Name<span class="requiredIcon">*</span></label>
+                      <label for="saleDetailsVendorName">Vendor Name<span class="requiredIcon">*</span></label>
                       <div style="display:flex;">
-                        <select id="purchaseDetailsVendorName" name="purchaseDetailsVendorName" class="form-control chosenSelect">
+                        <select id="saleDetailsVendorName" name="saleDetailsVendorName" class="form-control chosenSelect">
                           <option  value="null">--Select Vendor--</option> 
                           <?php 
                                 require('model/vendor/getVendorNames.php');
@@ -46,10 +46,14 @@
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-10">
+              <div class="form-group col-md-8">
                 <label for="salesDescription">Note</label>
                 <textarea rows="1" class="form-control" id="salesDescription" name="salesDescription" autocomplete="off"></textarea>
               </div>
+              <div class="form-group col-md-2" id="statusSO">
+                    <label>Status</label>
+                    <h4><span id="statusSOText" class="badge badge-info">Status</span></h4>
+                  </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-4">
@@ -65,22 +69,28 @@
                 <label>Sub Total</label>
               </div>
               <div class="form-group col-md-1">
-                <label>#</label>
+                <label id="lableActionHeader">#</label>
               </div>
             </div>
             <div id="salesItemList">
               <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <select id="saleDetailsItem" class="form-control" style="width: 100%"></select>
                 </div>
-                <div class="form-group col-md-2">
-                  <input type="number" class="form-control" id="saleDetailsQuantity" name="saleDetailsQuantity" value="0"/>
+                <div class="form-group col-md-1">
+                  <input type="number" class="form-control text-right" id="saleDetailsAvalableQuantity" name="saleDetailsAvalableQuantity" value="0" readonly>
                 </div>
                 <div class="form-group col-md-2">
-                  <input type="text" class="form-control" id="saleDetailsUnitPrice" name="saleDetailsUnitPrice" value="0" readonly="readonly"/>
+                  <input type="number" class="form-control text-right" id="saleDetailsQuantity" name="saleDetailsQuantity" value="0"/>
                 </div>
                 <div class="form-group col-md-2">
-                  <input type="text" class="form-control" id="saleDetailsTotal" name="saleDetailsTotal" readonly="readonly"/>
+                  <input type="text" class="form-control text-right" id="saleDetailsUnitPrice" name="saleDetailsUnitPrice" value="0" readonly="readonly"/>
+                </div>
+                <div class="form-group col-md-2">
+                  <input type="text" class="form-control text-right" id="saleDetailsTotal" name="saleDetailsTotal" readonly="readonly"/>
+                </div>
+                <div class="form-group col-md-1" id="deliveredData">
+                  <input type="number" class="form-control" id="saleDetailsDeliveredQuantity" name="saleDetailsDeliveredQuantity" value="0">
                 </div>
                 <div class="form-group col-md-1">
                 </div>
@@ -94,7 +104,7 @@
                 <label style="float:right">Total Before Discount</label>
               </div>
               <div class="form-group col-md-2">
-                <input type="text" class="form-control" id="salesOrderTotal" name="salesOrderTotal" readonly="readonly">
+                <input type="text" class="form-control text-right" id="salesOrderTotal" name="salesOrderTotal" readonly="readonly">
               </div>
             </div>
             <div class="form-row">
@@ -102,7 +112,7 @@
                 <label style="float:right" for="saleDetailsDiscountp">Discount %</label>
               </div>
               <div class="form-group col-md-1">
-                <input class="form-control" id="saleDetailsDiscountp" name="saleDetailsDiscountp" type="number" min="1" max="50"/>
+                <input class="form-control text-right" id="saleDetailsDiscountp" name="saleDetailsDiscountp" value="0" type="number" min="1" max="50"/>
               </div>
             </div>
             <div class="form-row">
@@ -110,12 +120,17 @@
                 <label style="float:right">Total</label>
               </div>
               <div class="form-group col-md-2">
-                <input type="text" class="form-control" id="salesOrderNetTotal" name="salesOrderNetTotal" readonly="readonly">
+                <input type="text" class="form-control text-right" id="salesOrderNetTotal" name="salesOrderNetTotal" readonly="readonly">
               </div>
             </div>
             <button type="button" id="addSaleButton" class="btn btn-success">Add Sale</button>
-            <!-- <button type="button" id="updateSaleDetailsButton" class="btn btn-primary">Update</button> -->
-            <button type="reset" id="saleClear" onclick="initSalesOrder()" class="btn">Clear</button>
+            <button type="button" id="updateSaleButton" class="btn btn-primary" onclick="updateSalesOrder()">Update</button>
+            <button type="reset" id="clearBtn" onclick="initSalesOrder()" class="btn">Clear</button>
+            <button type="button" id="printPdfBtn" class="btn btn-secondary" onclick="printSalesOrderPdf()">Print</button>
+            <button type="button" id="sendSOBtn" class="btn btn-info" onclick="sendSO()">Submit</button>
+            <button type="button" id="deliveredBtn" class="btn btn-info" onclick="updateDelivered()">Delivery</button>
+            <button type="button" id="closeSOBtn" class="btn btn-success" onclick="closeSO()">Close</button>
+            <button type="button" id="cancelSOBtn" class="btn btn-danger" onclick="cancelSO()">Cancel</button>
           </form>
         </div>
         <div id="salesListTab" class="container-fluid tab-pane fade show active">

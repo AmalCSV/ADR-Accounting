@@ -95,7 +95,7 @@ function addPurchase() {
       }
     });
   }
-  else {console.log(errorText)
+  else {
     $('#purchaseDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
     $('#purchaseDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
   }
