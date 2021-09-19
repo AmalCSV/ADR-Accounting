@@ -28,7 +28,7 @@
                   </div>
                   <div class="form-group col-md-3">
                       <label>Purchase Date<span class="requiredIcon">*</span></label>
-                      <input style="height:38px;" type="text" class="form-control datepicker" id="purchaseDetailsPurchaseDate" name="purchaseDetailsPurchaseDate" readonly>
+                      <input style="height:32px;" type="text" class="form-control datepicker" id="purchaseDetailsPurchaseDate" name="purchaseDetailsPurchaseDate" readonly>
                   </div>
                   <div class="form-group col-md-5">
                       <label for="purchaseDetailsVendorName">Vendor Name<span class="requiredIcon">*</span></label>
@@ -82,20 +82,20 @@
                               </select>
                             </div>
                             <div class="form-group col-md-1">
-                              <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity" name="purchaseDetailsAvalableQuantity" value="0" readonly>
+                              <input type="number" class="form-control price-al" id="purchaseDetailsAvalableQuantity" name="purchaseDetailsAvalableQuantity" value="0" readonly>
                           </div>
                             <div class="form-group col-md-2">
-                                <input type="number" class="form-control" id="purchaseDetailsQuantity" name="purchaseDetailsQuantity" value="0" min="1">
+                                <input type="number" class="form-control price-al" id="purchaseDetailsQuantity" name="purchaseDetailsQuantity" value="0" min="1">
                             </div>
                             <div class="form-group col-md-2">
-                                <input type="text" class="form-control" id="purchaseDetailsUnitPrice" name="purchaseDetailsUnitPrice" value="0" readonly>
+                                <input type="text" class="form-control price-al" id="purchaseDetailsUnitPrice" name="purchaseDetailsUnitPrice" value="0" readonly>
                             </div>
                             <div class="form-group col-md-2">
                                 <input type="hidden" id="purchaseItemId" name="purchaseItemId">
-                                <input type="text" class="form-control" id="purchaseDetailsTotal" name="purchaseDetailsTotal" readonly>
+                                <input type="text" class="form-control price-al" id="purchaseDetailsTotal" name="purchaseDetailsTotal" readonly>
                             </div>
                             <div class="form-group col-md-1" id="goodReceivedData">
-                              <input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity" name="purchaseDetailsGoodReceivedQuantity" value="0">
+                              <input type="number" class="form-control price-al" id="purchaseDetailsGoodReceivedQuantity" name="purchaseDetailsGoodReceivedQuantity" value="0">
                             </div>
                             <div class="form-group col-md-1"> 
                             </div>
@@ -109,7 +109,7 @@
                         <label style="float:right">Total </label>
                       </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseOrderTotal" name="purchaseOrderTotal" readonly>
+                        <input type="text" class="form-control price-al" id="purchaseOrderTotal" name="purchaseOrderTotal" readonly>
                       </div>
                   </div>
                 </div>
@@ -128,7 +128,6 @@
             </div>
             <div id="purchaseListTab" class="container-fluid tab-pane fade active show">
               <br>
-              <p>Use the grid below to search purchase details</p>
               <div class="table-responsive" id="purchaseDetailsTableDiv"></div>
             </div>
             <div id="purchasePaymentsTab" class="container-fluid tab-pane">
@@ -137,13 +136,13 @@
               <div id="PaymentDetailsMessage"></div>
               <div class="form-row">
                 <div class="form-group col-md-4" style="display:inline-block">
-                  <label for="totalAmount" style="display : inline-flex"> Order No  : <span id="poNumber"></span> </label>
+                  <label for="totalAmount" class ="payment-info"> Order No  : <span id="poNumber"></span> </label>
                 </div>
                 <div class="form-group col-md-4" style="display:inline-block">
-                  <label for="totalAmount"  style="display : inline-flex"> Vendor : <span id="vendor"></span>  </label>
+                  <label for="totalAmount"  class ="payment-info"> Vendor : <span id="vendor"></span>  </label>
                 </div>
                 <div class="form-group col-md-4" style="display:inline-block">
-                  <label for="totalAmount"  style="display : inline-flex"> Payment Status : <span style="font-weight: 700;" id="paymentStatus"></span>  </label>
+                  <label for="totalAmount" class ="payment-info"> Payment Status : <span style="font-weight: 700;" id="paymentStatus"></span>  </label>
                 </div>
               </div>
               <div class="form-row">
@@ -170,7 +169,7 @@
                   </div>
                   <div class="form-group col-md-2">
                      <label for="paymentAmount">Date<span class="requiredIcon">*</span></label>
-                    <input style="height:38px;" type="text" class="form-control datepicker" name="paymentDate" id="paymentDate" value="2018-05-24" readonly="">
+                    <input style="height:32px;" type="text" class="form-control datepicker" name="paymentDate" id="paymentDate"  readonly="">
                   </div>
                 <div class="form-group col-md-2">
                   <label for="paymentAmount">Payment Type<span class="requiredIcon">*</span></label>
@@ -184,7 +183,7 @@
                   <input type="text" class="form-control" name="chequeNo" id="chequeNo" autocomplete="off">
                 </div>
                 <div class="form-group col-md-2 d-none" id="chequeDateDiv">
-                    <label for="chequeDate">Realisation Date</label>
+                    <label for="chequeDate">Realization Date</label>
                     <input style="height:38px;" type="text" class="form-control datepicker" name="chequeDate" id="chequeDate" value="2018-05-24" readonly="">
                 </div>
              </div>
