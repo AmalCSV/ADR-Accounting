@@ -31,7 +31,7 @@
 	<!-- New scripts -->
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/autocomplete.js"></script>
-	<script src="assets/js/item.js"></script>
+	
 
 	<!-- <script src="assets/js/sales-order.js"></script> -->
 	<script src="vendor/pdfmake/pdfmake.js"></script>
@@ -39,6 +39,4 @@
 
 	<script src="assets/js/pdfGenerator.js"></script>
 	
-	<script src="assets/js/customer.js"></script>
-	<script src="assets/js/vendor.js"></script>
 

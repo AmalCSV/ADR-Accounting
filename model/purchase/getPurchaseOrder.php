@@ -9,6 +9,7 @@
             WHEN po.status = 2 THEN 'Pending'
             WHEN po.status = 3 THEN 'Close'
             WHEN po.status = 4 THEN 'Cancel'
+            WHEN po.status = 5 THEN 'Goods Received'
             ELSE ''
         END AS statusText
         FROM purchaseorder po inner join vendor v on po.vendorID=v.vendorID 
