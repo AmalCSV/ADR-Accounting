@@ -732,7 +732,8 @@ function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
 	$(`#salesOrderTotal`).val(salesOrder.amount);
 	$(`#salesOrderId`).val(salesOrder.saleID);
   $(`#saleDetailsDiscountp`).val(salesOrder.discountPercentage);
- 
+  $("#saleDetailsCustomerName").val(salesOrder.customerID.toString());
+  $(`#saleDetailsCustomerName`).trigger('change');
   rowCount =0;
 	document.getElementById("statusSO").style.display = "inline-block";
 	$(`#statusSOText`).text(salesOrder.statusText);
