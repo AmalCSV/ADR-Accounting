@@ -934,6 +934,7 @@ function updateDelivered() {
         //populateLastInsertedID("model/sale/nextSalesID.php", "saleDetailsSaleID");
         $(`#statusSOText`).text('Delivered');
         displayHideElements(["deliveredBtn"]);
+        displayElements(["closeSOBtn"]);
       }
     }
   });
