@@ -88,6 +88,7 @@
                   <input type="text" class="form-control text-right" id="saleDetailsUnitPrice" name="saleDetailsUnitPrice" value="0" readonly="readonly"/>
                 </div>
                 <div class="form-group col-md-2">
+                  <input type="hidden" id="saleItemId" name="saleItemId">
                   <input type="text" class="form-control text-right" id="saleDetailsTotal" name="saleDetailsTotal" readonly="readonly"/>
                 </div>
                 <div class="form-group col-md-1" id="deliveredData">
@@ -129,7 +130,7 @@
             <button type="reset" id="clearBtn" onclick="initSalesOrder()" class="btn">Clear</button>
             <button type="button" id="printPdfBtn" class="btn btn-secondary" onclick="printSalesOrderPdf()">Print</button>
             <button type="button" id="sendSOBtn" class="btn btn-info" onclick="sendSO()">Submit</button>
-            <button type="button" id="deliveredBtn" class="btn btn-info" onclick="updateDelivered()">Delivery</button>
+            <button type="button" id="deliveredBtn" class="btn btn-info" onclick="updateDelivered()">Delivered</button>
             <button type="button" id="closeSOBtn" class="btn btn-success" onclick="closeSO()">Close</button>
             <button type="button" id="cancelSOBtn" class="btn btn-danger" onclick="cancelSO()">Cancel</button>
           </form>

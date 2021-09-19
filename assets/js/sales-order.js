@@ -78,7 +78,7 @@ function addSale() {
         salesItem: salesItem,
         vendorId: saleDetailsVendorId,
       },
-      success: function (data) { console.log(data)
+      success: function (data) { 
         const result = $.parseJSON(data);
         $('#saleDetailsMessage').html(result.alertMessage);
         $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {
@@ -422,7 +422,7 @@ function showSalesPayments(orderId) {
   $.ajax({
     url: "model/sale/getSalesOrder.php",
     data: {
-      salesID: orderId
+      saleID: orderId
     },
     method: "POST",
     success: function (data) {
@@ -700,7 +700,7 @@ function openEditView(salesOrderId, viewType) {
       saleID: salesOrderId
     },
     method: "POST",
-    success: function (soData) { console.log(soData)
+    success: function (soData) { 
       const {salesOrder, salesOrderItems} = JSON.parse(soData);
       $.ajax({
         url: "model/item/getAllItems.php",
@@ -715,7 +715,6 @@ function openEditView(salesOrderId, viewType) {
           $("#saleDetailsItem").select2({
             data: itemData
           });
-          console.log(salesOrder, salesOrderItems, viewType)
           loadDataToSalesOrder(salesOrder, salesOrderItems, viewType);
         }
       });
@@ -762,12 +761,17 @@ function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
             case '1': //created
               disableElements([`deleteSaleItem${numberText}`]);
             break;
+            case '3':
+            case '5':
+              disableElements([`saleDetailsDeliveredQuantity${numberText}`]);
+              $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].deliveredQuantity);
+            break;
           }
         }
         
       }
       if(viewType === 'DELIVERED'){
-        $(`#saleDetailsGoodReceivedQuantity${numberText}`).val(salesOrderItems[index].quantity);
+        $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].quantity);
       }
 		}
     else if (viewType === 'EDIT') {
@@ -808,10 +812,16 @@ function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
 					case '3': // close
 						displayHideElements(["deliveredBtn", "sendSOBtn", "closeSOBtn", "printPdfBtn", "addSaleButton", "clearBtn" ]);
 						displayElements(["cancelSOBtn"]);
+            document.getElementById("deliveredData").style.display = "block";
+            $(`#saleDetailsDeliveredQuantity`).val(salesOrderItems[0].deliveredQuantity);
+            disableElements([`saleDetailsDeliveredQuantity`]);
 						break;
-          case '5': //goods received
+          case '5': //goods delivered
 						displayElements(["cancelSOBtn", "closeSOBtn"]);
-						displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "printPdfBtn", "clearBtn" ]);	
+						displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "printPdfBtn", "clearBtn" ]);
+            document.getElementById("deliveredData").style.display = "block";
+            $(`#saleDetailsDeliveredQuantity`).val(salesOrderItems[0].deliveredQuantity);
+            disableElements([`saleDetailsDeliveredQuantity`]);
 						break;
 					default: // cancel
 						displayHideElements(["deliveredBtn", "sendSOBtn", "closeSOBtn", "cancelSOBtn", "printPdfBtn", "addSaleButton", "clearBtn" ]);
@@ -890,39 +900,39 @@ function openViewSalesOrder(salesOrderId) {
 function updateDelivered() {
   const items = [];
   let item = {
-    itemNumber: $("#purchaseDetailsItem").val(),
-    id: $("#purchaseItemId").val(),
-    goodReceived: $(`#purchaseDetailsGoodReceivedQuantity`).val()
+    itemNumber: $("#saleDetailsItem").val(),
+    id: $("#saleItemId").val(),
+    delivered: $(`#saleDetailsDeliveredQuantity`).val()
   };
   items.push(item);
 
   for (let index = 0; index < rowCount; index++) {
     item = {
-      itemNumber: $(`#purchaseDetailsItem${index + 1}`).val(),
-      id: $(`#purchaseItemId${index + 1}`).val(),
-      goodReceived: $(`#purchaseDetailsGoodReceivedQuantity${index + 1}`).val()
+      itemNumber: $(`#saleDetailsItem${index + 1}`).val(),
+      id: $(`#saleItemId${index + 1}`).val(),
+      delivered: $(`#saleDetailsDeliveredQuantity${index + 1}`).val()
     };
 
    // if()
     items.push(item);
   }
 
-  const purchaseId = $(`#purchaseOrderId`).val();
+  const saleId = $(`#salesOrderId`).val();
   $.ajax({
-    url: "model/goodReceive/insertGoodReceive.php",
+    url: "model/sale/insertDelivered.php",
     data: {
       items: items,
-      purchaseId: purchaseId
+      saleId: saleId
     },
     method: "POST",
     success: function (data) { 
       const result = JSON.parse(data);
-      $("#purchaseDetailsMessage").fadeIn();
-      $("#purchaseDetailsMessage").html(result.alertMessage);
+      $("#saleDetailsMessage").fadeIn();
+      $("#saleDetailsMessage").html(result.alertMessage);
       if(result.status === 'success'){
-        populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
-        $(`#statusPOText`).text('Goods Received');
-        displayHideElements(["goodReceivedBtn"]);
+        //populateLastInsertedID("model/sale/nextSalesID.php", "saleDetailsSaleID");
+        $(`#statusSOText`).text('Delivered');
+        displayHideElements(["deliveredBtn"]);
       }
     }
   });

@@ -12,9 +12,9 @@
 
 	function optionsMenu($status, $saleID) {
 		if( $status == soStatus::pending && $status != soStatus::delivered ) { 
-			return '<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delivered"><i class="fas fa-boxes" onclick="openDelivered(' . $saleID . ')"></i></button>';
+			return '<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delivered" onclick="openDeliveredOrder(' . $saleID . ')"><i class="fas fa-boxes"></i></button>';
 		} else if ($status == soStatus::created){
-			return '<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"> <i class="fas fa-edit" onclick="openEditSalesOrder(' . $saleID . ')"></i></button>';
+			return '<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="openEditSalesOrder(' . $saleID . ')"> <i class="fas fa-edit"></i></button>';
 		}
 		return '';	
 	}
@@ -60,8 +60,8 @@ END AS statusText FROM salesorder so where isDeleted = false ORDER BY so.saleID 
 						'<td>' . $row['amount'] . '</td>' .
 						'<td>' . $row['paidAmount'] . '</td>' .
 						'<td align="right">' . optionsMenu($row['status'], $row['saleID']).
-						'<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="View"> <i class="fa fa-eye pointer" onclick="openViewSalesOrder(' . $row['saleID'] . ')"></i></button>
-						<button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Payments"> <i class="fa fa-dollar-sign pointer" onclick=showSalesPayments("'. $row['saleID'] .'")></i></button>
+						'<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="View" onclick="openViewSalesOrder(' . $row['saleID'] . ')"> <i class="fa fa-eye pointer"></i></button>
+						<button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Payments" onclick=showSalesPayments("'. $row['saleID'] .'")> <i class="fa fa-dollar-sign pointer"></i></button>
 						</td>'.
 					'</tr>';
 	}
