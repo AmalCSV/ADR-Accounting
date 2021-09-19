@@ -184,7 +184,7 @@ $("#updatePurchaseDetailsButton").on("click", function () {
   updatePurchase();
 });
 
-function addPurchaseItem(id, viewType, status) {
+function addPurchaseItem(id, viewType, status) { console.log(viewType, status)
   $("#poItemList").append(
     `
 			<div class="form-row" id="addedRow${id}"> 
@@ -193,19 +193,19 @@ function addPurchaseItem(id, viewType, status) {
                         </select>
 				    </div>
 					<div class="form-group col-md-1">
-                        <input type="number" class="form-control" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
+                        <input type="number" class="form-control text-right" id="purchaseDetailsAvalableQuantity${id}" name="purchaseDetailsAvalableQuantity${id}" readonly>
                     </div>
                     <div class="form-group col-md-2">
                         <input type="number" class="form-control" id="purchaseDetailsQuantity${id}" name="purchaseDetailsQuantity${id}" value="0" min="1">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
+                        <input type="text" class="form-control text-right" id="purchaseDetailsUnitPrice${id}" name="purchaseDetailsUnitPrice${id}" value="0" readonly>
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
+                        <input type="text" class="form-control text-right" id="purchaseDetailsTotal${id}" name="purchaseDetailsTotal${id}" readonly>
 						<input type="hidden" id="purchaseItemId${id}" name="purchaseItemId${id}">
 					</div>
-					${viewType === "GOOD_RECEIVED" || (viewType === 'VIEW' && status === 5)
+					${viewType === "GOOD_RECEIVED" || (viewType == 'VIEW' && (status == 5 || status == 3))
     ? `<div class="form-group col-md-1">
 						<input type="number" class="form-control" id="purchaseDetailsGoodReceivedQuantity${id}" name="purchaseDetailsGoodReceivedQuantity${id}" value="0">
 					</div>`
@@ -432,9 +432,18 @@ function loadDataToPurchaseOrder(data, viewType) {
 			disableElements([`purchaseDetailsItem${numberText}`,`purchaseDetailsQuantity${numberText}`]);
       if(index>0){
         if(viewType !== 'GOOD_RECEIVED'){
-          displayHideElements([`deletePurchaseItem${numberText}`]);
+         switch (purchaseOrder.status) {
+          case '4':
+            displayHideElements([`deletePurchaseItem${numberText}`]);
+            break;
+          case '3':
+          case '5':
+            disableElements([`purchaseDetailsGoodReceivedQuantity${numberText}`]);
+            $(`#purchaseDetailsGoodReceivedQuantity${numberText}`).val(purchaseOrderItems[index].goodReceivedQuantity);
+          break;
+        }
         } else {
-          switch (purchaseOrder.status) {
+          switch (purchaseOrder.status.toString()) {
             case '1': //created
               disableElements([`deletePurchaseItem${numberText}`]);
             break;
@@ -444,7 +453,7 @@ function loadDataToPurchaseOrder(data, viewType) {
       }
       if(viewType === 'GOOD_RECEIVED'){
         $(`#purchaseDetailsGoodReceivedQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
-      }
+      } 
 		}
     else if (viewType === 'EDIT') {
       if(index>0){
@@ -483,10 +492,16 @@ function loadDataToPurchaseOrder(data, viewType) {
 					case '3': // close
 						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
 						displayElements(["cancelPOBtn"]);
+            document.getElementById("goodReceivedData").style.display = "block";
+            $(`#purchaseDetailsGoodReceivedQuantity`).val(purchaseOrderItems[0].goodReceivedQuantity);
+            disableElements([`purchaseDetailsGoodReceivedQuantity`]);
 						break;
           case '5': //goods received
 						displayElements(["cancelPOBtn", "closePOBtn"]);
-						displayHideElements(["goodReceivedBtn", "sendPOBtn", "addPurchaseBtn", "printPdfBtn", "clearBtn" ]);	
+						displayHideElements(["goodReceivedBtn", "sendPOBtn", "addPurchaseBtn", "printPdfBtn", "clearBtn" ]);
+            document.getElementById("goodReceivedData").style.display = "block";
+            $(`#purchaseDetailsGoodReceivedQuantity`).val(purchaseOrderItems[0].goodReceivedQuantity);
+            disableElements([`purchaseDetailsGoodReceivedQuantity`]);
 						break;
 					default: // cancel
 						displayHideElements(["goodReceivedBtn", "sendPOBtn", "closePOBtn", "cancelPOBtn", "printPdfBtn", "addPurchaseBtn", "clearBtn" ]);
@@ -556,6 +571,7 @@ function updateGoodReceived() {
         searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
         $(`#statusPOText`).text('Goods Received');
         displayHideElements(["goodReceivedBtn"]);
+        displayElements(["closePOBtn"]);
       }
     }
   });

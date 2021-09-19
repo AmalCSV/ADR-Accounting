@@ -4,10 +4,10 @@
     <div class="card-body">
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#salesListTab">Sales Orders</a>
+          <a class="nav-link active" data-toggle="tab" href="#salesListTab" onclick="location.reload()">Sales Orders</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="salesOrderTab" data-toggle="tab" href="#salesOrderDetailTab">Add/Edit</a>
+          <a class="nav-link" id="salesOrderTab" data-toggle="tab" href="#salesOrderDetailTab" onclick="initSalesOrder()">Add/Edit</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="soPaymentsTab" data-toggle="tab" href="#salesPaymentsTab" disabled="disabled">Payments</a>
@@ -22,6 +22,7 @@
             <div class="form-row">
               <div class="form-group col-md-2">
                 <label for="saleDetailsSaleID">Sale ID</label>
+                <input type="hidden" id="salesOrderId" name="salesOrderId">
                 <input type="text" class="form-control invTooltip" id="saleDetailsSaleID" name="saleDetailsSaleID"/>
               </div>
               <div class="form-group col-md-2">
