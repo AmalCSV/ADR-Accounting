@@ -940,7 +940,6 @@ function updateDelivered() {
   });
 }
 
-
 initSalesOrder();
 
 function printSalesOrderPdf() {
@@ -948,26 +947,44 @@ function printSalesOrderPdf() {
 }
 
 function getVendorDetails(){
-// Get the vendorID entered in the text box
 var vendorID = $('#saleDetailsVendorName').val();
 let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
-	
-$.ajax({
-  url: 'model/vendor/populateVendorDetails.php',
-  method: 'POST',
-  data: {vendorDetailsVendorID:vendorID},
-  dataType: 'json',
-  success: function(vendorDetails){
-    try{
-      downloadOrderPdf("SO", order, orderItems, vendorDetails);
+    
+  $.ajax({
+    url: 'model/vendor/populateVendorDetails.php',
+    method: 'POST',
+    data: {vendorDetailsVendorID:vendorID},
+    dataType: 'json',
+    success: function(vendorDetails){
+      getCustomerDetails(vendorDetails);
+    },
+    error:  function(data){
+      
     }
-    catch(err){
-      $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " +  err.message + "</div>");
+  });
+}
+
+function getCustomerDetails(vendorDetails){
+  var customerId = $('#saleDetailsCustomerName').val();
+  let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
+
+  $.ajax({
+    url: 'model/customer/populateCustomerDetails.php',
+    method: 'POST',
+    data: {customerID:customerId},
+    dataType: 'json',
+    success: function(data){
+      try{
+        downloadOrderPdf("SO", order, orderItems, vendorDetails, data);
+      }
+      catch(err){
+        $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " +  err.message + "</div>");
+      }
+    },
+    error:  function(data){
+      $("#saleDetailsMessage").fadeIn();
+      $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + "</div>");
     }
-  },
-  error:  function(data){
-    $("#saleDetailsMessage").fadeIn();
-    $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + "</div>");
-  }
-});
+  });
+
 }
