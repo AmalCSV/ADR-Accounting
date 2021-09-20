@@ -11,7 +11,8 @@
 		$customerName = htmlentities($_POST['saleDetailsCustomerName']); 
 		$saleDetailsCustomerID = htmlentities($_POST['saleDetailsCustomerID']); 
 		$saleDate = htmlentities($_POST['saleDetailsSaleDate']);
-		$salesDetailsDescription = htmlentities($_POST['saleDetailsSaleDate']);
+		$salesDetailsDescription = htmlentities($_POST['salesDescription']);
+		$vendorId = htmlentities($_POST['vendorId']);
 		
 		
 		// Check if mandatory fields are not empty
@@ -19,31 +20,35 @@
 			
 			// insert sales order 
 			$discountAmount = $salesOrderTotal - $salesOrderNetTotal;
-			$insertSalesOrderSql = 'INSERT INTO salesorder(salesNumber, saleDate, amount, customerID, description, discount, discountPercentage, customerName) 
-			VALUES(:salesNumber, :saleDate, :amount, :customerID, :note, :discount, :discountPercentage, :customerName)';
+			$insertSalesOrderSql = 'INSERT INTO salesorder(salesNumber, saleDate, amount, customerID, description, discount, discountPercentage, customerName, vendorID) 
+			VALUES(:salesNumber, :saleDate, :amount, :customerID, :note, :discount, :discountPercentage, :customerName, :vendorId)';
 			$insertSalesOrderStatement = $conn->prepare($insertSalesOrderSql);
 			$insertSalesOrderStatement->execute(['salesNumber' => $saleDetailsSaleID, 'saleDate' => $saleDate, 'amount' => $salesOrderNetTotal, 
-				 'customerID' => $saleDetailsCustomerID, 'note' => $salesDetailsDescription, 'discount' => $discountAmount, 'discountPercentage' => $discountp, 'customerName' => $customerName]);
+				 'customerID' => $saleDetailsCustomerID, 'note' => $salesDetailsDescription, 'discount' => $discountAmount, 'discountPercentage' => $discountp, 'customerName' => $customerName, 'vendorId' => $vendorId]);
 
 			$salesOrderID = $conn->lastInsertId();
 				foreach ($salesItem as $item) {
-					$insertSalesSql = 'INSERT INTO salesorderitem(itemNumber, itemName, unitPrice, quantity, salesOrderId, totalPrice) VALUES(:itemNumber, :itemName, :unitPrice, :quantity, :salesOrderId, :totalPrice)';
+					$insertSalesSql = 'INSERT INTO salesorderitem(productID, itemNumber, itemName, unitPrice, quantity, salesOrderId, totalPrice) VALUES(:productID,:itemNumber, :itemName, :unitPrice, :quantity, :salesOrderId, :totalPrice)';
 					$insertSalesStatement = $conn->prepare($insertSalesSql);
-					$insertSalesStatement->execute(['itemNumber' => $item['id'], 'itemName' => $item['name'], 'unitPrice' => $item['sellingPrice'], 'quantity' => $item['quntity'], 'salesOrderId' => $salesOrderID, 'totalPrice'=> $item['total']]);		
+					$insertSalesStatement->execute(['productID' => $item['id'], 'itemNumber' => $item['itemNumber'], 'itemName' => $item['name'], 'unitPrice' => $item['sellingPrice'], 'quantity' => $item['quntity'], 'salesOrderId' => $salesOrderID, 'totalPrice'=> $item['total']]);		
 				
 					// UPDATE the stock in item table
-					$stockUpdateSql = 'UPDATE item SET stock =(stock -:stock) WHERE productID = :id';
-					$stockUpdateStatement = $conn->prepare($stockUpdateSql);
-					$stockUpdateStatement->execute(['stock' => $item['quntity'], 'id' => $item['id']]);
+					// $stockUpdateSql = 'UPDATE item SET stock =(stock -:stock) WHERE productID = :id';
+					// $stockUpdateStatement = $conn->prepare($stockUpdateSql);
+					// $stockUpdateStatement->execute(['stock' => $item['quntity'], 'id' => $item['id']]);
 				
 				}
 
-				echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Sales details added successfully.</div>';
+				$message = '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Sales details added successfully.</div>';
+				$data = ['alertMessage' => $message, 'status' => "success", 'salesOrderId' => $salesOrderID];
+				echo json_encode($data);
 				exit();
 
 		} else {
 			// One or more mandatory fields are empty. Therefore, display a the error message
-			echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter all fields marked with a (*)</div>';
+			$message = '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please enter all fields marked with a (*)</div>';
+			$data = ['alertMessage' => $message, 'status' => "error"];
+			echo json_encode($data);
 			exit();
 		}
 	}

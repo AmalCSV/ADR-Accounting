@@ -2,32 +2,37 @@
 	require_once('../../inc/config/constants.php');
 	require_once('../../inc/config/db.php');
 
-	if(isset($_POST['salesID'])){
-        $purchaseDetailSql = "SELECT po.*,v.companyName as fullName,
+	if(isset($_POST['saleID'])){
+        $salesDetailSql = "SELECT so.*,v.companyName as fullName,
         CASE
-            WHEN po.status = 1 THEN 'Created'
-            WHEN po.status = 2 THEN 'Pending'
-            WHEN po.status = 3 THEN 'Close'
-            WHEN po.status = 4 THEN 'Cancel'
+            WHEN so.status = 1 THEN 'Created'
+            WHEN so.status = 2 THEN 'Pending'
+            WHEN so.status = 3 THEN 'Close'
+            WHEN so.status = 4 THEN 'Cancel'
+            WHEN so.status = 5 THEN 'Delivered'
             ELSE ''
         END AS statusText
-        FROM salesorder po inner join customer v on po.customerID =v.customerID 
-        where po.saleID =". $_POST['salesID'];
-        $stmt = $conn->prepare($purchaseDetailSql);
+        FROM salesorder so inner join customer v on so.customerID =v.customerID 
+        where so.saleID =". $_POST['saleID'];
+        $stmt = $conn->prepare($salesDetailSql);
         $stmt->execute();
-        $purchaseDetail = $stmt->fetch(PDO::FETCH_ASSOC);
+        $salesDetail = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // $purchaseItemsSql = 'SELECT pi.* from salesorderitem pi WHERE saleID='. $_POST['salesID'];
-        // $stmtItem = $conn->prepare($purchaseItemsSql);
-        // $stmtItem->execute();
-        // $purchaseItems = $stmtItem->fetch(PDO::FETCH_ASSOC);
-        // $stmtItem->closeCursor();
+        $salesItemsSql = 'SELECT si.* from salesorderitem si WHERE salesOrderId='. $_POST['saleID'];
+        $stmtItem = $conn->prepare($salesItemsSql);
+        $stmtItem->execute();
 
+        $salesItems = array();
+        while($row =  $stmtItem->fetch(PDO::FETCH_ASSOC)){
+            array_push($salesItems, $row);
+        }
+        
         $object = (object) [
-            'salesOrder' => $purchaseDetail,
-            // 'salesOrderItems' => (array) [$purchaseItems],
+            'salesOrder' => $salesDetail,
+            'salesOrderItems' => (array) $salesItems,
           ];
         echo (json_encode($object));
+        exit;
     }
 	
 ?>
