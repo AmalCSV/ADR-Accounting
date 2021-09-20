@@ -36,18 +36,6 @@
                             <div class="card card-outline-secondary my-4">
                                 <div class="card-header">Reports</div>
                                 <div class="card-body pl-1 pt-1 pr-1">
-                                    <!-- <ul class="nav nav-tabs" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#itemListTab">Item List</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#itemDetailsTab">Add/Edit Item</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#itemImageTab">Upload Image</a>
-                                        </li>
-                                    </ul> -->
-
                                     <!-- Tab panes for item details and image sections -->
                                     <div class="tab-content">
                                         <?php include 'report.php';?>

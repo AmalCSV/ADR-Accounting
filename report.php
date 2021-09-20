@@ -1,3 +1,8 @@
+<style>
+   .table th, .table td{
+      padding: 0.50rem;
+   }
+</style>
 <div id="reportsTab" class="container-fluid tab-pane fade active show pl-1 pr-1" style="padding:6px">
    <div id="reportsDetailsMessage"></div>
    <form>
@@ -43,36 +48,147 @@
          </div>
       </div>
       <div class="mt-4 ml-2" id="companyDetails">
-         <div class="form-row ">
-            <div class="form-group col-md-2">
-               <label for="totalPurchases">Total Purchases </label>
+         <div class="row">
+            <div class="col-6">
+               <div class="card">
+                  <div class="card-header bg-warning pl-2 text-white">
+                     <div class="row">
+                        <div class="col-6">Profit</div>
+                        <div class="col-6 text-right">20000.00</div>
+                     </div>
+                  </div>
+                  <!-- <ul class="list-group list-group-flush">
+                  <table class="table table-striped">
+                        <thead class="thead-light">
+                           <tr>
+                              <th scope="col">Total Profit</th>
+                              <th class="text-right">20000.00</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                     </table>
+                  </ul> -->
+               </div>
             </div>
-            <div class="form-group col-md-1  text-right">
-               <label id="totalPurchases">0.00</label>
+            <div class="col-6">
+               <div class="card" >
+                  <div class="card-header bg-info pl-2 text-white">
+                     <div class="row">
+                        <div class="col-6">Stock Value</div>
+                        <div class="col-6 text-right">20000.00</div>
+                     </div>
+                  </div>
+                  <!-- <ul class="list-group list-group-flush">
+                  <table class="table table-striped">
+                        <thead class="thead-light">
+                           <tr>
+                              <th scope="col">Total Stock</th>
+                              <th class="text-right">20000.00</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                     </table>
+                  </ul> -->
+               </div>
             </div>
          </div>
-         <div class="form-row">
-            <div class="form-group col-md-2">
-               <label for="totalSales">Total Sales </label>
+         <br>
+         <div class="row">
+            <div class="col-6">
+               <div class="card">
+                  <div class="card-header bg-primary pl-2 text-white">
+                     Purchase Orders
+                  </div>
+                  <ul class="list-group list-group-flush">
+                     <table class="table table-striped">
+                        <thead class="thead-light">
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <th colspan="2">Total</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <th colspan="2">Total Paid</th>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <th colspan="2">Total To Be Paid</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <th scope="col">Order Status</th>
+                              <th scope="col"  class="text-right">No of Orders</th>
+                              <th scope="col"  class="text-right">Value</th>
+                           </tr>
+                           <tr>
+                              <td >Submitted</td>
+                              <td class="text-right">10</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <td>Received</td>
+                              <td class="text-right">10</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <td>Closed</td>
+                              <td class="text-right">10</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </ul>
+               </div>
             </div>
-            <div class="form-group col-md-1  text-right">
-               <label id="totalSales">0.00</label>
-            </div>
-         </div>
-         <div class="form-row">
-            <div class="form-group col-md-2">
-               <label for="totalProfit">Total Profit </label>
-            </div>
-            <div class="form-group col-md-1 text-right">
-               <label id="totalProfit">0.00</label>
-            </div>
-         </div>
-         <div class="form-row">
-            <div class="form-group col-md-2">
-               <label for="stockValue">Stock Value </label>
-            </div>
-            <div class="form-group col-md-1  text-right">
-               <label id="stockValue">0.00</label>
+            <div class="col-6">
+               <div class="card">
+                  <div class="card-header bg-success pl-2 text-white">
+                     Sales Orders
+                  </div>
+                  <ul class="list-group list-group-flush">
+                     <table class="table table-striped">
+                        <thead class="thead-light">
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <th colspan="2">Total</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <th colspan="2">Total Paid</th>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <th colspan="2">Total To Be Paid</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <th scope="col">Order Status</th>
+                              <th scope="col"  class="text-right">No of Orders</th>
+                              <th scope="col"  class="text-right">Value</th>
+                           </tr>
+                           <tr>
+                              <td >Submitted</td>
+                              <td class="text-right">10</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <td>Received</td>
+                              <td class="text-right">10</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                           <tr>
+                              <td>Closed</td>
+                              <td class="text-right">10</td>
+                              <td class="text-right">2000.00</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </ul>
+               </div>
             </div>
          </div>
       </div>
