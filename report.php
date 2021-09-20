@@ -76,7 +76,7 @@
                   <div class="card-header bg-dark pl-2 text-white">
                      <div class="row">
                         <div class="col-6">Stock Value</div>
-                        <div class="col-6 text-right">0.00</div>
+                        <div id="stockValue" class="col-6 text-right">0.00</div>
                      </div>
                   </div>
                   <!-- <ul class="list-group list-group-flush">
