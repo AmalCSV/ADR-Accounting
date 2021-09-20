@@ -22,7 +22,7 @@
                 <div class="col-lg-1 pl-1">
                     <h1 class="my-4"></h1>
                     <div class="nav flex-column nav-pills mt-minus-15" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <a class="nav-link" id="v-pills-item-tab" data-toggle="pill" href="#v-pills-item" role="tab" aria-controls="v-pills-item" aria-selected="false">Item</a>
+                        <a class="nav-link" href="items.php" role="tab" aria-controls="v-pills-item" aria-selected="false">Item</a>
                         <a class="nav-link" href="purchase.php" id="v-pills-purchase-tab" role="tab" aria-selected="false">Purchase</a>
                         <a class="nav-link" id="v-pills-vendor-tab" href="vendors.php" role="tab" aria-controls="v-pills-vendor" aria-selected="false">Vendor</a>
                         <a class="nav-link active" id="v-pills-sale-tab" href="sales.php" role="tab" aria-controls="v-pills-sale"  aria-selected="true">Sale</a>

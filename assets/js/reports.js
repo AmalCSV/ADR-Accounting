@@ -180,10 +180,45 @@ function loadCompanyReport(){
       var response = $.parseJSON(data);
 
       console.log(response);
+      var poArray = response.purchaseOrders;
+      var soArray = response.salesOrders;
+      let poTable = '';
+      let soTable = '';
+      var totalPurchases = 0.0;
+      var totalSales = 0.0;
+      var poToBePaid = 0.0;
+      var soToBePaid = 0.0;
+      var poPaid = 0.0;
+      var soPaid = 0.0;
 
-      $("#totalPurchases").html(response.totalPurchases);
-      $("#totalSales").html(data.totalSales);
-      $("#totalProfit").html(data.totalProfit);
+      poArray.forEach(element => {
+        poTable += '<tr><td >'+ element.statusText +'</td> <td class="text-right">' + element.purchseOrders +'</td><td class="text-right">'+ element.amount +'</td>""</tr>';
+        totalPurchases += parseFloat(element.amount) ;
+        poToBePaid += parseFloat(element.tobePaid);
+        poPaid += parseFloat(element.paid);
+      });
+
+      soArray.forEach(element => {
+        soTable += '<tr><td >'+ element.statusText +'</td> <td class="text-right">' + element.salesOrders +'</td><td class="text-right">'+ element.amount +'</td>""</tr>';
+        totalSales += parseFloat(element.amount) ;
+        soToBePaid += parseFloat(element.tobePaid);
+        soPaid += parseFloat(element.paid);
+      });
+
+      $("#poTable").html(poTable);
+      $("#soTable").html(soTable);
+
+
+      $("#totalPurchases").html(totalPurchases.toFixed(2));
+      $("#poToBePaid").html(poToBePaid.toFixed(2));
+      $("#poPaid").html(poPaid.toFixed(2));
+
+      $("#totalSales").html(totalSales.toFixed(2));
+      $("#soToBePaid").html(soToBePaid.toFixed(2));
+      $("#soPaid").html(soPaid.toFixed(2));
+      
+      var profit = totalSales - totalPurchases;
+      $("#totalProfit").html( (profit).toFixed(2));
       $("#stockValue").html(data.stockValue);
 
     },
