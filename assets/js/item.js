@@ -3,6 +3,19 @@ var itemList = [];
 getAllItemsDetails();
 enableUpdateDeleteButton(false);
 
+	// Initiate popovers
+	$(document).on('mouseover', '.itemDetailsHover', function(){
+		// Create item details popover boxes
+		$('.itemDetailsHover').popover({
+			container: 'body',
+			title: 'Item Details',
+			trigger: 'hover',
+			html: true,
+			placement: 'right',
+			content: fetchData
+		});
+	});
+
 // Function to call the insertItem.php script to insert item data to db
 function addItem() {
   var itemDetailsItemNumber = $("#itemDetailsItemNumber").val();

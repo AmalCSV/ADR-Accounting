@@ -297,20 +297,7 @@ $(document).ready(function(){
 	reportsTableCreator('customerReportsTableDiv', customerReportsSearchTableCreatorFile, 'customerReportsTable');
 	//reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
 	reportsTableCreator('vendorReportsTableDiv', vendorReportsSearchTableCreatorFile, 'vendorReportsTable');
-	
-	// Initiate popovers
-	$(document).on('mouseover', '.itemDetailsHover', function(){
-		// Create item details popover boxes
-		$('.itemDetailsHover').popover({
-			container: 'body',
-			title: 'Item Details',
-			trigger: 'hover',
-			html: true,
-			placement: 'right',
-			content: fetchData
-		});
-	});
-	
+		
 	// Listen to refresh buttons
 	$('#searchTablesRefresh, #reportsTablesRefresh').on('click', function(){
 		searchTableCreator('itemDetailsTableDiv', itemDetailsSearchTableCreatorFile, 'itemDetailsTable');
