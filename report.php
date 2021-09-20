@@ -51,10 +51,10 @@
          <div class="row">
             <div class="col-6">
                <div class="card">
-                  <div class="card-header bg-warning pl-2 text-white">
+                  <div class="card-header bg-warning pl-2 text-white" style="background-image: linear-gradient(#ff6707, #DD5600 60%, #c94e00);">
                      <div class="row">
                         <div class="col-6">Profit</div>
-                        <div class="col-6 text-right">20000.00</div>
+                        <div class="col-6 text-right" id="totalProfit">0.00</div>
                      </div>
                   </div>
                   <!-- <ul class="list-group list-group-flush">
@@ -73,10 +73,10 @@
             </div>
             <div class="col-6">
                <div class="card" >
-                  <div class="card-header bg-info pl-2 text-white">
+                  <div class="card-header bg-dark pl-2 text-white">
                      <div class="row">
                         <div class="col-6">Stock Value</div>
-                        <div class="col-6 text-right">20000.00</div>
+                        <div class="col-6 text-right">0.00</div>
                      </div>
                   </div>
                   <!-- <ul class="list-group list-group-flush">
@@ -103,41 +103,30 @@
                   </div>
                   <ul class="list-group list-group-flush">
                      <table class="table table-striped">
-                        <thead class="thead-light">
-                        </thead>
-                        <tbody>
+                        <tbody >
                            <tr>
-                              <th colspan="2">Total</td>
-                              <td class="text-right">2000.00</td>
+                              <th colspan="2">Total Purchases</td>
+                              <td class="text-right" id="totalPurchases">0.00</td>
                            </tr>
                            <tr>
                               <th colspan="2">Total Paid</th>
-                              <td class="text-right">2000.00</td>
+                              <td class="text-right" id="poPaid">0.00</td>
                            </tr>
                            <tr>
                               <th colspan="2">Total To Be Paid</td>
-                              <td class="text-right">2000.00</td>
+                              <td class="text-right" id="poToBePaid">0.00</td>
                            </tr>
-                           <tr>
+                        </tbody>
+                     </table>
+                     <table class="table table-striped">
+                        <thead>
+                        <tr>
                               <th scope="col">Order Status</th>
                               <th scope="col"  class="text-right">No of Orders</th>
-                              <th scope="col"  class="text-right">Value</th>
+                              <th scope="col"  class="text-right">Amount</th>
                            </tr>
-                           <tr>
-                              <td >Submitted</td>
-                              <td class="text-right">10</td>
-                              <td class="text-right">2000.00</td>
-                           </tr>
-                           <tr>
-                              <td>Received</td>
-                              <td class="text-right">10</td>
-                              <td class="text-right">2000.00</td>
-                           </tr>
-                           <tr>
-                              <td>Closed</td>
-                              <td class="text-right">10</td>
-                              <td class="text-right">2000.00</td>
-                           </tr>
+                        </thead>
+                        <tbody id="poTable"> 
                         </tbody>
                      </table>
                   </ul>
@@ -145,7 +134,7 @@
             </div>
             <div class="col-6">
                <div class="card">
-                  <div class="card-header bg-success pl-2 text-white">
+                  <div class="card-header pl-2 text-white" style="background-image: linear-gradient(#88c149, #73A839 60%, #699934);">
                      Sales Orders
                   </div>
                   <ul class="list-group list-group-flush">
@@ -154,37 +143,28 @@
                         </thead>
                         <tbody>
                            <tr>
-                              <th colspan="2">Total</td>
-                              <td class="text-right">2000.00</td>
+                              <th colspan="2">Total Sales</td>
+                              <td class="text-right"  id="totalSales">0.00</td>
                            </tr>
                            <tr>
-                              <th colspan="2">Total Paid</th>
-                              <td class="text-right">2000.00</td>
+                              <th colspan="2">Payments Received</th>
+                              <td class="text-right"  id="soPaid">0.00</td>
                            </tr>
                            <tr>
-                              <th colspan="2">Total To Be Paid</td>
-                              <td class="text-right">2000.00</td>
-                           </tr>
-                           <tr>
+                              <th colspan="2">Payments To Be Received</td>
+                              <td class="text-right"  id="soToBePaid">0.00</td>
+                           </tr>                       
+                        </tbody>
+                     </table>
+                     <table class="table table-striped">
+                        <thead>
+                        <tr>
                               <th scope="col">Order Status</th>
                               <th scope="col"  class="text-right">No of Orders</th>
-                              <th scope="col"  class="text-right">Value</th>
+                              <th scope="col"  class="text-right">Amount</th>
                            </tr>
-                           <tr>
-                              <td >Submitted</td>
-                              <td class="text-right">10</td>
-                              <td class="text-right">2000.00</td>
-                           </tr>
-                           <tr>
-                              <td>Received</td>
-                              <td class="text-right">10</td>
-                              <td class="text-right">2000.00</td>
-                           </tr>
-                           <tr>
-                              <td>Closed</td>
-                              <td class="text-right">10</td>
-                              <td class="text-right">2000.00</td>
-                           </tr>
+                        </thead>
+                        <tbody id="soTable"> 
                         </tbody>
                      </table>
                   </ul>
