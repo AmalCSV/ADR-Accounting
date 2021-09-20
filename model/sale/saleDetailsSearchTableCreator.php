@@ -12,7 +12,7 @@
 
 	function optionsMenu($status, $saleID) {
 		if( $status == soStatus::pending && $status != soStatus::delivered ) { 
-			return '<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delivered" onclick="openDeliveredOrder(' . $saleID . ')"><i class="fas fa-boxes"></i></button>';
+			return '<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Deliver" onclick="openDeliveredOrder(' . $saleID . ')"><i class="fas fa-boxes"></i></button>';
 		} else if ($status == soStatus::created){
 			return '<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="openEditSalesOrder(' . $saleID . ')"> <i class="fas fa-edit"></i></button>';
 		}
@@ -32,7 +32,7 @@ END AS statusText FROM salesorder so where isDeleted = false ORDER BY so.saleID 
 	$saleDetailsSearchStatement->execute();
 
 	$headerRow = '<tr>
-					<th>Order Number</th>
+					<th>SO No</th>
 					<th>Customer Name</th>
 					<th>Sale Date</th>
 					<th>Discount %</th>

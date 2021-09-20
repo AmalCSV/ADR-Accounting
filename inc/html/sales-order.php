@@ -1,7 +1,7 @@
 <div class="tab-pane fade show active" id="v-pills-sale" role="tabpanel" aria-labelledby="v-pills-sale-tab">
   <div class="card card-outline-secondary my-4">
     <div class="card-header">Sale Details</div>
-    <div class="card-body">
+    <div class="card-body pl-1 pt-1 pr-1">
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#salesListTab" onclick="location.reload()">Sales Orders</a>
@@ -14,7 +14,7 @@
         </li>
       </ul>
       <!-- Tab panes -->
-      <div class="tab-content">
+      <div class="tab-content mt-minus-15">
         <div id="salesOrderDetailTab" class="container-fluid tab-pane">
           <br>
           <div id="saleDetailsMessage"></div>
@@ -47,7 +47,7 @@
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-8">
+              <div class="form-group col-md-7">
                 <label for="salesDescription">Note</label>
                 <textarea rows="1" class="form-control" id="salesDescription" name="salesDescription" autocomplete="off"></textarea>
               </div>
@@ -57,8 +57,11 @@
                   </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-4">
+              <div class="form-group col-md-3">
                 <label>Item Name<span class="requiredIcon">*</span></label>
+              </div>
+              <div class="form-group col-md-1">
+                <label>Stock<span class="requiredIcon">*</span></label>
               </div>
               <div class="form-group col-md-2">
                 <label>Quantity<span class="requiredIcon">*</span></label>
@@ -92,7 +95,7 @@
                   <input type="text" class="form-control text-right" id="saleDetailsTotal" name="saleDetailsTotal" readonly="readonly"/>
                 </div>
                 <div class="form-group col-md-1" id="deliveredData">
-                  <input type="number" class="form-control" id="saleDetailsDeliveredQuantity" name="saleDetailsDeliveredQuantity" value="0">
+                  <input type="number" class="form-control text-right" id="saleDetailsDeliveredQuantity" name="saleDetailsDeliveredQuantity" value="0">
                 </div>
                 <div class="form-group col-md-1">
                 </div>
@@ -137,7 +140,6 @@
         </div>
         <div id="salesListTab" class="container-fluid tab-pane fade show active">
           <br/>
-          <p>Use the grid below to search sale details</p>
           <div class="table-responsive" id="salesDetailsTableDiv1"></div>
         </div>
         <div id="salesPaymentsTab" class="container-fluid tab-pane fade">

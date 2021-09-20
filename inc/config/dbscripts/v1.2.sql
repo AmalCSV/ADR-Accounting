@@ -51,3 +51,6 @@ ALTER TABLE `salesorderitem`
 
 ALTER TABLE `salesorderitem`
   ADD CONSTRAINT `salesOrder_fk` FOREIGN KEY (`salesOrderId`) REFERENCES `salesorder` (`saleID`);
+
+
+ALTER TABLE `salesorderpayment` ADD FOREIGN KEY (`salesOrderID`) REFERENCES `salesorder`(`saleID`) ON DELETE RESTRICT ON UPDATE RESTRICT;
