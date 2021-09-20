@@ -26,7 +26,7 @@ INSERT INTO `purchaseorderstatus` (`id`, `status`) VALUES
 (2, 'Pending'),
 (3, 'Close'),
 (4, 'Cancel'),
-(5, 'Delivered');
+(5, 'Goods received');
 
 
 ALTER TABLE `purchaseorderstatus`

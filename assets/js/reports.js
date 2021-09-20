@@ -219,7 +219,8 @@ function loadCompanyReport(){
       
       var profit = totalSales - totalPurchases;
       $("#totalProfit").html( (profit).toFixed(2));
-      $("#stockValue").html(data.stockValue);
+
+      $("#stockValue").html(response.stockValuation.amount);
 
     },
     complete: function () {}
