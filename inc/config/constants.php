@@ -15,7 +15,7 @@
 	
 	// DB password
 	// define('DB_PASSWORD', '');
-	define('DB_PASSWORD', 'root');
+	define('DB_PASSWORD', '');
 	
 	// DB name
 	define('DB_NAME', 'shop_inventory');
