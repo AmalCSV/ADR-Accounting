@@ -22,9 +22,21 @@
         array_push($salesOrders, $row);
     }
 
+    $poPaymentReportSql = "SELECT 'Paid', sum(amount) amount FROM purchaseorderpayment WHERE isDeleted =0 and date BETWEEN :fromDate and :toDate";
+	$poPaymentReportStatement = $conn->prepare($poPaymentReportSql);
+	$poPaymentReportStatement->execute(['fromDate' => $fromDate, 'toDate' => $toDate]);
+    $poPayment =  $poPaymentReportStatement->fetch(PDO::FETCH_ASSOC);
+
+    $soPaymentReportSql = "SELECT 'Received', sum(amount) amount FROM salesorderpayment WHERE isDeleted =0 and date BETWEEN :fromDate and :toDate";
+	$soPaymentReportStatement = $conn->prepare($soPaymentReportSql);
+	$soPaymentReportStatement->execute(['fromDate' => $fromDate, 'toDate' => $toDate]);
+    $soPayment =  $soPaymentReportStatement->fetch(PDO::FETCH_ASSOC);
+
     $object = (object) [
-        'purchseOrders' => (array) $purchseOrders,
+        'purchaseOrders' => (array) $purchseOrders,
+        'purchaseOrdersPaid' => $poPayment,
         'salesOrders' => (array) $salesOrders,
+        'salesOrdersPaid' => $soPayment,
       ];
 
     echo json_encode($object);
