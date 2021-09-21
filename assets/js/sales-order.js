@@ -665,7 +665,7 @@ $("#saleDetailsVendorName").on("change", function () {
 function salesItemSelectChange(id) {
 	const itemId = $(`#saleDetailsItem${id}`).val();
 	const item = itemList.find(x => x.productID === itemId);
-	$(`#saleDetailsUnitPrice${id}`).val(item ? item.buyingPrice : 0);
+	$(`#saleDetailsUnitPrice${id}`).val(item ? item.sellingPrice : 0);
 	$(`#saleDetailsAvalableQuantity${id}`).val(item ? item.stock : 0);
 	
 }
