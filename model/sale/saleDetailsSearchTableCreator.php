@@ -38,7 +38,7 @@ END AS statusText FROM salesorder so where isDeleted = false ORDER BY so.saleID 
 					<th>Discount %</th>
 					<th>Discount</th>
 					<th>Net Total</th>
-					<th>Received</th>
+					<th>Received Amount</th>
 					<th>Status</th>
 					<th style="width: 90px;"> Action </th>
 				</tr>';

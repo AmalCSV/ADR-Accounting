@@ -220,7 +220,12 @@ function loadCompanyReport(){
       var profit = totalSales - totalPurchases;
       $("#totalProfit").html( (profit).toFixed(2));
 
-      $("#stockValue").html(response.stockValuation.amount);
+      if(response.stockValuation.amount == null){
+        $("#stockValue").html("0.00");
+      }
+      else{
+        $("#stockValue").html(response.stockValuation.amount);
+      }
 
     },
     complete: function () {}
