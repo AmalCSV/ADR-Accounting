@@ -208,17 +208,16 @@ function loadCompanyReport(){
       $("#poTable").html(poTable);
       $("#soTable").html(soTable);
 
+      $("#totalPurchases").html(isNaN(totalPurchases) ? "0.00" : totalPurchases.toFixed(2));
+      $("#poToBePaid").html(isNaN(poToBePaid) ? "0.00" : poToBePaid.toFixed(2));
+      $("#poPaid").html(isNaN(poPaid) ? "0.00" : poPaid.toFixed(2));
 
-      $("#totalPurchases").html(totalPurchases.toFixed(2));
-      $("#poToBePaid").html(poToBePaid.toFixed(2));
-      $("#poPaid").html(poPaid.toFixed(2));
-
-      $("#totalSales").html(totalSales.toFixed(2));
-      $("#soToBePaid").html(soToBePaid.toFixed(2));
-      $("#soPaid").html(soPaid.toFixed(2));
+      $("#totalSales").html(isNaN(totalSales) ? "0.00" : totalSales.toFixed(2));
+      $("#soToBePaid").html(isNaN(soToBePaid) ? "0.00" : soToBePaid.toFixed(2));
+      $("#soPaid").html(isNaN(soPaid) ? "0.00" : soPaid.toFixed(2));
       
       var profit = totalSales - totalPurchases;
-      $("#totalProfit").html( (profit).toFixed(2));
+      $("#totalProfit").html( profit? "0.00" : (profit).toFixed(2));
 
       if(response.stockValuation.amount == null){
         $("#stockValue").html("0.00");
