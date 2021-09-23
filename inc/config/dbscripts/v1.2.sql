@@ -92,3 +92,5 @@ ALTER TABLE salesorder MODIFY COLUMN amount decimal(16,2);
 ALTER TABLE salesorder MODIFY COLUMN paidAmount decimal(16,2);
 ALTER TABLE salesorderitem MODIFY COLUMN totalPrice decimal(16,2);
 ALTER TABLE salesorderitem MODIFY COLUMN unitPrice decimal(16,2);
+
+ALTER TABLE `salesorder` CHANGE `paidAmount` `paidAmount` DECIMAL(16,2) NULL DEFAULT '0.00';
