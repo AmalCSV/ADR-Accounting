@@ -222,7 +222,7 @@ function addSalesItem(id, viewType) {
 					</div>
           ${viewType === "DELIVERED" || (viewType === 'VIEW' && status === 5)
           ? `<div class="form-group col-md-1">
-                  <input type="number" class="form-control" id="saleDetailsDeliveredQuantity${id}" name="saleDetailsDeliveredQuantity${id}" value="0">
+                  <input type="number" class="form-control text-right" id="saleDetailsDeliveredQuantity${id}" name="saleDetailsDeliveredQuantity${id}" value="0">
                 </div>`
           : `
 					<div class="form-group col-md-1">
