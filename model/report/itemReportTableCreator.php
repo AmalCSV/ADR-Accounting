@@ -20,15 +20,15 @@
 					<tr>
 					<th class="d-none">Product ID</th>
 					<th style="min-width:100px !important;">Item No</th>
-					<th style="min-width:165px !important;">Item Name</th>
-					<th style="width:165px !important;">Supplier</th>
-					<th>Stock</th>
-					<th>W Qty</th>
-					<th>Selling Price</th>
-					<th>Buying Price</th>
-					<th style="min-width:100px !important;">Rack</th>
-					<th>Status</th>
-					<th></th>
+					<th style="min-width:145px !important;">Item Name</th>
+					<th class="price-al">Purchases</th>
+					<th class="price-al">Purchases Cost</th>
+					<th class="price-al">Sales</th>
+					<th class="price-al">Sales Income</th> 
+					<th class="price-al">Profit</th> 
+					<th class="price-al">In stock</th>
+					<th class="price-al">Stock value</th>
+					<th class="price-al">Yet to receive</th>
 					</tr>
 				</thead>
 				<tbody>';
@@ -40,14 +40,14 @@
 					'<td class="d-none">' . $row['productID'] . '</td>' .
 					'<td>' . $row['itemNumber'] . '</td>' .
 					'<td><a href="#" class="itemDetailsHover" data-toggle="popover" id="' . $row['productID'] . '">' . $row['itemName'] . '</a></td>' .
-					'<td>' . $row['companyName'] . '</td>' .
+					'<td class="price-al">' . $row['warningQty'] . '</td>' .
 					showStock( $row['stock'], $row['warningQty']) .
 					'<td class="text-right pr-1">' . $row['warningQty'] . '</td>' .
 					'<td class="text-right pr-1">' . $row['sellingPrice'] . '</td>' .
 					'<td class="text-right pr-1">' . $row['buyingPrice'] . '</td>' .
-					'<td>' . $row['rackNo'] . '</td>' .
-					'<td>' . $row['status'] . '</td>' .
-					'<td class="text-right"> ' . '<button onclick=showEditItem("'. $row['productID'] .'") type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit  fa-sm"></i></button>'. '</td>' .
+					'<td class="price-al">' . $row['warningQty'] . '</td>' .
+					'<td class="price-al">' . $row['sellingPrice'] . '</td>' .
+					'<td class="price-al">' . $row['warningQty'] . '</td>' .
 					'</tr>';
 	}
 	
@@ -55,19 +55,19 @@
 	
 	$output .= '</tbody>
 					<tfoot>
-						<tr>
-						<th class="d-none">Product ID</th>
-						<th>Item Number</th>
-						<th>Item Name</th>
-						<th>Supplier</th>
-						<th>Stock</th>
-						<th>W Qty</th>
-						<th>Selling Price</th>
-						<th>Buying Price</th>
-						<th>Rack</th>
-						<th>Status</th>
-						<th></th>
-						</tr>
+					<tr>
+					<th class="d-none">Product ID</th>
+					<th style="min-width:100px !important;">Item No</th>
+					<th style="min-width:145px !important;">Item Name</th>
+					<th class="price-al">Purchases</th>
+					<th class="price-al">Cost</th>
+					<th class="price-al">Sales</th>
+					<th class="price-al">Sales Income</th> 
+					<th class="price-al">Profit</th> 
+					<th class="price-al">In stock</th>
+					<th class="price-al">Stock value</th>
+					<th class="price-al">Yet to receive</th>
+					</tr>
 					</tfoot>
 				</table>';
 	echo $output;

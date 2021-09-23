@@ -63,7 +63,7 @@
 						' <td align="right">'. optionsMenu($row['status'], $row['purchaseID']) . '
 							<button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="View"  onclick="openViewPurchaseOrder(' . $row['purchaseID'] . ')"> <i class="fa fa-eye pointer"></i></button>
 							<button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Payments" onclick=showPayments("'. $row['purchaseID'] .'")> <i class="fa fa-dollar-sign pointer"></i></button>
-                    	</td>'.
+            </td>'.
 					'</tr>';
 	}
 	

@@ -39,7 +39,7 @@
 						'<td>' . $row['city'] . '</td>' .
 						'<td>' . $row['district'] . '</td>' .
 						'<td>' . $row['status'] . '</td>' .
-						'<td>' . '<button onclick=showEditCustomer("'. $row['customerID'] .'") type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit  fa-sm"></i></button>'. '</td>' .
+						'<td class="text-right"> ' . '<button onclick=showEditCustomer("'. $row['customerID'] .'") type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit  fa-sm"></i></button>'. '</td>' .
 					'</tr>';
 	}
 	

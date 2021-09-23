@@ -1,6 +1,19 @@
-var itemData = [];
+var itemList = [];
+var order = {};
+var orderItems = {};
+// File that creates the sale details search table
+saleDetailsSearchTableCreatorFile = 'model/sale/saleDetailsSearchTableCreator.php';
+// File that creates the sale reports search table
+saleReportsSearchTableCreatorFile = 'model/sale/saleReportsSearchTableCreator.php';
+
+function getItem(id) {
+  const item = itemList.find(x => x.productID === id);
+  return item;
+}
+
 // Function to call the insertSale.php script to insert sale data to db
 function addSale() {
+  let errorText = null;
   var saleDetailsSaleID = $("#saleDetailsSaleID").val();
   var saleDetailsDiscount = $("#saleDetailsDiscountp").val();
   var saleDetailsCustomerID = $("#saleDetailsCustomerName").val();
@@ -9,87 +22,251 @@ function addSale() {
   var salesOrderTotal = $("#salesOrderTotal").val();
   var salesOrderNetTotal = $("#salesOrderNetTotal").val();
   var salesDescription = $("#salesDescription").val();
+  var saleDetailsVendorId = $("#saleDetailsVendorName").val();
 
   const salesItem = [];
 
+  let itemId = $('#saleDetailsItem').val();
+  let itemData = itemId ? getItem(itemId) : {};
+
   let item = {
-    id: $("#saleDetailsItem").val(),
+    id: itemId,
     sellingPrice: $("#saleDetailsUnitPrice").val(),
     quntity: $("#saleDetailsQuantity").val(),
     total: $(`#saleDetailsTotal`).val(),
-    name: $(`#saleDetailsItem option:selected`).text()
+    name: itemData.itemName,
+    itemNumber: itemData.itemNumber,
   };
   salesItem.push(item);
 
   for (let index = 0; index < rowCount; index++) {
+    itemId = $(`#saleDetailsItem${index+1}`).val();
+    itemData = itemId ? getItem(itemId) : {};
     item = {
-      id: $(`#saleDetailsItem${index + 1}`).val(),
+      id: itemId,
       sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
       quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
       total: $(`#saleDetailsTotal${index + 1}`).val(),
-      name: $(`#saleDetailsItem${index + 1} option:selected`).text()
+      name: itemData.itemName,
+      itemNumber: itemData.itemNumber,
     };
+
+    const duplicateItem = salesItem.find(x => x.id ===item.id)
+    if(duplicateItem){
+      errorText = 'Duplicate Items in the list';
+    }
     salesItem.push(item);
   }
 
+  if(errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)){
+    errorText = 'Quantity 0 item in the list';
+  }
+
+  if( errorText == null) {
+    $.ajax({
+      url: "model/sale/insertSale.php",
+      method: "POST",
+      data: {
+        saleDetailsSaleID: saleDetailsSaleID,
+        saleDetailsDiscount: saleDetailsDiscount,
+        salesOrderTotal: salesOrderTotal,
+        saleDetailsCustomerName: saleDetailsCustomerName,
+        saleDetailsSaleDate: saleDetailsSaleDate,
+        salesOrderNetTotal: salesOrderNetTotal,
+        salesDescription: salesDescription,
+        saleDetailsCustomerID: saleDetailsCustomerID,
+        salesItem: salesItem,
+        vendorId: saleDetailsVendorId,
+      },
+      success: function (data) { 
+        const result = $.parseJSON(data);
+        $('#saleDetailsMessage').html(result.alertMessage);
+        $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {
+        //  window.location.href += '#saleDetailsTab';
+        //  window.location.reload();
+        });
+        if(result.status ==='success'){
+          openEditView(result.salesOrderId, 'EDIT')
+        }
+      },
+      complete: function () {
+        //reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
+      }
+    });
+  }
+  else {
+    $('#saleDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
+    $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  }
+}
+
+function updateSale() {
+  let errorText = null;
+  var saleDetailsSaleID = $("#saleDetailsSaleID").val();
+  var saleDetailsDiscount = $("#saleDetailsDiscountp").val();
+  var saleDetailsCustomerID = $("#saleDetailsCustomerName").val();
+  var saleDetailsCustomerName = $("#saleDetailsCustomerName option:selected").text();
+  var saleDetailsSaleDate = $("#saleDetailsSaleDate").val();
+  var salesOrderTotal = $("#salesOrderTotal").val();
+  var salesOrderNetTotal = $("#salesOrderNetTotal").val();
+  var salesDescription = $("#salesDescription").val();
+  var saleDetailsVendorId = $("#saleDetailsVendorName").val();
+  const salesOrderId = $('#salesOrderId').val();
+
+  const salesItem = [];
+
+  let itemId = $('#saleDetailsItem').val();
+  let itemData = itemId ? getItem(itemId) : {};
+
+  let item = {
+    id: itemId,
+    sellingPrice: $("#saleDetailsUnitPrice").val(),
+    quntity: $("#saleDetailsQuantity").val(),
+    total: $(`#saleDetailsTotal`).val(),
+    name: itemData.itemName,
+    itemNumber: itemData.itemNumber,
+  };
+  salesItem.push(item);
+
+  for (let index = 0; index < rowCount; index++) {
+    itemId = $(`#saleDetailsItem${index+1}`).val();
+    itemData = itemId ? getItem(itemId) : {};
+    item = {
+      id: itemId,
+      sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
+      quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
+      total: $(`#saleDetailsTotal${index + 1}`).val(),
+      name: itemData.itemName,
+      itemNumber: itemData.itemNumber,
+    };
+
+    const duplicateItem = salesItem.find(x => x.id ===item.id)
+    if(duplicateItem){
+      errorText = 'Duplicate Items in the list';
+    }
+    salesItem.push(item);
+  }
+
+  if(errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)){
+    errorText = 'Quantity 0 item in the list';
+  }
+
+  if( errorText == null) {
+    $.ajax({
+      url: "model/sale/updateSale.php",
+      method: "POST",
+      data: {
+        saleDetailsSaleID: saleDetailsSaleID,
+        saleDetailsDiscount: saleDetailsDiscount,
+        salesOrderTotal: salesOrderTotal,
+        saleDetailsCustomerName: saleDetailsCustomerName,
+        saleDetailsSaleDate: saleDetailsSaleDate,
+        salesOrderNetTotal: salesOrderNetTotal,
+        salesDescription: salesDescription,
+        saleDetailsCustomerID: saleDetailsCustomerID,
+        salesItem: salesItem,
+        vendorId: saleDetailsVendorId,
+        salesOrderId: salesOrderId,
+      },
+      success: function (data) { 
+        $("#saleDetailsMessage").fadeOut(1000).fadeIn(500, function() {});
+        $("#saleDetailsMessage").html(data);
+      },
+      complete: function () {
+        //reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
+      }
+    });
+  }
+  else {
+    $('#saleDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
+    $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  }
+}
+
+function initItems(vendorId) {
   $.ajax({
-    url: "model/sale/insertSale.php",
+    url: "model/item/getAllItems.php",
     method: "POST",
+    dataType: "json",
     data: {
-      saleDetailsSaleID: saleDetailsSaleID,
-      saleDetailsDiscount: saleDetailsDiscount,
-      salesOrderTotal: salesOrderTotal,
-      saleDetailsCustomerName: saleDetailsCustomerName,
-      saleDetailsSaleDate: saleDetailsSaleDate,
-      salesOrderNetTotal: salesOrderNetTotal,
-      salesDescription: salesDescription,
-      saleDetailsCustomerID: saleDetailsCustomerID,
-      salesItem: salesItem
+      vendorId: vendorId
     },
     success: function (data) {
-      $("#saleDetailsMessage").fadeIn();
-      $("#saleDetailsMessage").html(data);
-    },
-    complete: function () {
-      reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
+      itemList = data;
+      setSOItemList(itemList);
     }
   });
+  $('#saleDetailsItemAdd').prop('disabled', !(vendorId>0));
+  $('#addSaleButton').prop("disabled", !(vendorId>0));
 }
 
 function addSalesItem(id, viewType) {
   $("#salesItemList").append(`
-			<div class="form-row" id="addedRow${id}"> 
-                    <div class="form-group col-md-4">
-						<select id='saleDetailsItem${id}' class="form-control">
+			      <div class="form-row" id="addedRow${id}"> 
+                    <div class="form-group col-md-3">
+						            <select id='saleDetailsItem${id}' class="form-control" style="width: 100%">
                         </select>
-				    </div>
-                    <div class="form-group col-md-2">
-                        <input type="number" class="form-control" id="saleDetailsQuantity${id}" name="saleDetailsQuantity${id}" value="0">
+				            </div>
+                    <div class="form-group col-md-1">
+                        <input type="number" class="form-control text-right" id="saleDetailsAvalableQuantity${id}" name="saleDetailsAvalableQuantity${id}" value="0" readonly>
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="saleDetailsUnitPrice${id}" name="saleDetailsUnitPrice${id}" value="0" readonly>
+                        <input type="number" class="form-control text-right" id="saleDetailsQuantity${id}" name="saleDetailsQuantity${id}" value="0">
                     </div>
                     <div class="form-group col-md-2">
-                        <input type="text" class="form-control" id="saleDetailsTotal${id}" name="saleDetailsTotal${id}" readonly>
+                        <input type="text" class="form-control text-right" id="saleDetailsUnitPrice${id}" name="saleDetailsUnitPrice${id}" value="0" readonly>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <input type="text" class="form-control text-right" id="saleDetailsTotal${id}" name="saleDetailsTotal${id}" readonly>
 						<input type="hidden" id="saleItemId${id}" name="saleItemId${id}">
 					</div>
+          ${viewType === "DELIVERED" || (viewType === 'VIEW' && status === 5)
+          ? `<div class="form-group col-md-1">
+                  <input type="number" class="form-control text-right" id="saleDetailsDeliveredQuantity${id}" name="saleDetailsDeliveredQuantity${id}" value="0">
+                </div>`
+          : `
 					<div class="form-group col-md-1">
-						<button type="button" id="deleteSalesItem${id}" onclick="deleteSalesItem(${id})" class="btn btn-danger">Delete</button>
-					</div>
+						<button type="button" id="deleteSaleItem${id}" onclick="deleteSalesItem(${id})" class="btn btn-danger">Delete</button>
+					</div>`}
                 </div>
             </div>
 	`);
-  setSuggestionFunctions(id);
+  setSOSuggestionFunctions(id);
   setCalculationFunctions(id);
 }
 
-function setSuggestionFunctions(id) {
-  $(`#saleDetailsItem${id}`).select2({data: itemData});
-  salesItemSelectChange(id);
-  $(`#saleDetailsItem${id}`).change(function () {
-    salesItemSelectChange(id);
-  });
+function updateSalesOrder() {
+  updateSale();
 }
+
+function setSOSuggestionFunctions(id) {
+	$(`#saleDetailsItem${id}`).select2({
+		placeholder: {text: "Select Item"},
+		data: itemData
+	});
+
+	salesItemSelectChange(id);
+	$(`#saleDetailsItem${id}`).change(function(){
+		salesItemSelectChange(id);
+	});
+}
+
+function deleteSalesItem(id) {
+	$(`#addedRow${id}`).remove();
+	rowCount--;
+	$(`#deleteSaleItem${rowCount}`).prop("disabled", false);
+	calculateGrandTotal();
+  calculateNetTotal();
+}
+
+$("#deleteSaleItem").on("click", function () {
+  deleteSalesItem();
+});
+
+
+$('#saleDetailsItem').change(function(){
+	salesItemSelectChange('');
+});
 
 function setCalculationFunctions(id) {
   $(`#saleDetailsQuantity${id}, #saleDetailsUnitPrice${id},  #saleDetailsItem${id}`).change(function () {
@@ -101,7 +278,7 @@ function setCalculationFunctions(id) {
 
 var rowCount = 0;
 $("#saleDetailsItemAdd").on("click", function () {
-  $(`#deleteSalesItem${rowCount}`).prop("disabled", true);
+  $(`#deleteSaleItem${rowCount}`).prop("disabled", true);
   rowCount++;
   addSalesItem(rowCount);
 });
@@ -122,18 +299,6 @@ function calculateTotalInSales(id) {
   $(`#saleDetailsTotal${id}`).val(Number(quantityPT) * Number(unitPricePT));
 }
 
-function deleteSalesItem(id) {
-  $(`#addedRow${id}`).remove();
-  rowCount--;
-  $(`#deleteSalesItem${rowCount}`).prop("disabled", false);
-  calculateGrandTotal();
-  calculateNetTotal();
-}
-
-$("#deleteSalesItem").on("click", function () {
-  deleteSalesItem();
-});
-
 function initSalesOrderList() {
   searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
 }
@@ -152,7 +317,7 @@ function initSalesOrderItems() {
   rowCount = 0;
 }
 
-function initSalesOrder() {
+function initSalesOrder(isClear) {
   const currentDate = new Date().toISOString().slice(0, 10);
   $("#saleDetailsSaleDate").val(currentDate);
   $.ajax({
@@ -173,6 +338,27 @@ function initSalesOrder() {
   salesItemSelectChange("");
   $("#addSaleButton").prop("disabled", true);
   $("#saleDetailsMessage").prop("display", "none");
+
+  document.getElementById("deliveredData").style.display = "none";
+	document.getElementById("saleDetailsItemAdd").style.display = "block";
+  $('#saleDetailsItemAdd').prop('disabled', true);
+	document.getElementById("lableActionHeader").text = '#';
+	document.getElementById("statusSO").style.display = "none";
+
+	displayHideElements(["cancelSOBtn","sendSOBtn","closeSOBtn", "deliveredBtn", "printPdfBtn", "updateSaleButton"]); //
+	displayElements(["clearBtn","addSaleButton"])
+  const vendorId = $('#saleDetailsVendorName').val();
+	rowCount = 0;
+ 
+    setSOItemList(isClear? null: itemList);
+  
+ 
+  searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
+	$('#addSaleButton').prop("disabled", true);
+  enableElements([`saleDetailsItem`,`saleDetailsQuantity`,
+   'salesDescription', 'saleDetailsSaleID'
+ ,'saleDetailsVendorName', 'saleDetailsQuantity']);
+
 }
 
 $("#saleDetailsItem").change(function () {
@@ -198,7 +384,7 @@ $("#saleDetailsQuantity, #saleDetailsUnitPrice, #saleDetailsItem").change(functi
 function calculateNetTotal() {
   const tot = $(`#salesOrderTotal`).val();
   const discountP = $("#saleDetailsDiscountp").val();
-  const val = Math.round(Number(tot) * ((100 - Number(discountP)) / 100), 2);
+  const val = Math.round(Number(tot) * ((100 - Number(discountP|| 0)) / 100)*100)/100;
   $("#salesOrderNetTotal").val(val);
   validateAddSales(val);
 }
@@ -236,7 +422,7 @@ function showSalesPayments(orderId) {
   $.ajax({
     url: "model/sale/getSalesOrder.php",
     data: {
-      salesID: orderId
+      saleID: orderId
     },
     method: "POST",
     success: function (data) {
@@ -298,7 +484,7 @@ function showSOChequeDetails(show) {
   }
 }
 
-// Function to call the insertPurchase.php script to insert purchase data to db
+// Function to call the insertSale.php script to insert Sale data to db
 function addSalesPayment() {
   var paymentType = $("#soPaymentType").val();
   var chequeNo = $("#soChequeNo").val();
@@ -469,4 +655,336 @@ function updateSOChequeStatus(paymentId, status) {
       reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
     }
   });
+}
+
+$("#saleDetailsVendorName").on("change", function () {
+  const selectedValue = $(this).val();
+  initItems(selectedValue);
+});
+
+function salesItemSelectChange(id) {
+	const itemId = $(`#saleDetailsItem${id}`).val();
+	const item = itemList.find(x => x.productID === itemId);
+	$(`#saleDetailsUnitPrice${id}`).val(item ? item.sellingPrice : 0);
+	$(`#saleDetailsAvalableQuantity${id}`).val(item ? item.stock : 0);
+	
+}
+
+function setSOItemList(items){
+	itemData = items && items.length? getSelect2ItemData(items): [];
+  $("#saleDetailsItem").empty().trigger("change");
+  $("#saleDetailsItem").select2({
+		placeholder: {text: "Select Item"},
+		data: itemData
+	});
+
+	salesItemSelectChange('');
+
+  for (let index = 0; index < rowCount; index++) {
+  $(`#saleDetailsItem${index+1}`).empty().trigger("change");
+  $(`#saleDetailsItem${index+1}`).select2({
+		placeholder: {text: "Select Item"},
+		data: itemData
+	});
+
+	salesItemSelectChange(index+1);
+  }
+}
+
+function openEditView(salesOrderId, viewType) {
+  const tab = document.getElementById("salesOrderTab");
+  tab.click();
+  $.ajax({
+    url: "model/sale/getSalesOrder.php",
+    data: {
+      saleID: salesOrderId
+    },
+    method: "POST",
+    success: function (soData) { 
+      const {salesOrder, salesOrderItems} = JSON.parse(soData);
+      $.ajax({
+        url: "model/item/getAllItems.php",
+        method: "POST",
+        dataType: "json",
+        data: {
+          vendorId: salesOrder.vendorID
+        },
+        success: function (data) {
+          itemList = data;
+          itemData = getSelect2ItemData(itemList);
+          $("#saleDetailsItem").select2({
+            data: itemData
+          });
+          loadDataToSalesOrder(salesOrder, salesOrderItems, viewType);
+        }
+      });
+    }
+  });
+}
+
+function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
+  order = salesOrder;
+	orderItems = salesOrderItems;
+	$('#saleDetailsSaleDate').val(salesOrder.saleDate);
+	$('#salesDescription').val(salesOrder.description);
+	$('#saleDetailsSaleID').val(salesOrder.salesNumber);
+  $('#saleDetailsVendorName').val(salesOrder.vendorID).trigger("chosen:updated");
+	$(`#salesOrderTotal`).val(salesOrder.amount);
+	$(`#salesOrderId`).val(salesOrder.saleID);
+  $(`#saleDetailsDiscountp`).val(salesOrder.discountPercentage);
+  $("#saleDetailsCustomerName").val(salesOrder.customerID.toString());
+  $(`#saleDetailsCustomerName`).trigger('change');
+  rowCount =0;
+	document.getElementById("statusSO").style.display = "inline-block";
+	$(`#statusSOText`).text(salesOrder.statusText);
+
+	for (let index = 0; index < salesOrderItems.length; index++) {
+		const numberText = index === 0 ? '' : index;
+		if(index>0){
+			rowCount++;
+    		addSalesItem(rowCount, viewType, salesOrder.status);
+		}
+
+    $(`#saleDetailsItem${numberText}`).val(salesOrderItems[index].productID.toString());
+    $(`#saleDetailsItem${numberText}`).trigger('change');
+		$(`#saleDetailsUnitPrice${numberText}`).val(salesOrderItems[index].unitPrice);
+		$(`#saleDetailsQuantity${numberText}`).val(salesOrderItems[index].quantity);
+		$(`#saleDetailsTotal${numberText}`).val(salesOrderItems[index].totalPrice);
+		$(`#saleItemId${numberText}`).val(salesOrderItems[index].orderItemId);
+
+		if(viewType === 'DELIVERED' || viewType === 'VIEW'){
+			disableElements([`saleDetailsItem${numberText}`,`saleDetailsQuantity${numberText}`]);
+      if(index>0){
+        if(viewType !== 'DELIVERED'){
+          displayHideElements([`deleteSaleItem${numberText}`]);
+        } else {
+          switch (salesOrder.status) {
+            case '1': //created
+              disableElements([`deleteSaleItem${numberText}`]);
+            break;
+            case '3':
+            case '5':
+              disableElements([`saleDetailsDeliveredQuantity${numberText}`]);
+              $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].deliveredQuantity);
+            break;
+          }
+        }
+        
+      }
+      if(viewType === 'DELIVERED'){
+        $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].quantity);
+      }
+		}
+    else if (viewType === 'EDIT') {
+      if(index>0){
+        if(salesOrderItems.length !== index+1){
+          disableElements([`deleteSaleItem${numberText}`]);
+        }
+      }
+    }
+	}
+  calculateGrandTotal();
+  calculateNetTotal();
+	if(viewType === 'DELIVERED' || viewType === 'VIEW'){
+		disableElements([`saleDetailsItem`,`saleDetailsUnitPrice`,`saleDetailsQuantity`,
+			`saleDetailsTotal`, 'salesDescription', 'saleDetailsSaleID'
+		,'saleDetailsVendorName', 'saleDetailsCustomerName', 'saleDetailsDiscountp']);
+
+		//document.getElementById("updateSaleBtn").disabled = true;
+		document.getElementById("saleDetailsItemAdd").style.display = "none";
+		switch (viewType) {
+			case 'DELIVERED': // goods received
+      displayElements(["deliveredBtn", "cancelSOBtn"]);
+      displayHideElements(["sendSOBtn",  "addSaleButton", "clearBtn"]);
+      document.getElementById("deliveredData").style.display = "block";
+      document.getElementById("lableActionHeader").innerText = "Delivered Quantity";
+				break;
+		
+			case 'VIEW':
+				switch (salesOrder.status) {
+					case '1': //created
+						displayHideElements(["deliveredBtn", "closeSOBtn", "addSaleButton", "clearBtn" ]);
+						displayElements(["sendSOBtn", "cancelSOBtn", "printPdfBtn"]);
+						break;
+					case '2': //pending
+						displayElements(["cancelSOBtn", "closeSOBtn", "printPdfBtn"]);
+						displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "clearBtn" ]);	
+						break;
+					case '3': // close
+						displayHideElements(["deliveredBtn", "sendSOBtn", "closeSOBtn", "printPdfBtn", "addSaleButton", "clearBtn" ]);
+						displayElements(["cancelSOBtn"]);
+            document.getElementById("deliveredData").style.display = "block";
+            $(`#saleDetailsDeliveredQuantity`).val(salesOrderItems[0].deliveredQuantity);
+            disableElements([`saleDetailsDeliveredQuantity`]);
+						break;
+          case '5': //goods delivered
+						displayElements(["cancelSOBtn", "closeSOBtn"]);
+						displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "printPdfBtn", "clearBtn" ]);
+            document.getElementById("deliveredData").style.display = "block";
+            $(`#saleDetailsDeliveredQuantity`).val(salesOrderItems[0].deliveredQuantity);
+            disableElements([`saleDetailsDeliveredQuantity`]);
+						break;
+					default: // cancel
+						displayHideElements(["deliveredBtn", "sendSOBtn", "closeSOBtn", "cancelSOBtn", "printPdfBtn", "addSaleButton", "clearBtn" ]);
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+	} else if (viewType === 'EDIT') {
+    disableElements([`saleDetailsVendorName`]);
+    enableElements(['saleDetailsItemAdd']);
+    displayElements(["updateSaleButton","sendSOBtn","printPdfBtn", "cancelSOBtn" ]);
+    displayHideElements(["clearBtn", "addSaleButton"]);
+  } else{
+		displayHideElements(["clearBtn", "addSaleButton"]);
+		document.getElementById("cancelSOBtn").disabled = saleOrder.status === 3;
+	} 
+}
+
+
+function updateSO(statusId, status) {
+  const saleId = $(`#salesOrderId`).val();
+  return new Promise((resolve, reject) => {
+      $.ajax({
+        url: "model/sale/updateStatus.php",
+        data: {
+          saleID: saleId,
+          statusId: statusId
+        },
+        method: "POST",
+        success: function (data) {
+          $("#saleDetailsMessage").fadeIn();
+          $("#saleDetailsMessage").html(data);
+          $(`#statusSOText`).text(status);
+          resolve(saleId)
+        },
+        error: function () {
+          reject(data);
+        }
+
+      });
+    });
+}
+
+function sendSO() {
+  updateSO(2, "Pending").then(function (saleId) {
+    openDeliveredOrder(saleId)
+  });
+}
+
+function cancelSO() {
+  updateSO(4, "Cancel").then(function () {
+    displayHideElements(["sendSOBtn",  "addSaleButton", "clearBtn", "deliveredBtn", "closeSOBtn","cancelSOBtn", "printPdfBtn"]);
+  });
+}
+
+function closeSO() {
+  updateSO(3, "Close").then(function () {
+    displayHideElements(["sendSOBtn",  "addSaleButton", "clearBtn", "deliveredBtn", "closeSOBtn","cancelSOBtn", "printPdfBtn"]); 
+  });
+}
+
+function openDeliveredOrder(salesOrderId) {
+	openEditView(salesOrderId, 'DELIVERED');
+}
+
+function openEditSalesOrder(salesOrderId) {
+  openEditView(salesOrderId, "EDIT");
+}
+
+function openViewSalesOrder(salesOrderId) {
+  openEditView(salesOrderId, "VIEW");
+}
+
+function updateDelivered() {
+  const items = [];
+  let item = {
+    itemNumber: $("#saleDetailsItem").val(),
+    id: $("#saleItemId").val(),
+    delivered: $(`#saleDetailsDeliveredQuantity`).val()
+  };
+  items.push(item);
+
+  for (let index = 0; index < rowCount; index++) {
+    item = {
+      itemNumber: $(`#saleDetailsItem${index + 1}`).val(),
+      id: $(`#saleItemId${index + 1}`).val(),
+      delivered: $(`#saleDetailsDeliveredQuantity${index + 1}`).val()
+    };
+
+   // if()
+    items.push(item);
+  }
+
+  const saleId = $(`#salesOrderId`).val();
+  $.ajax({
+    url: "model/sale/insertDelivered.php",
+    data: {
+      items: items,
+      saleId: saleId
+    },
+    method: "POST",
+    success: function (data) { 
+      const result = JSON.parse(data);
+      $("#saleDetailsMessage").fadeIn();
+      $("#saleDetailsMessage").html(result.alertMessage);
+      if(result.status === 'success'){
+        //populateLastInsertedID("model/sale/nextSalesID.php", "saleDetailsSaleID");
+        $(`#statusSOText`).text('Delivered');
+        displayHideElements(["deliveredBtn"]);
+        displayElements(["closeSOBtn"]);
+      }
+    }
+  });
+}
+
+initSalesOrder();
+
+function printSalesOrderPdf() {
+  getVendorDetails();
+}
+
+function getVendorDetails(){
+var vendorID = $('#saleDetailsVendorName').val();
+let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
+    
+  $.ajax({
+    url: 'model/vendor/populateVendorDetails.php',
+    method: 'POST',
+    data: {vendorDetailsVendorID:vendorID},
+    dataType: 'json',
+    success: function(vendorDetails){
+      getCustomerDetails(vendorDetails);
+    },
+    error:  function(data){
+      
+    }
+  });
+}
+
+function getCustomerDetails(vendorDetails){
+  var customerId = $('#saleDetailsCustomerName').val();
+  let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
+
+  $.ajax({
+    url: 'model/customer/populateCustomerDetails.php',
+    method: 'POST',
+    data: {customerID:customerId},
+    dataType: 'json',
+    success: function(data){
+      try{
+        downloadOrderPdf("SO", order, orderItems, vendorDetails, data);
+      }
+      catch(err){
+        $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " +  err.message + "</div>");
+      }
+    },
+    error:  function(data){
+      $("#saleDetailsMessage").fadeIn();
+      $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + "</div>");
+    }
+  });
+
 }

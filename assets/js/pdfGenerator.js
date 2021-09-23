@@ -73,7 +73,7 @@ function getOrderHeader(orderType, orderNumber, date, companyImage) {
   return headerContent;
 }
 
-function getFromToPO(orderPdf) {
+function getFromToPO(orderPdf, type) {
   let fromTo = [
     {
       columns: [
@@ -85,7 +85,7 @@ function getFromToPO(orderPdf) {
           alignment: "left",
           margin: [0, 20, 0, 5]
         }, {
-          text: "Vendor",
+          text: type,
           color: "#aaaaab",
           bold: true,
           fontSize: 11,
@@ -151,6 +151,32 @@ function getFromToPO(orderPdf) {
           text: orderPdf.fromMobile,
           fontSize: 11,
           style: "invoiceBillingAddress"
+        }
+      ]
+    }
+  ];
+
+  return fromTo;
+}
+
+
+function getVendor(orderPdf) {
+  let fromTo = [
+    {
+      columns: [
+        {
+          text: "Company :",
+          color: "#aaaaab",
+          bold: true,
+          fontSize: 11,
+          alignment: "left",
+          width: 60
+        },
+        {
+          text: orderPdf.vendorCompany + ", " + orderPdf.vendorAddress,
+          bold: true,
+          fontSize: 11,
+          alignment: "left"
         }
       ]
     }
@@ -405,11 +431,12 @@ function getNotes(note) {
   return notes;
 }
 
-function downloadOrderPdf(orderType, order, items, secondParty) {
+function downloadOrderPdf(orderType, order, items, secondParty, customer) {
+
   let content = [];
   let type = "";
-
   let company = getCompanyDetails();
+  let fromTo = "";
 
   let orderPdf = {
     fromCompany : "",
@@ -417,6 +444,8 @@ function downloadOrderPdf(orderType, order, items, secondParty) {
     toCompany: "",
     toAddress : ""
   }
+
+  let header = "";
   if (orderType === "PO") {
     type = "PURCHASE ORDER";
     orderPdf = {
@@ -427,15 +456,31 @@ function downloadOrderPdf(orderType, order, items, secondParty) {
       toCompany: company.companyName,
       toAddress : company.address + ", " + (company.address2 != "" ? (company.address2  + ", ") : "") + company.city,
       toContactPerson : company.fullName,
-      toMobile : company.mobile,
+      toMobile : company.mobile
     }
+    header = getOrderHeader(type, order.orderNumber, order.orderDate, company.logo);
+    fromTo = getFromToPO(orderPdf, "Vendor");
 
   } else {
     type = "SALES ORDER";
+    orderPdf = {
+      fromAddress : company.address + ", " + (company.address2 != "" ? (company.address2  + ", ") : "") + company.city,
+      fromCompany: company.companyName,
+      fromContactPerson :  company.fullName,
+      fromMobile : company.mobile,
+      toCompany : customer.companyName,
+      toAddress : customer.address + ", " + (customer.address2 != "" ? customer.address2  + ", " : "") + customer.city,
+      toContactPerson :  customer.contactPerson,
+      toMobile : customer.mobile,
+      vendorCompany: secondParty.companyName,
+      vendorAddress: secondParty.address + ", " + (secondParty.address2 != "" ? (secondParty.address2  + ", ") : "") + secondParty.city
+    }
+    order.orderNumber = order.salesNumber;
+    header = getOrderHeader(type, order.salesNumber, order.saleDate, company.logo);
+    fromTo = getFromToPO(orderPdf, "Distributor");
+    
   }
 
-  let header = getOrderHeader(type, order.orderNumber, order.orderDate, company.logo);
-  let fromTo = getFromToPO(orderPdf);
   let newLine = {
     alignment: "justify",
     margin: [
@@ -457,6 +502,12 @@ function downloadOrderPdf(orderType, order, items, secondParty) {
   };
 
   content.push(header);
+  
+  let vendor = "";
+  if (orderType === "SO") {
+    vendor = getVendor(orderPdf);
+    content.push(vendor);
+  }
   content.push(fromTo);
   content.push(newLine);
   content.push(itemsHeader);

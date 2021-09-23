@@ -25,10 +25,9 @@
                         <a class="nav-link active" href="items.php" role="tab" aria-controls="v-pills-item" aria-selected="true">Item</a>
                         <a class="nav-link" href="purchase.php" id="v-pills-purchase-tab" role="tab" aria-selected="false">Purchase</a>
                         <a class="nav-link" id="v-pills-vendor-tab" href="vendors.php" role="tab" aria-controls="v-pills-vendor" aria-selected="false">Vendor</a>
-                        <!-- <a class="nav-link" id="v-pills-sale-tab" data-toggle="pill" href="#v-pills-sale" role="tab" aria-controls="v-pills-sale" aria-selected="false" onclick="initSalesOrder()">Sale</a> -->
+                        <a class="nav-link" id="v-pills-sale-tab" href="sales.php" role="tab" aria-controls="v-pills-sale" aria-selected="false">Sale</a>
                         <a class="nav-link" id="v-pills-customer-tab" href="customers.php" role="tab" aria-controls="v-pills-customer" aria-selected="false">Customer</a>
-                        <!-- <a class="nav-link" id="v-pills-search-tab" data-toggle="pill" href="#v-pills-search" role="tab" aria-controls="v-pills-search" aria-selected="false">Search</a> -->
-                        <!-- <a class="nav-link" id="v-pills-reports-tab" data-toggle="pill" href="#v-pills-reports" role="tab" aria-controls="v-pills-reports" aria-selected="false">Reports</a> -->
+                        <a class="nav-link" id="v-pills-reports-tab" href="reports.php" role="tab" aria-controls="v-pills-reports" aria-selected="false">Reports</a>
                     </div>
                 </div>
                 <div class="col-lg-11 pl-1 pr-1">
