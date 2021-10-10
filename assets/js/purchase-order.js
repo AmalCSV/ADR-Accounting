@@ -985,3 +985,6 @@ $.ajax({
 });
 }
 
+function closeOrder(){
+  
+}

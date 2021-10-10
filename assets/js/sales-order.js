@@ -988,3 +988,7 @@ function getCustomerDetails(vendorDetails){
   });
 
 }
+
+function closeSalesOrder(){
+  
+}

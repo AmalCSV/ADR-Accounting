@@ -165,6 +165,9 @@
                 <span style="font-weight: 700;" id="soPaymentStatus"></span>
               </label>
             </div>
+            <div class="form-group col-md-3" style="display:inline-block">
+              <button type="button" id="addItem" class="btn btn-success" onclick="closeSalesOrder()">Close Order</button>
+            </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-3" style="display:inline-block">
