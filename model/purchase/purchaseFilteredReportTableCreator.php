@@ -6,6 +6,7 @@
 	$qty = 0;
 	$totalPrice = 0;
 	
+	
 	if(isset($_POST['startDate'])){
 		$startDate = htmlentities($_POST['startDate']);
 		$endDate = htmlentities($_POST['endDate']);

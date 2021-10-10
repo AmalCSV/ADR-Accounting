@@ -336,7 +336,7 @@ function initPurchaseOrder(isClear) {
     setPOItemList(isClear? null: itemList);
   
  
-  searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+  // searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	$('#addPurchaseBtn').prop("disabled", true);
   enableElements([`purchaseDetailsItem`,`purchaseDetailsQuantity`,
    'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
@@ -345,7 +345,30 @@ function initPurchaseOrder(isClear) {
 } 
 
 function initPurchaseOrderList() {
-  searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+  // searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+  filterPurchaseOrders();
+}
+
+function filterPurchaseOrders(){
+  var pageNo = 1;
+  var perPage = 10;
+
+  $.ajax({
+    url: "model/purchase/purchaseOrdersTableCreatorFile.php",
+    method: "POST",
+    data: {
+      pageNo: pageNo,
+      perPage : perPage
+    },
+    success: function (data) {
+      console.log(data);
+      $("#purchaseDetailsTableDiv").empty();
+      $("#purchaseDetailsTableDiv").html(data);
+    },
+    complete: function () {}
+  });
+
+
 }
 
 function initPurchaseOrderItems() {
