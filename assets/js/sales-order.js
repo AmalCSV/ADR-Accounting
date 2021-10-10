@@ -446,6 +446,12 @@ function loadSalesPayments(data) {
     : " Need to pay";
   $("#soPaymentStatus").html(status);
 
+  if(salesOrder.statusText === "Close"){
+    $("#closeBtn").prop("disabled", true);
+  }
+  else{
+    $("#closeBtn").prop("disabled", false);
+  }
   initSalesOrderPaymentList(salesOrder.saleID);
 }
 
@@ -987,4 +993,26 @@ function getCustomerDetails(vendorDetails){
     }
   });
 
+}
+
+function closeSalesOrder(){
+  const saleId = $(`#paymentSalesId`).val();
+  var statusId = 3; // Close
+  $.ajax({
+    url: "model/sale/updateStatus.php",
+    data: {
+      saleID: saleId,
+      statusId: statusId
+    },
+    method: "POST",
+    success: function () {
+	    initSalesOrderList();
+      $("#saleDetailsMessage").html("");
+      showSalesPaymentMessages("Successfully Closed.", "success");
+      $("#closeBtn").prop("disabled",true);
+    },
+    error: function () {
+      showSalesPaymentMessages("Error !", "error");
+    }
+  });
 }

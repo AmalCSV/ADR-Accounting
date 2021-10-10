@@ -135,29 +135,32 @@
               <input type="hidden" id="paymentOrderId" name="paymentOrderId">
               <div id="PaymentDetailsMessage"></div>
               <div class="form-row">
-                <div class="form-group col-md-4" style="display:inline-block">
+                <div class="form-group col-md-3" style="display:inline-block">
                   <label for="totalAmount" class ="payment-info"> Order No  : <span id="poNumber"></span> </label>
                 </div>
-                <div class="form-group col-md-4" style="display:inline-block">
+                <div class="form-group col-md-3" style="display:inline-block">
                   <label for="totalAmount"  class ="payment-info"> Vendor : <span id="vendor"></span>  </label>
                 </div>
-                <div class="form-group col-md-4" style="display:inline-block">
+                <div class="form-group col-md-3" style="display:inline-block">
                   <label for="totalAmount" class ="payment-info"> Payment Status : <span style="font-weight: 700;" id="paymentStatus"></span>  </label>
+                </div>
+                <div class="form-group col-md-3" >
+                  <button type="button" id="closeBtn" class="btn btn-success" onclick="closeOrder()">Close Order</button>
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-4" style="display:inline-block">
+                <div class="form-group col-md-3" style="display:inline-block">
                   <label for="totalAmount"> Total Amount</label>
                   <h3 ><span id="totalAmount" class="badge bg-primary text-white"></span></h3>  
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <label for="paidAmount"> Paid Amount </label>
                   <h3><span id="paidAmount" class="badge bg-success text-white"></span></h3>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <label for="creditAmount"> Credit</label>
                   <h3><span id="creditAmount" class="badge bg-warning text-white"></span></h3>
-                </div>
+                </div>               
              </div>
               <br>
              <h5>Settle this  bill</h5>
