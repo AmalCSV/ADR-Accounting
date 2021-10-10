@@ -166,7 +166,7 @@
               </label>
             </div>
             <div class="form-group col-md-3" style="display:inline-block">
-              <button type="button" id="addItem" class="btn btn-success" onclick="closeSalesOrder()">Close Order</button>
+              <button type="button" id="closeBtn" class="btn btn-success" onclick="closeSalesOrder()">Close Order</button>
             </div>
           </div>
           <div class="form-row">
