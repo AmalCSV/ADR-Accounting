@@ -144,8 +144,8 @@
                 <div class="form-group col-md-3" style="display:inline-block">
                   <label for="totalAmount" class ="payment-info"> Payment Status : <span style="font-weight: 700;" id="paymentStatus"></span>  </label>
                 </div>
-                <div class="form-group col-md-3">
-                  <button type="button" id="addItem" class="btn btn-success" onclick="closeOrder()">Close Order</button>
+                <div class="form-group col-md-3" >
+                  <button type="button" id="closeBtn" class="btn btn-success" onclick="closeOrder()">Close Order</button>
                 </div>
               </div>
               <div class="form-row">

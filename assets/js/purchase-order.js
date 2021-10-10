@@ -677,7 +677,6 @@ function showPayments(purchaseOrderId) {
 function loadPayments(data) {
   const {purchaseOrder} = JSON.parse(data);
   let paidAmount =  purchaseOrder.paidAmount === null ? 0.00 : parseFloat(purchaseOrder.paidAmount); 
-
   let credit = parseFloat(purchaseOrder.amount) - paidAmount;
   $("#paymentOrderId").val(purchaseOrder.purchaseID);
   $("#totalAmount").html(purchaseOrder.amount);
@@ -689,7 +688,13 @@ function loadPayments(data) {
   $("#paymentStatus").html(status);
 	const currentDate =  new Date().toISOString().slice(0, 10);
 	$('#paymentDate').val(currentDate);
-  
+
+  if(purchaseOrder.statusText === "Close"){
+    $("#closeBtn").prop("disabled", true);
+  }
+  else{
+    $("#closeBtn").prop("disabled", false);
+  }
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
 }
 
@@ -986,5 +991,25 @@ $.ajax({
 }
 
 function closeOrder(){
-  
+
+  const purchaseId = $(`#paymentOrderId`).val();
+  var statusId = 3; // Close
+  $.ajax({
+    url: "model/purchase/updateStatus.php",
+    data: {
+      purchaseID: purchaseId,
+      statusId: statusId
+    },
+    method: "POST",
+    success: function () {
+	    initPurchaseOrderList();
+      $("#PaymentDetailsMessage").html("");
+      showPaymentMessages("Successfully Closed.", "success");
+      $("#closeBtn").prop("disabled",true);
+    },
+    error: function () {
+      showPaymentMessages("Error !", "error");
+    }
+  });
+
 }
