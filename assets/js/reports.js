@@ -234,9 +234,9 @@ function loadCompanyReport(){
 }
 
 function loadVendorReport(fromDate, toDate, vendor, status){
-  reportsTableCreator('reportListTableDiv', `model/report/itemReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}`, 'vendorReportTable');  
+  reportsTableCreator('reportListTableDiv', `model/report/vendorReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}`, 'vendorReportTable');  
 }
 
 function loadItemsReport(fromDate, toDate, vendor, item){
-
+  reportsTableCreator('reportListTableDiv', `model/report/itemReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}&itemId=${item}`, 'itemReportTable');  
 }
