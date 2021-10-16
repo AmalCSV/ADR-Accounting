@@ -55,11 +55,13 @@ $("#reportType").on("change", function () {
     document.getElementById("venderDiv").style.display = "none";
     document.getElementById("reportListTab").style.display = "none";
     document.getElementById("itemsDiv").style.display = "none";
+    document.getElementById("statusDiv").style.display = "none";
   }
   else if(selectedValue == "vendorReports" || selectedValue == "itemReports"){
     document.getElementById("venderDiv").style.display = "";
     document.getElementById("companyDetails").style.display = "none";
     document.getElementById("reportListTab").style.display = "";
+    document.getElementById("statusDiv").style.display = "";
 
     if(selectedValue == "itemReports"){
       document.getElementById("itemsDiv").style.display = "";
@@ -146,21 +148,21 @@ function loadData(){
 
 function searchData(){
 
-  var reportType = $("#reportType").val();
-  var vendor = $("#reportDetailsVendor").val();
-  var fromDate = $("#reportDetailsItem").val();
-  var toDate = $("#reportsFromDate").val();
-  var item = $("#reportsToDate").val();
+  const reportType = $("#reportType").val();
+  const vendor = $("#reportDetailsVendor").val();
+  const item = $("#reportDetailsItem").val();
+  const toDate = $("#reportsToDate").val();
+  const fromDate = $("#reportsFromDate").val();
+  const status = $("#reportStatus").val();
 
   if(reportType == "companyReports"){
     loadCompanyReport();
   }
   else if(reportType == "vendorReports"){
-
-
+    loadVendorReport(fromDate, toDate, vendor, status);
   }
   else if(reportType == "itemReports"){
-
+    loadItemsReport(fromDate, toDate, vendor, item, status);
   }
 
 }
@@ -179,7 +181,6 @@ function loadCompanyReport(){
     success: function (data) {
       var response = $.parseJSON(data);
 
-      console.log(response);
       var poArray = response.purchaseOrders;
       var soArray = response.salesOrders;
       let poTable = '';
@@ -230,5 +231,12 @@ function loadCompanyReport(){
     complete: function () {}
   });
 
+}
+
+function loadVendorReport(fromDate, toDate, vendor, status){
+  reportsTableCreator('reportListTableDiv', `model/report/itemReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}`, 'vendorReportTable');  
+}
+
+function loadItemsReport(fromDate, toDate, vendor, item){
 
 }
