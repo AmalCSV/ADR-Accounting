@@ -238,5 +238,5 @@ function loadVendorReport(fromDate, toDate, vendor, status){
 }
 
 function loadItemsReport(fromDate, toDate, vendor, item){
-  reportsTableCreator('reportListTableDiv', `model/report/itemReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}&itemId=${item}`, 'itemReportTable');  
+  reportsTableCreator('reportListTableDiv', `model/report/itemReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}&itemId=${item}`, 'itemDetailsTable');  
 }
