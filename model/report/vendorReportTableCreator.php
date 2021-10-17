@@ -55,9 +55,9 @@
 	//echo $itemDetailsSearchSql;
 	function getDataTable($itemDetailsSearchStatement) {
 		$headerRow = '<tr>
-						<th class="text-right">Vendor </th>
-						<th class="text-right">Type </th>
-						<th style="min-width:100px !important;">Count</th>
+						<th>Vendor </th>
+						<th>Transaction Type </th>
+						<th style="min-width:100px !important;">Transaction Count</th>
 						<th style="min-width:145px !important;">Amount</th>
 						<th class="price-al">Paid</th>
 						<th class="price-al">To be Paid</th>
@@ -73,7 +73,7 @@
 		while($row = $itemDetailsSearchStatement->fetch(PDO::FETCH_ASSOC)){
 			if($row['vendorID']) {
 				$output .= '<tr>' .
-				'<td class="text-right">' . $row['name'] . '</td>' .
+				'<td>' . $row['name'] . '</td>' .
 				'<td>' . $row['orderType'] . '</td>' .
 				'<td>' . $row['orders'] . '</td>' .
 				'<td class="price-al">' . $row['amount'] . '</td>'.

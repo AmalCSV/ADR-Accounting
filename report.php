@@ -32,7 +32,7 @@
             </select>
          </div>
          <div class="form-group col-md-3" id="statusDiv"  style="display:none;">
-            <label for="reportStatus">Status</label>
+            <label for="reportStatus">Order Status</label>
             <div  style="display:flex;" >
                 <select id="reportStatus" name="reportStatus" class="form-control ">
                 <option  value="ALL">All</option> 
