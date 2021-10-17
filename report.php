@@ -18,7 +18,7 @@
          <div class="form-group col-md-3" id="venderDiv"  style="display:none;">
             <label for="reportDetailsVendor">Vendor Name<span class="requiredIcon">*</span></label>
             <div  style="display:flex;" >
-                <select id="reportDetailsVendor" name="reportDetailsVendor" class="form-control chosenSelect">
+                <select id="reportDetailsVendor" name="reportDetailsVendor" class="form-control">
                 <option  value="-1">All</option> 
                     <?php 
                             require('model/vendor/getVendorNames.php');
@@ -51,7 +51,7 @@
             <input style="height:32px;width: 92%;" type="text" class="form-control datepicker" id="reportsToDate" name="reportsToDate">
          </div>
          <div class="form-group col-md-4 mt-4">
-            <button type="button" id="addItem" class="btn btn-success mt-1" style="width: 30%;" onclick="searchData()">Search</button>
+            <button type="button" id="searchBtn" class="btn btn-success mt-1" style="width: 30%;" onclick="searchData()">Search</button>
          </div>
       </div>
       <div class="mt-4 ml-2" id="companyDetails">
