@@ -100,7 +100,7 @@
 		$row['salesQuantity'] = getArrayData($salesItems, $row['productID'],'productID', 'quantity');
 		$row['salesCost'] = getArrayData($salesItems, $row['productID'],'productID', 'totalPrice');
 		$row['purchasePendingQuantity'] = getArrayData($purchasePendingItems, $row['productID'],'productID', 'quantity');
-
+		$row['calculatedProfit'] = (is_numeric($row['salesCost'])? $row['salesCost']: 0) - (is_numeric($row['purchaseCost'])? $row['purchaseCost']: 0);
 		$output .= '<tr>' .
 					'<td class="d-none">' . $row['productID'] . '</td>' .
 					'<td>' . $row['itemNumber'] . '</td>' .
@@ -109,7 +109,7 @@
 					'<td class="text-right pr-1">' . $row['purchaseCost'] . '</td>'.
 					'<td class="text-right pr-1">' . $row['salesQuantity'] . '</td>'.
 					'<td class="text-right pr-1">' . $row['salesCost'] . '</td>' .
-					'<td class="text-right pr-1">' . $row['salesCost']- $row['purchaseCost']. '</td>' .
+					'<td class="text-right pr-1">' . $row['calculatedProfit']. '</td>' .
 					'<td class="price-al">' . $row['stock'] . '</td>' .
 					'<td class="price-al">' . $row['stock'] * $row['buyingPrice'] . '</td>' .
 					'<td class="price-al">' . $row['purchasePendingQuantity'] . '</td>' .
