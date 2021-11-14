@@ -3,7 +3,7 @@ var order = {};
 var orderItems = {};
 
 // File that creates the purchase details search table
-purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator.php';
+purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator2.php';
 purchasePaymentTableCreatorFile = 'model/purchase/purchasePaymentTableCreator.php';
 // File that creates the purchase reports search table
 purchaseReportsSearchTableCreatorFile = 'model/purchase/purchaseReportsSearchTableCreator.php';
@@ -90,7 +90,7 @@ function addPurchase() {
       },
       complete: function(){
         //populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
-        searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');  
+       // searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');  
        // $('#addPurchaseBtn').prop('disabled', true);
       }
     });
@@ -170,7 +170,7 @@ function updatePurchase() {
         $("#purchaseDetailsMessage").html(data);
       },
       complete: function () {
-        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+        //searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
       }
     });
   } else {
@@ -316,7 +316,8 @@ function initPurchaseOrder(isClear) {
 		}
 	});
 
-	initPurchaseOrderList();
+  initPurchaseOrders1();
+	// initPurchaseOrderList();
 	initPurchaseOrderItems();
   $("#poPaymentsTab").prop("disabled", true);
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
@@ -336,7 +337,7 @@ function initPurchaseOrder(isClear) {
     setPOItemList(isClear? null: itemList);
   
  
-  searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+  //searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	$('#addPurchaseBtn').prop("disabled", true);
   enableElements([`purchaseDetailsItem`,`purchaseDetailsQuantity`,
    'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
@@ -696,6 +697,19 @@ function loadPayments(data) {
     $("#closeBtn").prop("disabled", false);
   }
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
+}
+
+function initPurchaseOrders1() {
+ 
+var test = 'model/purchase/purchaseDetailsSearchTableCreator1.php?fromDate=2021-09-28&toDate=2021-10-17';
+
+  $("#purchaseDetailsTableDiv").load(test, function(){
+		$("#purchaseDetailsTable").DataTable({
+			"order": [[ 0, "desc" ]]
+		});
+		$("[data-toggle=tooltip]").tooltip();
+	});
+
 }
 
 function initPurchaseOrderPaymentList(orderId) {
