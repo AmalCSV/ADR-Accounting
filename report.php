@@ -7,31 +7,38 @@
    <div id="reportsDetailsMessage"></div>
    <form>
       <div class="form-row">
-         <div class="form-group col-md-4">
+         <div class="form-group col-md-3">
             <label for="reportType" >Report Type</label>
             <select id="reportType" name="reportType" class="form-control chosenSelect">
                 <option value="companyReports">All company</option>
-                <option value="vendorReports">Vendor vice</option>
-                <option value="itemReports">Item vice</option>
+                <option value="vendorReports">Vendor wise</option>
+                <option value="itemReports">Item wise</option>
             </select>
          </div>
-         <div class="form-group col-md-4" id="venderDiv"  style="display:none;">
+         <div class="form-group col-md-3" id="venderDiv"  style="display:none;">
             <label for="reportDetailsVendor">Vendor Name<span class="requiredIcon">*</span></label>
             <div  style="display:flex;" >
-                <select id="reportDetailsVendor" name="reportDetailsVendor" class="form-control chosenSelect">
-                <option  value="null">--Select Vendor--</option> 
+                <select id="reportDetailsVendor" name="reportDetailsVendor" class="form-control">
+                <option  value="-1">All</option> 
                     <?php 
                             require('model/vendor/getVendorNames.php');
                         ?>
                 </select>                   
-                <button type="button" class="btn btn-primary btn-md ml-2" onclick="window.location.href = 'vendors.php';"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
             </div>
-           
          </div>
-         <div  class="form-group col-md-4 " style="display:none;" id="itemsDiv">
+         <div  class="form-group col-md-3" style="display:none;" id="itemsDiv">
             <label for="reportDetailsItem">Items<span class="requiredIcon">*</span></label>
             <select id="reportDetailsItem" name="reportDetailsItem" class="form-control" style="width: 100%">
             </select>
+         </div>
+         <div class="form-group col-md-3" id="statusDiv"  style="display:none;">
+            <label for="reportStatus">Order Status</label>
+            <div  style="display:flex;" >
+                <select id="reportStatus" name="reportStatus" class="form-control ">
+                <option  value="ALL">All</option> 
+                <option  value="CLOSE">Close</option> 
+                </select>                   
+            </div>
          </div>
       </div>
       <div class="form-row">
@@ -44,7 +51,7 @@
             <input style="height:32px;width: 92%;" type="text" class="form-control datepicker" id="reportsToDate" name="reportsToDate">
          </div>
          <div class="form-group col-md-4 mt-4">
-            <button type="button" id="addItem" class="btn btn-success mt-1" style="width: 30%;" onclick="searchData()">Search</button>
+            <button type="button" id="searchBtn" class="btn btn-success mt-1" style="width: 30%;" onclick="searchData()">Search</button>
          </div>
       </div>
       <div class="mt-4 ml-2" id="companyDetails">

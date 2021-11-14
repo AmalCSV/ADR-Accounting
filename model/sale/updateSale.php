@@ -15,6 +15,8 @@
 		$salesDetailsDescription = htmlentities($_POST['salesDescription']);
 		$vendorId = htmlentities($_POST['vendorId']);
 		$salesOrderId = htmlentities($_POST['salesOrderId']);
+		$isDiscountAmount = htmlentities($_POST['isDiscountAmount']);
+        $discount =  htmlentities($_POST['discount']);
 		
 		if(!empty($saleDetailsSaleID) && isset($salesOrderTotal) && isset($customerName) && isset($saleDate) && isset($salesItem)){	
 			if($salesOrderNetTotal == 'null' || $salesOrderNetTotal == 0){
@@ -30,14 +32,21 @@
 				echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>Please select a vendor</div>';
 				exit();
 			}
-			
+				
+			if($isDiscountAmount === 'true'){
+				$discountAmount = $discount;
+				$isDiscountAmount = 1;
+			} else {
+				$discountAmount = $salesOrderTotal - $salesOrderNetTotal;
+				$isDiscountAmount = 0;
+			}
+
 			// update sales order 
-			$discountAmount = $salesOrderTotal - $salesOrderNetTotal;
 			$updateOrderSql = 'UPDATE salesorder set salesNumber= :salesNumber, saleDate = :saleDate, amount=:amount, customerID= :customerID, description= :note, discount=:discount, 
-			discountPercentage =:discountPercentage, customerName=:customerName, vendorID=:vendorId WHERE saleID=:saleID';
+			discountPercentage =:discountPercentage, customerName=:customerName, vendorID=:vendorId, isDiscountAmount=:isDiscountAmount WHERE saleID=:saleID ';
 			$updateOrderSqlStatement = $conn->prepare($updateOrderSql);
 			$updateOrderSqlStatement->execute(['salesNumber' => $saleDetailsSaleID, 'saleDate' => $saleDate, 'amount' => $salesOrderNetTotal, 
-			'customerID' => $saleDetailsCustomerID, 'note' => $salesDetailsDescription, 'discount' => $discountAmount, 'discountPercentage' => $discountp, 'customerName' => $customerName, 'vendorId' => $vendorId, 'saleID' => $salesOrderId]);
+			'customerID' => $saleDetailsCustomerID, 'note' => $salesDetailsDescription, 'discount' => $discountAmount, 'discountPercentage' => $discountp, 'customerName' => $customerName, 'vendorId' => $vendorId, 'isDiscountAmount' => $isDiscountAmount, 'saleID' => $salesOrderId]);
 
 		    // delete SO Items
 			$selectSOitemsSql = 'SELECT orderItemId FROM salesorderitem WHERE salesOrderId= :salesOrderId';

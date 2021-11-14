@@ -16,6 +16,8 @@ function addSale() {
   let errorText = null;
   var saleDetailsSaleID = $("#saleDetailsSaleID").val();
   var saleDetailsDiscount = $("#saleDetailsDiscountp").val();
+  const isDiscountAmount = $("#isDiscountAmount").is(':checked');
+  const saleDetailsDiscountAmount= $('#saleDetailsDiscountAmount').val();
   var saleDetailsCustomerID = $("#saleDetailsCustomerName").val();
   var saleDetailsCustomerName = $("#saleDetailsCustomerName option:selected").text();
   var saleDetailsSaleDate = $("#saleDetailsSaleDate").val();
@@ -25,37 +27,41 @@ function addSale() {
   var saleDetailsVendorId = $("#saleDetailsVendorName").val();
 
   const salesItem = [];
-
+  let itemData = {};
   let itemId = $('#saleDetailsItem').val();
-  let itemData = itemId ? getItem(itemId) : {};
+  if(!!itemId) {
+     itemData = itemId ? getItem(itemId) : {};
 
-  let item = {
-    id: itemId,
-    sellingPrice: $("#saleDetailsUnitPrice").val(),
-    quntity: $("#saleDetailsQuantity").val(),
-    total: $(`#saleDetailsTotal`).val(),
-    name: itemData.itemName,
-    itemNumber: itemData.itemNumber,
-  };
-  salesItem.push(item);
-
-  for (let index = 0; index < rowCount; index++) {
-    itemId = $(`#saleDetailsItem${index+1}`).val();
-    itemData = itemId ? getItem(itemId) : {};
-    item = {
+    let item = {
       id: itemId,
-      sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
-      quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
-      total: $(`#saleDetailsTotal${index + 1}`).val(),
+      sellingPrice: $("#saleDetailsUnitPrice").val(),
+      quntity: $("#saleDetailsQuantity").val(),
+      total: $(`#saleDetailsTotal`).val(),
       name: itemData.itemName,
       itemNumber: itemData.itemNumber,
     };
-
-    const duplicateItem = salesItem.find(x => x.id ===item.id)
-    if(duplicateItem){
-      errorText = 'Duplicate Items in the list';
-    }
     salesItem.push(item);
+  }
+
+  for (let index = 0; index < rowCount; index++) {
+    itemId = $(`#saleDetailsItem${index+1}`).val();
+    if(!!itemId) {
+      itemData = itemId ? getItem(itemId) : {};
+      item = {
+        id: itemId,
+        sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
+        quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
+        total: $(`#saleDetailsTotal${index + 1}`).val(),
+        name: itemData.itemName,
+        itemNumber: itemData.itemNumber,
+      };
+
+      const duplicateItem = salesItem.find(x => x.id ===item.id)
+      if(duplicateItem){
+        errorText = 'Duplicate Items in the list';
+      }
+      salesItem.push(item);
+    }
   }
 
   if(errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)){
@@ -77,8 +83,10 @@ function addSale() {
         saleDetailsCustomerID: saleDetailsCustomerID,
         salesItem: salesItem,
         vendorId: saleDetailsVendorId,
+        isDiscountAmount: isDiscountAmount,
+        discount: saleDetailsDiscountAmount,
       },
-      success: function (data) { 
+      success: function (data) {
         const result = $.parseJSON(data);
         $('#saleDetailsMessage').html(result.alertMessage);
         $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {
@@ -104,6 +112,9 @@ function updateSale() {
   let errorText = null;
   var saleDetailsSaleID = $("#saleDetailsSaleID").val();
   var saleDetailsDiscount = $("#saleDetailsDiscountp").val();
+  const isDiscountAmount = $("#isDiscountAmount").is(':checked');
+  const saleDetailsDiscountAmount= $('#saleDetailsDiscountAmount').val();
+  
   var saleDetailsCustomerID = $("#saleDetailsCustomerName").val();
   var saleDetailsCustomerName = $("#saleDetailsCustomerName option:selected").text();
   var saleDetailsSaleDate = $("#saleDetailsSaleDate").val();
@@ -116,35 +127,38 @@ function updateSale() {
   const salesItem = [];
 
   let itemId = $('#saleDetailsItem').val();
-  let itemData = itemId ? getItem(itemId) : {};
+  if(!!itemId) {
+    let itemData = itemId ? getItem(itemId) : {};
 
-  let item = {
-    id: itemId,
-    sellingPrice: $("#saleDetailsUnitPrice").val(),
-    quntity: $("#saleDetailsQuantity").val(),
-    total: $(`#saleDetailsTotal`).val(),
-    name: itemData.itemName,
-    itemNumber: itemData.itemNumber,
-  };
-  salesItem.push(item);
-
-  for (let index = 0; index < rowCount; index++) {
-    itemId = $(`#saleDetailsItem${index+1}`).val();
-    itemData = itemId ? getItem(itemId) : {};
-    item = {
+    let item = {
       id: itemId,
-      sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
-      quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
-      total: $(`#saleDetailsTotal${index + 1}`).val(),
+      sellingPrice: $("#saleDetailsUnitPrice").val(),
+      quntity: $("#saleDetailsQuantity").val(),
+      total: $(`#saleDetailsTotal`).val(),
       name: itemData.itemName,
       itemNumber: itemData.itemNumber,
     };
-
-    const duplicateItem = salesItem.find(x => x.id ===item.id)
-    if(duplicateItem){
-      errorText = 'Duplicate Items in the list';
-    }
     salesItem.push(item);
+  }
+  for (let index = 0; index < rowCount; index++) {
+    itemId = $(`#saleDetailsItem${index+1}`).val();
+    if(!!itemId) {
+      itemData = itemId ? getItem(itemId) : {};
+      item = {
+        id: itemId,
+        sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
+        quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
+        total: $(`#saleDetailsTotal${index + 1}`).val(),
+        name: itemData.itemName,
+        itemNumber: itemData.itemNumber,
+      };
+
+      const duplicateItem = salesItem.find(x => x.id ===item.id)
+      if(duplicateItem){
+        errorText = 'Duplicate Items in the list';
+      }
+      salesItem.push(item);
+    }
   }
 
   if(errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)){
@@ -167,6 +181,8 @@ function updateSale() {
         salesItem: salesItem,
         vendorId: saleDetailsVendorId,
         salesOrderId: salesOrderId,
+        isDiscountAmount: isDiscountAmount,
+        discount: saleDetailsDiscountAmount,
       },
       success: function (data) { 
         $("#saleDetailsMessage").fadeOut(1000).fadeIn(500, function() {});
@@ -252,9 +268,7 @@ function setSOSuggestionFunctions(id) {
 }
 
 function deleteSalesItem(id) {
-	$(`#addedRow${id}`).remove();
-	rowCount--;
-	$(`#deleteSaleItem${rowCount}`).prop("disabled", false);
+	$(`#addedRow${id||''}`).remove();
 	calculateGrandTotal();
   calculateNetTotal();
 }
@@ -278,7 +292,6 @@ function setCalculationFunctions(id) {
 
 var rowCount = 0;
 $("#saleDetailsItemAdd").on("click", function () {
-  $(`#deleteSaleItem${rowCount}`).prop("disabled", true);
   rowCount++;
   addSalesItem(rowCount);
 });
@@ -309,7 +322,11 @@ function initSalesOrderItems() {
   $("#saleDetailsCustomerName").val("");
   $(`#salesOrderTotal`).val("");
   $(`#saleDetailsItem`).val("");
+
+  $("#isDiscountAmount").prop( "checked", false );
   $(`#saleDetailsDiscountp`).val(0);
+  $('#saleDetailsDiscountAmount').val(0);
+
 
   for (let index = 0; index <= rowCount + 1; index++) {
     deleteSalesItem(index + 1);
@@ -338,12 +355,15 @@ function initSalesOrder(isClear) {
   salesItemSelectChange("");
   $("#addSaleButton").prop("disabled", true);
   $("#saleDetailsMessage").prop("display", "none");
-
-  document.getElementById("deliveredData").style.display = "none";
-	document.getElementById("saleDetailsItemAdd").style.display = "block";
+  document.getElementById("saleDetailsItemAdd").style.display = "block";
   $('#saleDetailsItemAdd').prop('disabled', true);
 	document.getElementById("lableActionHeader").text = '#';
 	document.getElementById("statusSO").style.display = "none";
+
+  const deliveredData = document.getElementById("deliveredData")
+  if(deliveredData) {
+    deliveredData.style.display = "none";
+  }
 
 	displayHideElements(["cancelSOBtn","sendSOBtn","closeSOBtn", "deliveredBtn", "printPdfBtn", "updateSaleButton"]); //
 	displayElements(["clearBtn","addSaleButton"])
@@ -355,10 +375,11 @@ function initSalesOrder(isClear) {
  
   searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
 	$('#addSaleButton').prop("disabled", true);
-  enableElements([`saleDetailsItem`,`saleDetailsQuantity`,
-   'salesDescription', 'saleDetailsSaleID'
- ,'saleDetailsVendorName', 'saleDetailsQuantity']);
-
+  if(!!$('#saleDetailsItem').val()){
+    enableElements([`saleDetailsItem`,`saleDetailsQuantity`,
+    'salesDescription', 'saleDetailsSaleID'
+  ,'saleDetailsVendorName', 'saleDetailsQuantity']);
+  }
 }
 
 $("#saleDetailsItem").change(function () {
@@ -383,13 +404,14 @@ $("#saleDetailsQuantity, #saleDetailsUnitPrice, #saleDetailsItem").change(functi
 
 function calculateNetTotal() {
   const tot = $(`#salesOrderTotal`).val();
-  const discountP = $("#saleDetailsDiscountp").val();
-  const val = Math.round(Number(tot) * ((100 - Number(discountP|| 0)) / 100)*100)/100;
+  const isDiscountAmount = $('#isDiscountAmount').is(':checked');
+  let discount = isDiscountAmount ? $('#saleDetailsDiscountAmount').val(): (Number(tot) * Number($("#saleDetailsDiscountp").val()|| 0) / 100);
+  const val = Math.round((Number(tot) - Number(discount)) * 100)/100;
   $("#salesOrderNetTotal").val(val);
   validateAddSales(val);
 }
 
-$("#saleDetailsDiscountp").change(function () {
+$("#saleDetailsDiscountp, #saleDetailsDiscountAmount").change(function () {
   calculateNetTotal();
 });
 
@@ -446,6 +468,12 @@ function loadSalesPayments(data) {
     : " Need to pay";
   $("#soPaymentStatus").html(status);
 
+  if(salesOrder.statusText === "Close"){
+    $("#closeBtn").prop("disabled", true);
+  }
+  else{
+    $("#closeBtn").prop("disabled", false);
+  }
   initSalesOrderPaymentList(salesOrder.saleID);
 }
 
@@ -731,7 +759,17 @@ function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
   $('#saleDetailsVendorName').val(salesOrder.vendorID).trigger("chosen:updated");
 	$(`#salesOrderTotal`).val(salesOrder.amount);
 	$(`#salesOrderId`).val(salesOrder.saleID);
-  $(`#saleDetailsDiscountp`).val(salesOrder.discountPercentage);
+
+  $("#isDiscountAmount").prop( "checked", salesOrder.isDiscountAmount=='1' );
+  if(salesOrder.isDiscountAmount=='1'){
+    $(`#saleDetailsDiscountAmount`).val(salesOrder.discount);
+    $("#saleDetailsDiscountAmount").prop("disabled", false);
+    $("#saleDetailsDiscountp").prop("disabled", true);
+  } else {
+    $(`#saleDetailsDiscountp`).val(salesOrder.discountPercentage);
+    $("#saleDetailsDiscountp").prop("disabled", false);
+    $("#saleDetailsDiscountAmount").prop("disabled", true);
+  }
   $("#saleDetailsCustomerName").val(salesOrder.customerID.toString());
   $(`#saleDetailsCustomerName`).trigger('change');
   rowCount =0;
@@ -754,7 +792,7 @@ function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
 
 		if(viewType === 'DELIVERED' || viewType === 'VIEW'){
 			disableElements([`saleDetailsItem${numberText}`,`saleDetailsQuantity${numberText}`]);
-      if(index>0){
+      //if(index>0){
         if(viewType !== 'DELIVERED'){
           displayHideElements([`deleteSaleItem${numberText}`]);
         } else {
@@ -770,25 +808,20 @@ function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
           }
         }
         
-      }
+      //}
       if(viewType === 'DELIVERED'){
         $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].quantity);
       }
 		}
-    else if (viewType === 'EDIT') {
-      if(index>0){
-        if(salesOrderItems.length !== index+1){
-          disableElements([`deleteSaleItem${numberText}`]);
-        }
-      }
-    }
+    // else if (viewType === 'EDIT') {
+    // }
 	}
   calculateGrandTotal();
   calculateNetTotal();
 	if(viewType === 'DELIVERED' || viewType === 'VIEW'){
 		disableElements([`saleDetailsItem`,`saleDetailsUnitPrice`,`saleDetailsQuantity`,
 			`saleDetailsTotal`, 'salesDescription', 'saleDetailsSaleID'
-		,'saleDetailsVendorName', 'saleDetailsCustomerName', 'saleDetailsDiscountp']);
+		,'saleDetailsVendorName', 'saleDetailsCustomerName', 'saleDetailsDiscountp','isDiscountAmount', 'saleDetailsDiscountAmount']);
 
 		//document.getElementById("updateSaleBtn").disabled = true;
 		document.getElementById("saleDetailsItemAdd").style.display = "none";
@@ -987,4 +1020,34 @@ function getCustomerDetails(vendorDetails){
     }
   });
 
+}
+
+function closeSalesOrder(){
+  const saleId = $(`#paymentSalesId`).val();
+  var statusId = 3; // Close
+  $.ajax({
+    url: "model/sale/updateStatus.php",
+    data: {
+      saleID: saleId,
+      statusId: statusId
+    },
+    method: "POST",
+    success: function () {
+	    initSalesOrderList();
+      $("#saleDetailsMessage").html("");
+      showSalesPaymentMessages("Successfully Closed.", "success");
+      $("#closeBtn").prop("disabled",true);
+    },
+    error: function () {
+      showSalesPaymentMessages("Error !", "error");
+    }
+  });
+}
+
+function setIsDiscount() {
+  const isDiscountAmount = $("#isDiscountAmount").is(':checked');
+  $(`#${isDiscountAmount?'saleDetailsDiscountp':'saleDetailsDiscountAmount'}`).val(0);
+  $("#saleDetailsDiscountAmount").prop("disabled", !isDiscountAmount);
+  $("#saleDetailsDiscountp").prop("disabled", isDiscountAmount);
+  calculateNetTotal();
 }

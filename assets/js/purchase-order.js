@@ -30,35 +30,40 @@ function addPurchase() {
 	const grandTotal= $(`#purchaseOrderTotal`).val();
 
 	const purchaseItems = [];
-  
+
+  let itemData = {};
   let itemId = $('#purchaseDetailsItem').val();
-  let itemData = itemId ? getItem(itemId) : {};
-	let item = {
-		id: itemId,
-		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
-		quntity: $('#purchaseDetailsQuantity').val(),
-		total: $(`#purchaseDetailsTotal`).val(),
-		name: itemData.itemName,
-    itemNumber: itemData.itemNumber,
-	};
-	purchaseItems.push(item);
+  if(!!itemId) {
+    itemData = itemId ? getItem(itemId) : {};
+    item = {
+      id: itemId,
+      buyingPrice: $('#purchaseDetailsUnitPrice').val(),
+      quntity: $('#purchaseDetailsQuantity').val(),
+      total: $(`#purchaseDetailsTotal`).val(),
+      name: itemData.itemName,
+      itemNumber: itemData.itemNumber,
+    };
+    purchaseItems.push(item);
+  }
 
 	for (let index = 0; index < rowCount; index++) {
     itemId = $(`#purchaseDetailsItem${index+1}`).val();
-    itemData = itemId ? getItem(itemId) : {};
-		item = {
-			id: itemId,
-			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
-			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
-			total: $(`#purchaseDetailsTotal${index+1}`).val(),
-			name: itemData.itemName,
-      itemNumber: itemData.itemNumber,
-		};
-    const duplicateItem = purchaseItems.find(x => x.id ===item.id)
-    if(duplicateItem){
-      errorText = 'Duplicate Items in the list';
+    if(!!itemId) {
+      itemData = itemId ? getItem(itemId) : {};
+      item = {
+        id: itemId,
+        buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
+        quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
+        total: $(`#purchaseDetailsTotal${index+1}`).val(),
+        name: itemData.itemName,
+        itemNumber: itemData.itemNumber,
+      };
+      const duplicateItem = purchaseItems.find(x => x.id ===item.id)
+      if(duplicateItem){
+        errorText = 'Duplicate Items in the list';
+      }
+      purchaseItems.push(item);
     }
-		purchaseItems.push(item);
 	}
 
   if(errorText == null && !!purchaseItems.find(x => !x.quntity || x.quntity == 0)){
@@ -118,34 +123,39 @@ function updatePurchase() {
 
 	const purchaseItems = [];
   let itemId = $('#purchaseDetailsItem').val();
-  let itemData = itemId ? getItem(itemId) : {};
-	let item = {
-		id: itemId,
-		buyingPrice: $('#purchaseDetailsUnitPrice').val(),
-		quntity: $('#purchaseDetailsQuantity').val(),
-		total: $(`#purchaseDetailsTotal`).val(),
-    name: itemData.itemName,
-    itemNumber: itemData.itemNumber,
-	};
-	purchaseItems.push(item);
+  let itemData = {};
+  if(!!itemId) {
+    itemData = itemId ? getItem(itemId) : {};
+    let item = {
+      id: itemId,
+      buyingPrice: $('#purchaseDetailsUnitPrice').val(),
+      quntity: $('#purchaseDetailsQuantity').val(),
+      total: $(`#purchaseDetailsTotal`).val(),
+      name: itemData.itemName,
+      itemNumber: itemData.itemNumber,
+    };
+	  purchaseItems.push(item);
+  }
 
 	for (let index = 0; index < rowCount; index++) {
     itemId = $(`#purchaseDetailsItem${index+1}`).val();
-    itemData = itemId ? getItem(itemId) : {};
-		item = {
-			id: itemId,
-			buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
-			quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
-			total: $(`#purchaseDetailsTotal${index+1}`).val(),
-      name: itemData.itemName,
-      itemNumber: itemData.itemNumber,
-		};
-    const duplicateItem = purchaseItems.find(x => x.id ===item.id)
-    if(duplicateItem){
-      errorText = 'Duplicate Items in the list';
-      return;
+    if(!!itemId) {
+      itemData = itemId ? getItem(itemId) : {};
+      item = {
+        id: itemId,
+        buyingPrice: $(`#purchaseDetailsUnitPrice${index+1}`).val(),
+        quntity: $(`#purchaseDetailsQuantity${index+1}`).val(),
+        total: $(`#purchaseDetailsTotal${index+1}`).val(),
+        name: itemData.itemName,
+        itemNumber: itemData.itemNumber,
+      };
+      const duplicateItem = purchaseItems.find(x => x.id ===item.id)
+      if(duplicateItem){
+        errorText = 'Duplicate Items in the list';
+        return;
+      }
+      purchaseItems.push(item);
     }
-		purchaseItems.push(item);
 	}
 
   if(errorText == null && !!purchaseItems.find(x => !x.quntity || x.quntity == 0)){
@@ -274,8 +284,8 @@ function calculateTotalInPurchase(id) {
 
 function deletePurchaseItem(id) {
 	$(`#addedRow${id}`).remove();
-	rowCount--;
-	$(`#deletePurchaseItem${rowCount}`).prop("disabled", false);
+	//rowCount--;
+	//$(`#deletePurchaseItem${rowCount}`).prop("disabled", false);
 	calculatePOGrandTotal();
 }
 
@@ -285,7 +295,7 @@ $("#deletePurchaseItem").on("click", function () {
 
 var rowCount = 0;
 $('#addPurchaseItem').on('click', function(){
-	$(`#deletePurchaseItem${rowCount}`).prop("disabled", true);
+	//$(`#deletePurchaseItem${rowCount}`).prop("disabled", true);
 	rowCount++;
     addPurchaseItem(rowCount);
 });
@@ -455,13 +465,13 @@ function loadDataToPurchaseOrder(data, viewType) {
         $(`#purchaseDetailsGoodReceivedQuantity${numberText}`).val(purchaseOrderItems[index].quantity);
       } 
 		}
-    else if (viewType === 'EDIT') {
-      if(index>0){
-        if(purchaseOrderItems.length !== index+1){
-          disableElements([`deletePurchaseItem${numberText}`]);
-        }
-      }
-    }
+    // else if (viewType === 'EDIT') {
+    //   if(index>0){
+    //     if(purchaseOrderItems.length !== index+1){
+    //       disableElements([`deletePurchaseItem${numberText}`]);
+    //     }
+    //   }
+    // }
 	}
   calculatePOGrandTotal();
 	if(viewType === 'GOOD_RECEIVED' || viewType === 'VIEW'){
@@ -677,7 +687,6 @@ function showPayments(purchaseOrderId) {
 function loadPayments(data) {
   const {purchaseOrder} = JSON.parse(data);
   let paidAmount =  purchaseOrder.paidAmount === null ? 0.00 : parseFloat(purchaseOrder.paidAmount); 
-
   let credit = parseFloat(purchaseOrder.amount) - paidAmount;
   $("#paymentOrderId").val(purchaseOrder.purchaseID);
   $("#totalAmount").html(purchaseOrder.amount);
@@ -689,7 +698,13 @@ function loadPayments(data) {
   $("#paymentStatus").html(status);
 	const currentDate =  new Date().toISOString().slice(0, 10);
 	$('#paymentDate').val(currentDate);
-  
+
+  if(purchaseOrder.statusText === "Close"){
+    $("#closeBtn").prop("disabled", true);
+  }
+  else{
+    $("#closeBtn").prop("disabled", false);
+  }
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
 }
 
@@ -985,3 +1000,26 @@ $.ajax({
 });
 }
 
+function closeOrder(){
+
+  const purchaseId = $(`#paymentOrderId`).val();
+  var statusId = 3; // Close
+  $.ajax({
+    url: "model/purchase/updateStatus.php",
+    data: {
+      purchaseID: purchaseId,
+      statusId: statusId
+    },
+    method: "POST",
+    success: function () {
+	    initPurchaseOrderList();
+      $("#PaymentDetailsMessage").html("");
+      showPaymentMessages("Successfully Closed.", "success");
+      $("#closeBtn").prop("disabled",true);
+    },
+    error: function () {
+      showPaymentMessages("Error !", "error");
+    }
+  });
+
+}

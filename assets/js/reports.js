@@ -55,18 +55,27 @@ $("#reportType").on("change", function () {
     document.getElementById("venderDiv").style.display = "none";
     document.getElementById("reportListTab").style.display = "none";
     document.getElementById("itemsDiv").style.display = "none";
+    document.getElementById("statusDiv").style.display = "none";
+    $("#searchBtn").prop("disabled", false);
   }
   else if(selectedValue == "vendorReports" || selectedValue == "itemReports"){
     document.getElementById("venderDiv").style.display = "";
     document.getElementById("companyDetails").style.display = "none";
     document.getElementById("reportListTab").style.display = "";
+    document.getElementById("statusDiv").style.display = "";
 
+    const vendorOption = document.getElementById('reportDetailsVendor');
     if(selectedValue == "itemReports"){
       document.getElementById("itemsDiv").style.display = "";
+      vendorOption.options[0].text = "--Select Vendor--";
+      $("#searchBtn").prop("disabled", true);
     }
     else{
       document.getElementById("itemsDiv").style.display = "none";
+      vendorOption.options[0].text = "All";
+      $("#searchBtn").prop("disabled", false);
     }
+
   }
   
   initItems(selectedValue);
@@ -74,12 +83,16 @@ $("#reportType").on("change", function () {
 
 $("#reportDetailsVendor").on("change", function () {
     const selectedValue = $(this).val();
-    if(selectedValue == "null"){
+    if(selectedValue == "-1"){
       $("#reportDetailsItem").empty().trigger("change");
+      const reportType = $("#reportType").val();
+      $("#searchBtn").prop("disabled", reportType == "itemReports");
     }
     else{
       initItems(selectedValue);
+      $("#searchBtn").prop("disabled", false);
     }
+
   });
   
   function initItems(vendorId) {
@@ -99,7 +112,8 @@ $("#reportDetailsVendor").on("change", function () {
 }
   
 function setReportsItemList(items){
-	itemData = items && items.length? getSelect2ItemData(items): [];
+   
+	itemData = items && items.length? getSelect2ItemData([{productID: -1, itemNumber: '- All', itemName: ''}, ...items]): [];
   $("#reportDetailsItem").empty().trigger("change");
   $("#reportDetailsItem").select2({
 		placeholder: {text: "Select Item"},
@@ -146,21 +160,21 @@ function loadData(){
 
 function searchData(){
 
-  var reportType = $("#reportType").val();
-  var vendor = $("#reportDetailsVendor").val();
-  var fromDate = $("#reportDetailsItem").val();
-  var toDate = $("#reportsFromDate").val();
-  var item = $("#reportsToDate").val();
+  const reportType = $("#reportType").val();
+  const vendor = $("#reportDetailsVendor").val();
+  const item = $("#reportDetailsItem").val();
+  const toDate = $("#reportsToDate").val();
+  const fromDate = $("#reportsFromDate").val();
+  const status = $("#reportStatus").val();
 
   if(reportType == "companyReports"){
     loadCompanyReport();
   }
   else if(reportType == "vendorReports"){
-
-
+    loadVendorReport(fromDate, toDate, vendor, status);
   }
   else if(reportType == "itemReports"){
-
+    loadItemsReport(fromDate, toDate, vendor, item, status);
   }
 
 }
@@ -179,7 +193,6 @@ function loadCompanyReport(){
     success: function (data) {
       var response = $.parseJSON(data);
 
-      console.log(response);
       var poArray = response.purchaseOrders;
       var soArray = response.salesOrders;
       let poTable = '';
@@ -230,5 +243,12 @@ function loadCompanyReport(){
     complete: function () {}
   });
 
+}
 
+function loadVendorReport(fromDate, toDate, vendor, status){
+  reportsTableCreator('reportListTableDiv', `model/report/vendorReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}`, 'vendorReportTable');  
+}
+
+function loadItemsReport(fromDate, toDate, vendor, item){
+  reportsTableCreator('reportListTableDiv', `model/report/itemReportTableCreator.php?fromDate=${fromDate}&toDate=${toDate}&vendorId=${vendor}&status=${status}&itemId=${item}`, 'itemDetailsTable');  
 }

@@ -104,3 +104,23 @@ fetchCompanyDetails();
 function getCompanyDetails(){
 	return companyDetails;
 }
+
+function reportsTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
+	var tableContainerDivID = '#' + tableContainerDiv;
+	var tableID = '#' + table;
+	$(tableContainerDivID).load(tableCreatorFileUrl, function(){
+		// Initiate the Datatable plugin once the table is added to the DOM
+		$(tableID).DataTable({
+			dom: 'lBfrtip',
+			//dom: 'lfBrtip',
+			//dom: 'Bfrtip',
+			buttons: [
+				'copy',
+				'csv', 'excel',
+				{extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL'},
+				'print'
+			],
+			"ordering": false
+		});
+	});
+}
