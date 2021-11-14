@@ -77,7 +77,7 @@
               </div>
             </div>
             <div id="salesItemList">
-              <div class="form-row">
+              <div class="form-row" id="addedRow">
                 <div class="form-group col-md-3">
                   <select id="saleDetailsItem" class="form-control" style="width: 100%"></select>
                 </div>
@@ -98,6 +98,7 @@
                   <input type="number" class="form-control text-right" id="saleDetailsDeliveredQuantity" name="saleDetailsDeliveredQuantity" value="0">
                 </div>
                 <div class="form-group col-md-1">
+                  <button type="button" id="deleteSaleItem" onclick="deleteSalesItem()" class="btn btn-danger">Delete</button>
                 </div>
               </div>
             </div>
@@ -114,10 +115,17 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-8">
+                <div style="float:right; padding-left:35px;">
+                  <input type="checkbox" id="isDiscountAmount" onclick="setIsDiscount()">
+                  <label style="cursor=pointer" for="isDiscountAmount">is Amount</label>
+                </div>
                 <label style="float:right" for="saleDetailsDiscountp">Discount %</label>
               </div>
               <div class="form-group col-md-1">
-                <input class="form-control text-right" id="saleDetailsDiscountp" name="saleDetailsDiscountp" value="0" type="number" min="1" max="50"/>
+                <div class="form-row">
+                  <input class="form-control col-md-8 text-right" style="margin-right:5px;margin-left:5px;" id="saleDetailsDiscountp" name="saleDetailsDiscountp" value="0" type="number" min="1" max="50"/>
+                  <input class="form-control col-md-12 text-right" id="saleDetailsDiscountAmount" name="saleDetailsDiscountAmount" value="0" type="number" min="1" disabled/>
+                </div>
               </div>
             </div>
             <div class="form-row">
