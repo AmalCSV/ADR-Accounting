@@ -13,18 +13,26 @@
 		$saleDate = htmlentities($_POST['saleDetailsSaleDate']);
 		$salesDetailsDescription = htmlentities($_POST['salesDescription']);
 		$vendorId = htmlentities($_POST['vendorId']);
-		
+		$isDiscountAmount = htmlentities($_POST['isDiscountAmount']);
+        $discount =  htmlentities($_POST['discount']);
 		
 		// Check if mandatory fields are not empty
 		if(!empty($saleDetailsSaleID) && isset($salesOrderTotal) && isset($customerName) && isset($saleDate) && isset($salesItem)){
-			
+
+			if($isDiscountAmount === 'true'){
+				$discountAmount = $discount;
+				$isDiscountAmount = 1;
+			} else {
+				$discountAmount = $salesOrderTotal - $salesOrderNetTotal;
+				$isDiscountAmount = 0;
+			}
 			// insert sales order 
-			$discountAmount = $salesOrderTotal - $salesOrderNetTotal;
-			$insertSalesOrderSql = 'INSERT INTO salesorder(salesNumber, saleDate, amount, customerID, description, discount, discountPercentage, customerName, vendorID) 
-			VALUES(:salesNumber, :saleDate, :amount, :customerID, :note, :discount, :discountPercentage, :customerName, :vendorId)';
+			
+			$insertSalesOrderSql = 'INSERT INTO salesorder(salesNumber, saleDate, amount, customerID, description, discount, discountPercentage, customerName, vendorID, isDiscountAmount) 
+			VALUES(:salesNumber, :saleDate, :amount, :customerID, :note, :discount, :discountPercentage, :customerName, :vendorId, :isDiscountAmount)';
 			$insertSalesOrderStatement = $conn->prepare($insertSalesOrderSql);
 			$insertSalesOrderStatement->execute(['salesNumber' => $saleDetailsSaleID, 'saleDate' => $saleDate, 'amount' => $salesOrderNetTotal, 
-				 'customerID' => $saleDetailsCustomerID, 'note' => $salesDetailsDescription, 'discount' => $discountAmount, 'discountPercentage' => $discountp, 'customerName' => $customerName, 'vendorId' => $vendorId]);
+				 'customerID' => $saleDetailsCustomerID, 'note' => $salesDetailsDescription, 'discount' => $discountAmount, 'discountPercentage' => $discountp, 'customerName' => $customerName, 'vendorId' => $vendorId, 'isDiscountAmount' => $isDiscountAmount]);
 
 			$salesOrderID = $conn->lastInsertId();
 				foreach ($salesItem as $item) {

@@ -119,7 +119,8 @@ function reportsTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
 				'csv', 'excel',
 				{extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL'},
 				'print'
-			]
+			],
+			"ordering": false
 		});
 	});
 }

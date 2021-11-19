@@ -32,7 +32,7 @@
 		}
 	}
 
-	$itemDetailsSearchSql = 'SELECT i.*, v.vendorID, v.companyName FROM item i left join vendor v on i.vendorID = v.vendorID  where i.status ="Active" ' . getItemSqlText($itemId, 'i') ;
+	$itemDetailsSearchSql = 'SELECT i.*, v.vendorID, v.companyName ,i.sellingPrice-i.buyingPrice as itemProfit FROM item i left join vendor v on i.vendorID = v.vendorID  where i.status ="Active" ' . getItemSqlText($itemId, 'i') ;
 	$itemDetailsSearchStatement = $conn->prepare($itemDetailsSearchSql);
 	$itemDetailsSearchStatement->execute();
 
@@ -74,6 +74,30 @@
 	$purchaseItemPendingStatement->closeCursor();
 
 	//echo $purchaseItemSearchSql;
+	function getStyle($isBold)
+	{
+		if($isBold){
+			return 'style="font-weight:bold"';
+		}
+		else {
+			return '';
+		}
+	}
+	function getReportRow($row ,$isBold = false) {
+		return '<tr '. getStyle($isBold) .'>' .
+		'<td class="d-none">' . $row['productID'] . '</td>' .
+		'<td>' . $row['itemNumber'] . '</td>' .
+		'<td><a href="#" class="itemDetailsHover" data-toggle="popover" id="' . $row['productID'] . '">' . $row['itemName'] . '</a></td>' .
+		'<td class="price-al">' . $row['purchaseQuantity'] . '</td>' .
+		'<td class="text-right pr-1">' . $row['purchaseCost'] . '</td>'.
+		'<td class="text-right pr-1">' . $row['salesQuantity'] . '</td>'.
+		'<td class="text-right pr-1">' . $row['salesCost'] . '</td>' .
+		'<td class="text-right pr-1">' . $row['calculatedProfit']. '</td>' .
+		'<td class="price-al">' . $row['stock'] . '</td>' .
+		'<td class="price-al">' . $row['stockValue'] . '</td>' .
+		'<td class="price-al">' . $row['purchasePendingQuantity'] . '</td>' .
+		'</tr>';
+	}
 
 	$output = '<table id="itemDetailsTable" class="table table-sm table-striped table-bordered table-hover " style="width:100%;">
 				<thead>
@@ -94,28 +118,40 @@
 				<tbody>';
 	
 	// Create table rows from the selected data
-	while($row = $itemDetailsSearchStatement->fetch(PDO::FETCH_ASSOC)){
-		$row['purchaseQuantity'] = getArrayData($purchaseItems, $row['productID'],'productID', 'quantity');
-		$row['purchaseCost'] = getArrayData($purchaseItems, $row['productID'],'productID', 'totalPrice');
-		$row['salesQuantity'] = getArrayData($salesItems, $row['productID'],'productID', 'quantity');
-		$row['salesCost'] = getArrayData($salesItems, $row['productID'],'productID', 'totalPrice');
-		$row['purchasePendingQuantity'] = getArrayData($purchasePendingItems, $row['productID'],'productID', 'quantity');
+	$totalRow = array();
+	$i = 0;
+	$totalRow[$i]['productID'] = '#';
+	$totalRow[$i]['itemNumber'] = 'Total';
+	$totalRow[$i]['itemName'] = '';
+	$totalRow[$i]['purchaseQuantity'] = 0;
+	$totalRow[$i]['purchaseCost']  =0;
+	$totalRow[$i]['salesQuantity']  =0;
+	$totalRow[$i]['salesCost'] =0;
+	$totalRow[$i]['purchasePendingQuantity'] =0;
+	$totalRow[$i]['calculatedProfit'] =0;
+	$totalRow[$i]['stockValue']  =0;
+	$totalRow[$i]['stock'] =0;
+	while ($row = $itemDetailsSearchStatement->fetch(PDO::FETCH_ASSOC)) {
+		$row['purchaseQuantity'] = getArrayData($purchaseItems, $row['productID'], 'productID', 'quantity');
+		$row['purchaseCost'] = getArrayData($purchaseItems, $row['productID'], 'productID', 'totalPrice');
+		$row['salesQuantity'] = getArrayData($salesItems, $row['productID'], 'productID', 'quantity');
+		$row['salesCost'] = getArrayData($salesItems, $row['productID'], 'productID', 'totalPrice');
+		$row['purchasePendingQuantity'] = getArrayData($purchasePendingItems, $row['productID'], 'productID', 'quantity');
+		$row['calculatedProfit'] = $row['itemProfit'] * $row['salesQuantity'];
+		$row['stockValue'] = $row['stock'] * $row['buyingPrice'];
+		$output .= getReportRow($row);
 
-		$output .= '<tr>' .
-					'<td class="d-none">' . $row['productID'] . '</td>' .
-					'<td>' . $row['itemNumber'] . '</td>' .
-					'<td><a href="#" class="itemDetailsHover" data-toggle="popover" id="' . $row['productID'] . '">' . $row['itemName'] . '</a></td>' .
-					'<td class="price-al">' . $row['purchaseQuantity'] . '</td>' .
-					'<td class="text-right pr-1">' . $row['purchaseCost'] . '</td>'.
-					'<td class="text-right pr-1">' . $row['salesQuantity'] . '</td>'.
-					'<td class="text-right pr-1">' . $row['salesCost'] . '</td>' .
-					'<td class="text-right pr-1">' . $row['salesCost']- $row['purchaseCost']. '</td>' .
-					'<td class="price-al">' . $row['stock'] . '</td>' .
-					'<td class="price-al">' . $row['stock'] * $row['buyingPrice'] . '</td>' .
-					'<td class="price-al">' . $row['purchasePendingQuantity'] . '</td>' .
-					'</tr>';
+		$totalRow[$i]['purchaseQuantity'] += $row['purchaseQuantity'];
+		$totalRow[$i]['purchaseCost'] += $row['purchaseCost'];
+		$totalRow[$i]['salesQuantity'] += $row['salesQuantity'];
+		$totalRow[$i]['salesCost'] += $row['salesCost'];
+		$totalRow[$i]['purchasePendingQuantity'] += $row['purchasePendingQuantity'];
+		$totalRow[$i]['calculatedProfit'] += $row['calculatedProfit'];
+		$totalRow[$i]['stockValue'] += $row['stockValue'];
 	}
-	
+
+	$output .= getReportRow($totalRow[$i], true);
+
 	$itemDetailsSearchStatement->closeCursor();
 	
 	$output .= '</tbody>
