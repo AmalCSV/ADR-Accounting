@@ -316,7 +316,15 @@ function initPurchaseOrder(isClear) {
 		}
 	});
 
-  initPurchaseOrders1();
+  $('#toDate').val(currentDate);
+
+  var date = new Date();
+  date.setDate(date.getDate() - 30);
+  var fromDate = date.toISOString().split('T')[0]; 
+  $('#fromDate').val(fromDate);
+  // fetch purchase orders by date range
+  fetchOrdersByDateRange();
+
 	// initPurchaseOrderList();
 	initPurchaseOrderItems();
   $("#poPaymentsTab").prop("disabled", true);
@@ -699,17 +707,20 @@ function loadPayments(data) {
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
 }
 
-function initPurchaseOrders1() {
- 
-var test = 'model/purchase/purchaseDetailsSearchTableCreator1.php?fromDate=2021-09-28&toDate=2021-10-17';
+function initPurchaseOrders(fromDate, toDate) {
+var url = 'model/purchase/purchaseDetailsSearchTableCreatorByDates.php?fromDate='+ fromDate +'&toDate=' + toDate;
 
-  $("#purchaseDetailsTableDiv").load(test, function(){
+  $("#purchaseDetailsTableDiv").load(url, function(){
 		$("#purchaseDetailsTable").DataTable({
 			"order": [[ 0, "desc" ]]
 		});
 		$("[data-toggle=tooltip]").tooltip();
 	});
 
+}
+
+function fetchOrdersByDateRange(){
+  initPurchaseOrders($('#fromDate').val(), $('#toDate').val());
 }
 
 function initPurchaseOrderPaymentList(orderId) {
@@ -1016,7 +1027,7 @@ function closeOrder(){
     },
     method: "POST",
     success: function () {
-	    initPurchaseOrderList();
+	    fetchOrdersByDateRange();
       $("#PaymentDetailsMessage").html("");
       showPaymentMessages("Successfully Closed.", "success");
       $("#closeBtn").prop("disabled",true);
