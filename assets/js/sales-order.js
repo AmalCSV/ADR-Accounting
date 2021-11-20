@@ -2,9 +2,10 @@ var itemList = [];
 var order = {};
 var orderItems = {};
 // File that creates the sale details search table
-saleDetailsSearchTableCreatorFile = 'model/sale/saleDetailsSearchTableCreator.php';
+// saleDetailsSearchTableCreatorFile = 'model/sale/saleDetailsSearchTableCreator.php';
+saleOrdersSearchTableByDatesFile = "model/sale/SalesDetailsSearchTableCreatorByDates.php";
 // File that creates the sale reports search table
-saleReportsSearchTableCreatorFile = 'model/sale/saleReportsSearchTableCreator.php';
+saleReportsSearchTableCreatorFile = "model/sale/saleReportsSearchTableCreator.php";
 
 function getItem(id) {
   const item = itemList.find(x => x.productID === id);
@@ -16,8 +17,8 @@ function addSale() {
   let errorText = null;
   var saleDetailsSaleID = $("#saleDetailsSaleID").val();
   var saleDetailsDiscount = $("#saleDetailsDiscountp").val();
-  const isDiscountAmount = $("#isDiscountAmount").is(':checked');
-  const saleDetailsDiscountAmount= $('#saleDetailsDiscountAmount').val();
+  const isDiscountAmount = $("#isDiscountAmount").is(":checked");
+  const saleDetailsDiscountAmount = $("#saleDetailsDiscountAmount").val();
   var saleDetailsCustomerID = $("#saleDetailsCustomerName").val();
   var saleDetailsCustomerName = $("#saleDetailsCustomerName option:selected").text();
   var saleDetailsSaleDate = $("#saleDetailsSaleDate").val();
@@ -28,9 +29,11 @@ function addSale() {
 
   const salesItem = [];
   let itemData = {};
-  let itemId = $('#saleDetailsItem').val();
-  if(!!itemId) {
-     itemData = itemId ? getItem(itemId) : {};
+  let itemId = $("#saleDetailsItem").val();
+  if (!!itemId) {
+    itemData = itemId
+      ? getItem(itemId)
+      : {};
 
     let item = {
       id: itemId,
@@ -38,37 +41,39 @@ function addSale() {
       quntity: $("#saleDetailsQuantity").val(),
       total: $(`#saleDetailsTotal`).val(),
       name: itemData.itemName,
-      itemNumber: itemData.itemNumber,
+      itemNumber: itemData.itemNumber
     };
     salesItem.push(item);
   }
 
   for (let index = 0; index < rowCount; index++) {
-    itemId = $(`#saleDetailsItem${index+1}`).val();
-    if(!!itemId) {
-      itemData = itemId ? getItem(itemId) : {};
+    itemId = $(`#saleDetailsItem${index + 1}`).val();
+    if (!!itemId) {
+      itemData = itemId
+        ? getItem(itemId)
+        : {};
       item = {
         id: itemId,
         sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
         quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
         total: $(`#saleDetailsTotal${index + 1}`).val(),
         name: itemData.itemName,
-        itemNumber: itemData.itemNumber,
+        itemNumber: itemData.itemNumber
       };
 
-      const duplicateItem = salesItem.find(x => x.id ===item.id)
-      if(duplicateItem){
-        errorText = 'Duplicate Items in the list';
+      const duplicateItem = salesItem.find(x => x.id === item.id);
+      if (duplicateItem) {
+        errorText = "Duplicate Items in the list";
       }
       salesItem.push(item);
     }
   }
 
-  if(errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)){
-    errorText = 'Quantity 0 item in the list';
+  if (errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)) {
+    errorText = "Quantity 0 item in the list";
   }
 
-  if( errorText == null) {
+  if (errorText == null) {
     $.ajax({
       url: "model/sale/insertSale.php",
       method: "POST",
@@ -84,27 +89,26 @@ function addSale() {
         salesItem: salesItem,
         vendorId: saleDetailsVendorId,
         isDiscountAmount: isDiscountAmount,
-        discount: saleDetailsDiscountAmount,
+        discount: saleDetailsDiscountAmount
       },
       success: function (data) {
         const result = $.parseJSON(data);
-        $('#saleDetailsMessage').html(result.alertMessage);
-        $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {
-        //  window.location.href += '#saleDetailsTab';
-        //  window.location.reload();
+        $("#saleDetailsMessage").html(result.alertMessage);
+        $("#saleDetailsMessage").fadeOut(1000).fadeIn(500, function () {
+          //  window.location.href += '#saleDetailsTab';
+          //  window.location.reload();
         });
-        if(result.status ==='success'){
-          openEditView(result.salesOrderId, 'EDIT')
+        if (result.status === "success") {
+          openEditView(result.salesOrderId, "EDIT");
         }
       },
       complete: function () {
         //reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
       }
     });
-  }
-  else {
-    $('#saleDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
-    $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  } else {
+    $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorText + "</div>");
+    $("#saleDetailsMessage").fadeOut(1000).fadeIn(500, function () {});
   }
 }
 
@@ -112,9 +116,9 @@ function updateSale() {
   let errorText = null;
   var saleDetailsSaleID = $("#saleDetailsSaleID").val();
   var saleDetailsDiscount = $("#saleDetailsDiscountp").val();
-  const isDiscountAmount = $("#isDiscountAmount").is(':checked');
-  const saleDetailsDiscountAmount= $('#saleDetailsDiscountAmount').val();
-  
+  const isDiscountAmount = $("#isDiscountAmount").is(":checked");
+  const saleDetailsDiscountAmount = $("#saleDetailsDiscountAmount").val();
+
   var saleDetailsCustomerID = $("#saleDetailsCustomerName").val();
   var saleDetailsCustomerName = $("#saleDetailsCustomerName option:selected").text();
   var saleDetailsSaleDate = $("#saleDetailsSaleDate").val();
@@ -122,13 +126,15 @@ function updateSale() {
   var salesOrderNetTotal = $("#salesOrderNetTotal").val();
   var salesDescription = $("#salesDescription").val();
   var saleDetailsVendorId = $("#saleDetailsVendorName").val();
-  const salesOrderId = $('#salesOrderId').val();
+  const salesOrderId = $("#salesOrderId").val();
 
   const salesItem = [];
 
-  let itemId = $('#saleDetailsItem').val();
-  if(!!itemId) {
-    let itemData = itemId ? getItem(itemId) : {};
+  let itemId = $("#saleDetailsItem").val();
+  if (!!itemId) {
+    let itemData = itemId
+      ? getItem(itemId)
+      : {};
 
     let item = {
       id: itemId,
@@ -136,36 +142,38 @@ function updateSale() {
       quntity: $("#saleDetailsQuantity").val(),
       total: $(`#saleDetailsTotal`).val(),
       name: itemData.itemName,
-      itemNumber: itemData.itemNumber,
+      itemNumber: itemData.itemNumber
     };
     salesItem.push(item);
   }
   for (let index = 0; index < rowCount; index++) {
-    itemId = $(`#saleDetailsItem${index+1}`).val();
-    if(!!itemId) {
-      itemData = itemId ? getItem(itemId) : {};
+    itemId = $(`#saleDetailsItem${index + 1}`).val();
+    if (!!itemId) {
+      itemData = itemId
+        ? getItem(itemId)
+        : {};
       item = {
         id: itemId,
         sellingPrice: $(`#saleDetailsUnitPrice${index + 1}`).val(),
         quntity: $(`#saleDetailsQuantity${index + 1}`).val(),
         total: $(`#saleDetailsTotal${index + 1}`).val(),
         name: itemData.itemName,
-        itemNumber: itemData.itemNumber,
+        itemNumber: itemData.itemNumber
       };
 
-      const duplicateItem = salesItem.find(x => x.id ===item.id)
-      if(duplicateItem){
-        errorText = 'Duplicate Items in the list';
+      const duplicateItem = salesItem.find(x => x.id === item.id);
+      if (duplicateItem) {
+        errorText = "Duplicate Items in the list";
       }
       salesItem.push(item);
     }
   }
 
-  if(errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)){
-    errorText = 'Quantity 0 item in the list';
+  if (errorText == null && !!salesItem.find(x => !x.quntity || x.quntity == 0)) {
+    errorText = "Quantity 0 item in the list";
   }
 
-  if( errorText == null) {
+  if (errorText == null) {
     $.ajax({
       url: "model/sale/updateSale.php",
       method: "POST",
@@ -182,20 +190,19 @@ function updateSale() {
         vendorId: saleDetailsVendorId,
         salesOrderId: salesOrderId,
         isDiscountAmount: isDiscountAmount,
-        discount: saleDetailsDiscountAmount,
+        discount: saleDetailsDiscountAmount
       },
-      success: function (data) { 
-        $("#saleDetailsMessage").fadeOut(1000).fadeIn(500, function() {});
+      success: function (data) {
+        $("#saleDetailsMessage").fadeOut(1000).fadeIn(500, function () {});
         $("#saleDetailsMessage").html(data);
       },
       complete: function () {
         //reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
       }
     });
-  }
-  else {
-    $('#saleDetailsMessage').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+errorText+'</div>');
-    $('#saleDetailsMessage').fadeOut(1000).fadeIn(500, function() {});
+  } else {
+    $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorText + "</div>");
+    $("#saleDetailsMessage").fadeOut(1000).fadeIn(500, function () {});
   }
 }
 
@@ -212,12 +219,13 @@ function initItems(vendorId) {
       setSOItemList(itemList);
     }
   });
-  $('#saleDetailsItemAdd').prop('disabled', !(vendorId>0));
-  $('#addSaleButton').prop("disabled", !(vendorId>0));
+  $("#saleDetailsItemAdd").prop("disabled", !(vendorId > 0));
+  $("#addSaleButton").prop("disabled", !(vendorId > 0));
 }
 
 function addSalesItem(id, viewType) {
-  $("#salesItemList").append(`
+  $("#salesItemList").append(
+    `
 			      <div class="form-row" id="addedRow${id}"> 
                     <div class="form-group col-md-3">
 						            <select id='saleDetailsItem${id}' class="form-control" style="width: 100%">
@@ -236,11 +244,11 @@ function addSalesItem(id, viewType) {
                         <input type="text" class="form-control text-right" id="saleDetailsTotal${id}" name="saleDetailsTotal${id}" readonly>
 						<input type="hidden" id="saleItemId${id}" name="saleItemId${id}">
 					</div>
-          ${viewType === "DELIVERED" || (viewType === 'VIEW' && status === 5)
-          ? `<div class="form-group col-md-1">
+          ${viewType === "DELIVERED" || (viewType === "VIEW" && status === 5)
+    ? `<div class="form-group col-md-1">
                   <input type="number" class="form-control text-right" id="saleDetailsDeliveredQuantity${id}" name="saleDetailsDeliveredQuantity${id}" value="0">
                 </div>`
-          : `
+    : `
 					<div class="form-group col-md-1">
 						<button type="button" id="deleteSaleItem${id}" onclick="deleteSalesItem(${id})" class="btn btn-danger">Delete</button>
 					</div>`}
@@ -256,20 +264,22 @@ function updateSalesOrder() {
 }
 
 function setSOSuggestionFunctions(id) {
-	$(`#saleDetailsItem${id}`).select2({
-		placeholder: {text: "Select Item"},
-		data: itemData
-	});
+  $(`#saleDetailsItem${id}`).select2({
+    placeholder: {
+      text: "Select Item"
+    },
+    data: itemData
+  });
 
-	salesItemSelectChange(id);
-	$(`#saleDetailsItem${id}`).change(function(){
-		salesItemSelectChange(id);
-	});
+  salesItemSelectChange(id);
+  $(`#saleDetailsItem${id}`).change(function () {
+    salesItemSelectChange(id);
+  });
 }
 
 function deleteSalesItem(id) {
-	$(`#addedRow${id||''}`).remove();
-	calculateGrandTotal();
+  $(`#addedRow${id || ""}`).remove();
+  calculateGrandTotal();
   calculateNetTotal();
 }
 
@@ -277,9 +287,8 @@ $("#deleteSaleItem").on("click", function () {
   deleteSalesItem();
 });
 
-
-$('#saleDetailsItem').change(function(){
-	salesItemSelectChange('');
+$("#saleDetailsItem").change(function () {
+  salesItemSelectChange("");
 });
 
 function setCalculationFunctions(id) {
@@ -312,8 +321,23 @@ function calculateTotalInSales(id) {
   $(`#saleDetailsTotal${id}`).val(Number(quantityPT) * Number(unitPricePT));
 }
 
-function initSalesOrderList() {
-  searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
+function initSalesOrderList(fromDate, toDate) {
+  //searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
+
+  var url = "model/sale/saleOrdersSearchTableByDatesFile.php?fromDate=" + fromDate + "&toDate=" + toDate;
+
+  $("#salesDetailsTableDiv1").load(url, function () {
+    $("#saleDetailsTable").DataTable({
+      order: [
+        [0, "desc"]
+      ]
+    });
+    $("[data-toggle=tooltip]").tooltip();
+  });
+}
+
+function fetchSalesOrdersByDateRange() {
+  initSalesOrderList($("#sfromDate").val(), $("#stoDate").val());
 }
 
 function initSalesOrderItems() {
@@ -323,10 +347,9 @@ function initSalesOrderItems() {
   $(`#salesOrderTotal`).val("");
   $(`#saleDetailsItem`).val("");
 
-  $("#isDiscountAmount").prop( "checked", false );
+  $("#isDiscountAmount").prop("checked", false);
   $(`#saleDetailsDiscountp`).val(0);
-  $('#saleDetailsDiscountAmount').val(0);
-
+  $("#saleDetailsDiscountAmount").val(0);
 
   for (let index = 0; index <= rowCount + 1; index++) {
     deleteSalesItem(index + 1);
@@ -345,40 +368,62 @@ function initSalesOrder(isClear) {
     }
   });
 
-  initSalesOrderList();
+  $("#stoDate").val(currentDate);
+
+  var date = new Date();
+  date.setDate(date.getDate() - 30);
+  var fromDate = date.toISOString().split("T")[0];
+  $("#sfromDate").val(fromDate);
+
+  fetchSalesOrdersByDateRange();
   initSalesOrderItems();
   initCustomers();
   $("#soPaymentsTab").prop("disabled", true);
 
-  itemData = itemList ? getSelect2ItemData(itemList) : [];
+  itemData = itemList
+    ? getSelect2ItemData(itemList)
+    : [];
   $("#saleDetailsItem").select2({data: itemData});
   salesItemSelectChange("");
   $("#addSaleButton").prop("disabled", true);
   $("#saleDetailsMessage").prop("display", "none");
   document.getElementById("saleDetailsItemAdd").style.display = "block";
-  $('#saleDetailsItemAdd').prop('disabled', true);
-	document.getElementById("lableActionHeader").text = '#';
-	document.getElementById("statusSO").style.display = "none";
+  $("#saleDetailsItemAdd").prop("disabled", true);
+  document.getElementById("lableActionHeader").text = "#";
+  document.getElementById("statusSO").style.display = "none";
 
-  const deliveredData = document.getElementById("deliveredData")
-  if(deliveredData) {
+  const deliveredData = document.getElementById("deliveredData");
+  if (deliveredData) {
     deliveredData.style.display = "none";
   }
 
-	displayHideElements(["cancelSOBtn","sendSOBtn","closeSOBtn", "deliveredBtn", "printPdfBtn", "updateSaleButton"]); //
-	displayElements(["clearBtn","addSaleButton"])
-  const vendorId = $('#saleDetailsVendorName').val();
-	rowCount = 0;
- 
-    setSOItemList(isClear? null: itemList);
-  
- 
-  searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
-	$('#addSaleButton').prop("disabled", true);
-  if(!!$('#saleDetailsItem').val()){
-    enableElements([`saleDetailsItem`,`saleDetailsQuantity`,
-    'salesDescription', 'saleDetailsSaleID'
-  ,'saleDetailsVendorName', 'saleDetailsQuantity']);
+  displayHideElements([
+    "cancelSOBtn",
+    "sendSOBtn",
+    "closeSOBtn",
+    "deliveredBtn",
+    "printPdfBtn",
+    "updateSaleButton"
+  ]); //
+  displayElements(["clearBtn", "addSaleButton"]);
+  const vendorId = $("#saleDetailsVendorName").val();
+  rowCount = 0;
+
+  setSOItemList(
+    isClear
+    ? null
+    : itemList);
+
+  $("#addSaleButton").prop("disabled", true);
+  if (!!$("#saleDetailsItem").val()) {
+    enableElements([
+      `saleDetailsItem`,
+      `saleDetailsQuantity`,
+      "salesDescription",
+      "saleDetailsSaleID",
+      "saleDetailsVendorName",
+      "saleDetailsQuantity"
+    ]);
   }
 }
 
@@ -404,9 +449,11 @@ $("#saleDetailsQuantity, #saleDetailsUnitPrice, #saleDetailsItem").change(functi
 
 function calculateNetTotal() {
   const tot = $(`#salesOrderTotal`).val();
-  const isDiscountAmount = $('#isDiscountAmount').is(':checked');
-  let discount = isDiscountAmount ? $('#saleDetailsDiscountAmount').val(): (Number(tot) * Number($("#saleDetailsDiscountp").val()|| 0) / 100);
-  const val = Math.round((Number(tot) - Number(discount)) * 100)/100;
+  const isDiscountAmount = $("#isDiscountAmount").is(":checked");
+  let discount = isDiscountAmount
+    ? $("#saleDetailsDiscountAmount").val()
+    : (Number(tot) * Number($("#saleDetailsDiscountp").val() || 0)) / 100;
+  const val = Math.round((Number(tot) - Number(discount)) * 100) / 100;
   $("#salesOrderNetTotal").val(val);
   validateAddSales(val);
 }
@@ -468,30 +515,28 @@ function loadSalesPayments(data) {
     : " Need to pay";
   $("#soPaymentStatus").html(status);
 
-  if(salesOrder.statusText === "Close"){
+  if (salesOrder.statusText === "Close") {
     $("#closeBtn").prop("disabled", true);
-  }
-  else{
+  } else {
     $("#closeBtn").prop("disabled", false);
   }
   initSalesOrderPaymentList(salesOrder.saleID);
 }
 
 function initSalesOrderPaymentList(orderId) {
-	$.ajax({
-	  url: "model/sale/salesPaymentTableCreatorFile.php",
-	  method: "POST",
-	  data: {
-		orderId: orderId
-	  },
-	  success: function (data) {
-		$("#salesPaymentsTableDiv").empty();
-		$("#salesPaymentsTableDiv").html(data);
-	  },
-	  complete: function () {}
-	});
-  }
-  
+  $.ajax({
+    url: "model/sale/salesPaymentTableCreatorFile.php",
+    method: "POST",
+    data: {
+      orderId: orderId
+    },
+    success: function (data) {
+      $("#salesPaymentsTableDiv").empty();
+      $("#salesPaymentsTableDiv").html(data);
+    },
+    complete: function () {}
+  });
+}
 
 $("#soPaymentType").on("change", function () {
   var selectedValue = $(this).val();
@@ -562,10 +607,9 @@ function insertSalesPayment() {
         showSalesPaymentMessages("Payment added successfully", "success");
       },
       complete: function () {
-        showSalesPayments(orderId)
+        showSalesPayments(orderId);
         initSalesOrderPaymentList(orderId);
-        searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
-        reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
+        fetchSalesOrdersByDateRange();
       }
     });
   } else {
@@ -621,8 +665,7 @@ function deleteSalesPayment(paymentId) {
     complete: function () {
       showSalesPayments(orderId);
       initSalesOrderPaymentList(orderId);
-      searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
-      reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
+      fetchSalesOrdersByDateRange();
     }
   });
 }
@@ -679,8 +722,7 @@ function updateSOChequeStatus(paymentId, status) {
     complete: function () {
       showSalesPayments(orderId);
       initSalesOrderPaymentList(orderId);
-      searchTableCreator("salesDetailsTableDiv1", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
-      reportsSaleTableCreator('saleReportsTableDiv', saleReportsSearchTableCreatorFile, 'saleReportsTable');
+      fetchSalesOrdersByDateRange();
     }
   });
 }
@@ -691,31 +733,42 @@ $("#saleDetailsVendorName").on("change", function () {
 });
 
 function salesItemSelectChange(id) {
-	const itemId = $(`#saleDetailsItem${id}`).val();
-	const item = itemList.find(x => x.productID === itemId);
-	$(`#saleDetailsUnitPrice${id}`).val(item ? item.sellingPrice : 0);
-	$(`#saleDetailsAvalableQuantity${id}`).val(item ? item.stock : 0);
-	
+  const itemId = $(`#saleDetailsItem${id}`).val();
+  const item = itemList.find(x => x.productID === itemId);
+  $(`#saleDetailsUnitPrice${id}`).val(
+    item
+    ? item.sellingPrice
+    : 0);
+  $(`#saleDetailsAvalableQuantity${id}`).val(
+    item
+    ? item.stock
+    : 0);
 }
 
-function setSOItemList(items){
-	itemData = items && items.length? getSelect2ItemData(items): [];
+function setSOItemList(items) {
+  itemData = items && items.length
+    ? getSelect2ItemData(items)
+    : [];
   $("#saleDetailsItem").empty().trigger("change");
   $("#saleDetailsItem").select2({
-		placeholder: {text: "Select Item"},
-		data: itemData
-	});
+    placeholder: {
+      text: "Select Item"
+    },
+    data: itemData
+  });
 
-	salesItemSelectChange('');
+  salesItemSelectChange("");
 
   for (let index = 0; index < rowCount; index++) {
-  $(`#saleDetailsItem${index+1}`).empty().trigger("change");
-  $(`#saleDetailsItem${index+1}`).select2({
-		placeholder: {text: "Select Item"},
-		data: itemData
-	});
+    $(`#saleDetailsItem${index + 1}`).empty().trigger("change");
+    $(`#saleDetailsItem${index + 1}`).select2({
+      placeholder: {
+        text: "Select Item"
+      },
+      data: itemData
+    });
 
-	salesItemSelectChange(index+1);
+    salesItemSelectChange(index + 1);
   }
 }
 
@@ -728,7 +781,7 @@ function openEditView(salesOrderId, viewType) {
       saleID: salesOrderId
     },
     method: "POST",
-    success: function (soData) { 
+    success: function (soData) {
       const {salesOrder, salesOrderItems} = JSON.parse(soData);
       $.ajax({
         url: "model/item/getAllItems.php",
@@ -740,9 +793,7 @@ function openEditView(salesOrderId, viewType) {
         success: function (data) {
           itemList = data;
           itemData = getSelect2ItemData(itemList);
-          $("#saleDetailsItem").select2({
-            data: itemData
-          });
+          $("#saleDetailsItem").select2({data: itemData});
           loadDataToSalesOrder(salesOrder, salesOrderItems, viewType);
         }
       });
@@ -752,16 +803,16 @@ function openEditView(salesOrderId, viewType) {
 
 function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
   order = salesOrder;
-	orderItems = salesOrderItems;
-	$('#saleDetailsSaleDate').val(salesOrder.saleDate);
-	$('#salesDescription').val(salesOrder.description);
-	$('#saleDetailsSaleID').val(salesOrder.salesNumber);
-  $('#saleDetailsVendorName').val(salesOrder.vendorID).trigger("chosen:updated");
-	$(`#salesOrderTotal`).val(salesOrder.amount);
-	$(`#salesOrderId`).val(salesOrder.saleID);
+  orderItems = salesOrderItems;
+  $("#saleDetailsSaleDate").val(salesOrder.saleDate);
+  $("#salesDescription").val(salesOrder.description);
+  $("#saleDetailsSaleID").val(salesOrder.salesNumber);
+  $("#saleDetailsVendorName").val(salesOrder.vendorID).trigger("chosen:updated");
+  $(`#salesOrderTotal`).val(salesOrder.amount);
+  $(`#salesOrderId`).val(salesOrder.saleID);
 
-  $("#isDiscountAmount").prop( "checked", salesOrder.isDiscountAmount=='1' );
-  if(salesOrder.isDiscountAmount=='1'){
+  $("#isDiscountAmount").prop("checked", salesOrder.isDiscountAmount == "1");
+  if (salesOrder.isDiscountAmount == "1") {
     $(`#saleDetailsDiscountAmount`).val(salesOrder.discount);
     $("#saleDetailsDiscountAmount").prop("disabled", false);
     $("#saleDetailsDiscountp").prop("disabled", true);
@@ -771,156 +822,198 @@ function loadDataToSalesOrder(salesOrder, salesOrderItems, viewType) {
     $("#saleDetailsDiscountAmount").prop("disabled", true);
   }
   $("#saleDetailsCustomerName").val(salesOrder.customerID.toString());
-  $(`#saleDetailsCustomerName`).trigger('change');
-  rowCount =0;
-	document.getElementById("statusSO").style.display = "inline-block";
-	$(`#statusSOText`).text(salesOrder.statusText);
+  $(`#saleDetailsCustomerName`).trigger("change");
+  rowCount = 0;
+  document.getElementById("statusSO").style.display = "inline-block";
+  $(`#statusSOText`).text(salesOrder.statusText);
 
-	for (let index = 0; index < salesOrderItems.length; index++) {
-		const numberText = index === 0 ? '' : index;
-		if(index>0){
-			rowCount++;
-    		addSalesItem(rowCount, viewType, salesOrder.status);
-		}
+  for (let index = 0; index < salesOrderItems.length; index++) {
+    const numberText = index === 0
+      ? ""
+      : index;
+    if (index > 0) {
+      rowCount++;
+      addSalesItem(rowCount, viewType, salesOrder.status);
+    }
 
     $(`#saleDetailsItem${numberText}`).val(salesOrderItems[index].productID.toString());
-    $(`#saleDetailsItem${numberText}`).trigger('change');
-		$(`#saleDetailsUnitPrice${numberText}`).val(salesOrderItems[index].unitPrice);
-		$(`#saleDetailsQuantity${numberText}`).val(salesOrderItems[index].quantity);
-		$(`#saleDetailsTotal${numberText}`).val(salesOrderItems[index].totalPrice);
-		$(`#saleItemId${numberText}`).val(salesOrderItems[index].orderItemId);
+    $(`#saleDetailsItem${numberText}`).trigger("change");
+    $(`#saleDetailsUnitPrice${numberText}`).val(salesOrderItems[index].unitPrice);
+    $(`#saleDetailsQuantity${numberText}`).val(salesOrderItems[index].quantity);
+    $(`#saleDetailsTotal${numberText}`).val(salesOrderItems[index].totalPrice);
+    $(`#saleItemId${numberText}`).val(salesOrderItems[index].orderItemId);
 
-		if(viewType === 'DELIVERED' || viewType === 'VIEW'){
-			disableElements([`saleDetailsItem${numberText}`,`saleDetailsQuantity${numberText}`]);
+    if (viewType === "DELIVERED" || viewType === "VIEW") {
+      disableElements([`saleDetailsItem${numberText}`, `saleDetailsQuantity${numberText}`]);
       //if(index>0){
-        if(viewType !== 'DELIVERED'){
-          displayHideElements([`deleteSaleItem${numberText}`]);
-        } else {
-          switch (salesOrder.status) {
-            case '1': //created
-              disableElements([`deleteSaleItem${numberText}`]);
+      if (viewType !== "DELIVERED") {
+        displayHideElements([`deleteSaleItem${numberText}`]);
+      } else {
+        switch (salesOrder.status) {
+          case "1": //created
+            disableElements([`deleteSaleItem${numberText}`]);
             break;
-            case '3':
-            case '5':
-              disableElements([`saleDetailsDeliveredQuantity${numberText}`]);
-              $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].deliveredQuantity);
+          case "3":
+          case "5":
+            disableElements([`saleDetailsDeliveredQuantity${numberText}`]);
+            $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].deliveredQuantity);
             break;
-          }
         }
-        
+      }
+
       //}
-      if(viewType === 'DELIVERED'){
+      if (viewType === "DELIVERED") {
         $(`#saleDetailsDeliveredQuantity${numberText}`).val(salesOrderItems[index].quantity);
       }
-		}
+    }
     // else if (viewType === 'EDIT') {
     // }
-	}
+  }
   calculateGrandTotal();
   calculateNetTotal();
-	if(viewType === 'DELIVERED' || viewType === 'VIEW'){
-		disableElements([`saleDetailsItem`,`saleDetailsUnitPrice`,`saleDetailsQuantity`,
-			`saleDetailsTotal`, 'salesDescription', 'saleDetailsSaleID'
-		,'saleDetailsVendorName', 'saleDetailsCustomerName', 'saleDetailsDiscountp','isDiscountAmount', 'saleDetailsDiscountAmount']);
+  if (viewType === "DELIVERED" || viewType === "VIEW") {
+    disableElements([
+      `saleDetailsItem`,
+      `saleDetailsUnitPrice`,
+      `saleDetailsQuantity`,
+      `saleDetailsTotal`,
+      "salesDescription",
+      "saleDetailsSaleID",
+      "saleDetailsVendorName",
+      "saleDetailsCustomerName",
+      "saleDetailsDiscountp",
+      "isDiscountAmount",
+      "saleDetailsDiscountAmount"
+    ]);
 
-		//document.getElementById("updateSaleBtn").disabled = true;
-		document.getElementById("saleDetailsItemAdd").style.display = "none";
-		switch (viewType) {
-			case 'DELIVERED': // goods received
-      displayElements(["deliveredBtn", "cancelSOBtn"]);
-      displayHideElements(["sendSOBtn",  "addSaleButton", "clearBtn"]);
-      document.getElementById("deliveredData").style.display = "block";
-      document.getElementById("lableActionHeader").innerText = "Delivered Quantity";
-				break;
-		
-			case 'VIEW':
-				switch (salesOrder.status) {
-					case '1': //created
-						displayHideElements(["deliveredBtn", "closeSOBtn", "addSaleButton", "clearBtn" ]);
-						displayElements(["sendSOBtn", "cancelSOBtn", "printPdfBtn"]);
-						break;
-					case '2': //pending
-						displayElements(["cancelSOBtn", "closeSOBtn", "printPdfBtn"]);
-						displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "clearBtn" ]);	
-						break;
-					case '3': // close
-						displayHideElements(["deliveredBtn", "sendSOBtn", "closeSOBtn", "printPdfBtn", "addSaleButton", "clearBtn" ]);
-						displayElements(["cancelSOBtn"]);
+    //document.getElementById("updateSaleBtn").disabled = true;
+    document.getElementById("saleDetailsItemAdd").style.display = "none";
+    switch (viewType) {
+      case "DELIVERED": // goods received
+        displayElements(["deliveredBtn", "cancelSOBtn"]);
+        displayHideElements(["sendSOBtn", "addSaleButton", "clearBtn"]);
+        document.getElementById("deliveredData").style.display = "block";
+        document.getElementById("lableActionHeader").innerText = "Delivered Quantity";
+        break;
+
+      case "VIEW":
+        switch (salesOrder.status) {
+          case "1": //created
+            displayHideElements(["deliveredBtn", "closeSOBtn", "addSaleButton", "clearBtn"]);
+            displayElements(["sendSOBtn", "cancelSOBtn", "printPdfBtn"]);
+            break;
+          case "2": //pending
+            displayElements(["cancelSOBtn", "closeSOBtn", "printPdfBtn"]);
+            displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "clearBtn"]);
+            break;
+          case "3": // close
+            displayHideElements([
+              "deliveredBtn",
+              "sendSOBtn",
+              "closeSOBtn",
+              "printPdfBtn",
+              "addSaleButton",
+              "clearBtn"
+            ]);
+            displayElements(["cancelSOBtn"]);
             document.getElementById("deliveredData").style.display = "block";
             $(`#saleDetailsDeliveredQuantity`).val(salesOrderItems[0].deliveredQuantity);
             disableElements([`saleDetailsDeliveredQuantity`]);
-						break;
-          case '5': //goods delivered
-						displayElements(["cancelSOBtn", "closeSOBtn"]);
-						displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "printPdfBtn", "clearBtn" ]);
+            break;
+          case "5": //goods delivered
+            displayElements(["cancelSOBtn", "closeSOBtn"]);
+            displayHideElements(["deliveredBtn", "sendSOBtn", "addSaleButton", "printPdfBtn", "clearBtn"]);
             document.getElementById("deliveredData").style.display = "block";
             $(`#saleDetailsDeliveredQuantity`).val(salesOrderItems[0].deliveredQuantity);
             disableElements([`saleDetailsDeliveredQuantity`]);
-						break;
-					default: // cancel
-						displayHideElements(["deliveredBtn", "sendSOBtn", "closeSOBtn", "cancelSOBtn", "printPdfBtn", "addSaleButton", "clearBtn" ]);
-						break;
-				}
-				break;
-			default:
-				break;
-		}
-	} else if (viewType === 'EDIT') {
+            break;
+          default:
+            // cancel
+            displayHideElements([
+              "deliveredBtn",
+              "sendSOBtn",
+              "closeSOBtn",
+              "cancelSOBtn",
+              "printPdfBtn",
+              "addSaleButton",
+              "clearBtn"
+            ]);
+            break;
+        }
+        break;
+      default:
+        break;
+    }
+  } else if (viewType === "EDIT") {
     disableElements([`saleDetailsVendorName`]);
-    enableElements(['saleDetailsItemAdd']);
-    displayElements(["updateSaleButton","sendSOBtn","printPdfBtn", "cancelSOBtn" ]);
+    enableElements(["saleDetailsItemAdd"]);
+    displayElements(["updateSaleButton", "sendSOBtn", "printPdfBtn", "cancelSOBtn"]);
     displayHideElements(["clearBtn", "addSaleButton"]);
-  } else{
-		displayHideElements(["clearBtn", "addSaleButton"]);
-		document.getElementById("cancelSOBtn").disabled = saleOrder.status === 3;
-	} 
+  } else {
+    displayHideElements(["clearBtn", "addSaleButton"]);
+    document.getElementById("cancelSOBtn").disabled = saleOrder.status === 3;
+  }
 }
-
 
 function updateSO(statusId, status) {
   const saleId = $(`#salesOrderId`).val();
   return new Promise((resolve, reject) => {
-      $.ajax({
-        url: "model/sale/updateStatus.php",
-        data: {
-          saleID: saleId,
-          statusId: statusId
-        },
-        method: "POST",
-        success: function (data) {
-          $("#saleDetailsMessage").fadeIn();
-          $("#saleDetailsMessage").html(data);
-          $(`#statusSOText`).text(status);
-          resolve(saleId)
-        },
-        error: function () {
-          reject(data);
-        }
-
-      });
+    $.ajax({
+      url: "model/sale/updateStatus.php",
+      data: {
+        saleID: saleId,
+        statusId: statusId
+      },
+      method: "POST",
+      success: function (data) {
+        $("#saleDetailsMessage").fadeIn();
+        $("#saleDetailsMessage").html(data);
+        $(`#statusSOText`).text(status);
+        resolve(saleId);
+      },
+      error: function () {
+        reject(data);
+      }
     });
+  });
 }
 
 function sendSO() {
   updateSO(2, "Pending").then(function (saleId) {
-    openDeliveredOrder(saleId)
+    openDeliveredOrder(saleId);
   });
 }
 
 function cancelSO() {
   updateSO(4, "Cancel").then(function () {
-    displayHideElements(["sendSOBtn",  "addSaleButton", "clearBtn", "deliveredBtn", "closeSOBtn","cancelSOBtn", "printPdfBtn"]);
+    displayHideElements([
+      "sendSOBtn",
+      "addSaleButton",
+      "clearBtn",
+      "deliveredBtn",
+      "closeSOBtn",
+      "cancelSOBtn",
+      "printPdfBtn"
+    ]);
   });
 }
 
 function closeSO() {
   updateSO(3, "Close").then(function () {
-    displayHideElements(["sendSOBtn",  "addSaleButton", "clearBtn", "deliveredBtn", "closeSOBtn","cancelSOBtn", "printPdfBtn"]); 
+    displayHideElements([
+      "sendSOBtn",
+      "addSaleButton",
+      "clearBtn",
+      "deliveredBtn",
+      "closeSOBtn",
+      "cancelSOBtn",
+      "printPdfBtn"
+    ]);
   });
 }
 
 function openDeliveredOrder(salesOrderId) {
-	openEditView(salesOrderId, 'DELIVERED');
+  openEditView(salesOrderId, "DELIVERED");
 }
 
 function openEditSalesOrder(salesOrderId) {
@@ -947,7 +1040,7 @@ function updateDelivered() {
       delivered: $(`#saleDetailsDeliveredQuantity${index + 1}`).val()
     };
 
-   // if()
+    // if()
     items.push(item);
   }
 
@@ -959,13 +1052,13 @@ function updateDelivered() {
       saleId: saleId
     },
     method: "POST",
-    success: function (data) { 
+    success: function (data) {
       const result = JSON.parse(data);
       $("#saleDetailsMessage").fadeIn();
       $("#saleDetailsMessage").html(result.alertMessage);
-      if(result.status === 'success'){
+      if (result.status === "success") {
         //populateLastInsertedID("model/sale/nextSalesID.php", "saleDetailsSaleID");
-        $(`#statusSOText`).text('Delivered');
+        $(`#statusSOText`).text("Delivered");
         displayHideElements(["deliveredBtn"]);
         displayElements(["closeSOBtn"]);
       }
@@ -979,50 +1072,50 @@ function printSalesOrderPdf() {
   getVendorDetails();
 }
 
-function getVendorDetails(){
-var vendorID = $('#saleDetailsVendorName').val();
-let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
-    
+function getVendorDetails() {
+  var vendorID = $("#saleDetailsVendorName").val();
+  let errorMsg = "An error occurred. Cannot download the pdf. Please try again.";
+
   $.ajax({
-    url: 'model/vendor/populateVendorDetails.php',
-    method: 'POST',
-    data: {vendorDetailsVendorID:vendorID},
-    dataType: 'json',
-    success: function(vendorDetails){
+    url: "model/vendor/populateVendorDetails.php",
+    method: "POST",
+    data: {
+      vendorDetailsVendorID: vendorID
+    },
+    dataType: "json",
+    success: function (vendorDetails) {
       getCustomerDetails(vendorDetails);
     },
-    error:  function(data){
-      
-    }
+    error: function (data) {}
   });
 }
 
-function getCustomerDetails(vendorDetails){
-  var customerId = $('#saleDetailsCustomerName').val();
-  let errorMsg = "An error occurred. Cannot download the pdf. Please try again."
+function getCustomerDetails(vendorDetails) {
+  var customerId = $("#saleDetailsCustomerName").val();
+  let errorMsg = "An error occurred. Cannot download the pdf. Please try again.";
 
   $.ajax({
-    url: 'model/customer/populateCustomerDetails.php',
-    method: 'POST',
-    data: {customerID:customerId},
-    dataType: 'json',
-    success: function(data){
-      try{
+    url: "model/customer/populateCustomerDetails.php",
+    method: "POST",
+    data: {
+      customerID: customerId
+    },
+    dataType: "json",
+    success: function (data) {
+      try {
         downloadOrderPdf("SO", order, orderItems, vendorDetails, data);
-      }
-      catch(err){
-        $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " +  err.message + "</div>");
+      } catch (err) {
+        $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + " : " + err.message + "</div>");
       }
     },
-    error:  function(data){
+    error: function (data) {
       $("#saleDetailsMessage").fadeIn();
       $("#saleDetailsMessage").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>' + errorMsg + "</div>");
     }
   });
-
 }
 
-function closeSalesOrder(){
+function closeSalesOrder() {
   const saleId = $(`#paymentSalesId`).val();
   var statusId = 3; // Close
   $.ajax({
@@ -1033,10 +1126,10 @@ function closeSalesOrder(){
     },
     method: "POST",
     success: function () {
-	    initSalesOrderList();
+      fetchSalesOrdersByDateRange();
       $("#saleDetailsMessage").html("");
       showSalesPaymentMessages("Successfully Closed.", "success");
-      $("#closeBtn").prop("disabled",true);
+      $("#closeBtn").prop("disabled", true);
     },
     error: function () {
       showSalesPaymentMessages("Error !", "error");
@@ -1045,8 +1138,11 @@ function closeSalesOrder(){
 }
 
 function setIsDiscount() {
-  const isDiscountAmount = $("#isDiscountAmount").is(':checked');
-  $(`#${isDiscountAmount?'saleDetailsDiscountp':'saleDetailsDiscountAmount'}`).val(0);
+  const isDiscountAmount = $("#isDiscountAmount").is(":checked");
+  $(
+    `#${isDiscountAmount
+    ? "saleDetailsDiscountp"
+    : "saleDetailsDiscountAmount"}`).val(0);
   $("#saleDetailsDiscountAmount").prop("disabled", !isDiscountAmount);
   $("#saleDetailsDiscountp").prop("disabled", isDiscountAmount);
   calculateNetTotal();

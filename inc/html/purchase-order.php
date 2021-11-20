@@ -129,11 +129,11 @@
             <div id="purchaseListTab" class="container-fluid tab-pane fade active show">
               <br>
               <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">From Date : </label>
+                <label for="fromDate" class="col-sm-2 col-form-label">From Date : </label>
                 <div class="col-sm-3">
                   <input style="height:32px;" type="text" class="form-control datepicker" id="fromDate" name="fromDate">
                 </div>
-                <label for="staticEmail" class="col-sm-2 col-form-label">To Date : </label>
+                <label for="toDate" class="col-sm-2 col-form-label">To Date : </label>
                 <div class="col-sm-3">
                 <input style="height:32px;" type="text" class="form-control datepicker" id="toDate" name="toDate">
                 </div>
