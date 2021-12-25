@@ -1131,6 +1131,7 @@ function closeSalesOrder() {
       $("#saleDetailsMessage").html("");
       showSalesPaymentMessages("Successfully Closed.", "success");
       $("#closeBtn").prop("disabled", true);
+      $("#soPaymentStatus").html("Closed");
     },
     error: function () {
       showSalesPaymentMessages("Error !", "error");

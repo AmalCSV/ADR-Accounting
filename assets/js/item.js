@@ -106,7 +106,7 @@ function updateItem() {
       },
       complete: function () {
         searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
-        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+        fetchOrdersByDateRange();
         searchTableCreator("saleDetailsTableDiv", saleDetailsSearchTableCreatorFile, "saleDetailsTable");
         reportsTableCreator("itemReportsTableDiv", itemReportsSearchTableCreatorFile, "itemReportsTable");
        // reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
