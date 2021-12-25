@@ -148,6 +148,19 @@
         </div>
         <div id="salesListTab" class="container-fluid tab-pane fade show active">
           <br/>
+          <div class="form-group row">
+              <label for="sfromDate" class="col-sm-2 col-form-label">From Date : </label>
+              <div class="col-sm-3">
+                <input style="height:32px;" type="text" class="form-control datepicker" id="sfromDate" name="sfromDate">
+              </div>
+              <label for="stoDate" class="col-sm-2 col-form-label">To Date : </label>
+              <div class="col-sm-3">
+              <input style="height:32px;" type="text" class="form-control datepicker" id="stoDate" name="stoDate">
+              </div>
+              <div class="col-sm-2 text-right">
+              <button type="button" id="searchBtn" class="btn btn-success" onclick="fetchSalesOrdersByDateRange()">Search</button>
+              </div>
+          </div>
           <div class="table-responsive" id="salesDetailsTableDiv1"></div>
         </div>
         <div id="salesPaymentsTab" class="container-fluid tab-pane fade">

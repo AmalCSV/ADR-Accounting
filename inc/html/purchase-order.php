@@ -128,6 +128,19 @@
             </div>
             <div id="purchaseListTab" class="container-fluid tab-pane fade active show">
               <br>
+              <div class="form-group row">
+                <label for="fromDate" class="col-sm-2 col-form-label">From Date : </label>
+                <div class="col-sm-3">
+                  <input style="height:32px;" type="text" class="form-control datepicker" id="fromDate" name="fromDate">
+                </div>
+                <label for="toDate" class="col-sm-2 col-form-label">To Date : </label>
+                <div class="col-sm-3">
+                <input style="height:32px;" type="text" class="form-control datepicker" id="toDate" name="toDate">
+                </div>
+                <div class="col-sm-2 text-right">
+                <button type="button" id="searchBtn" class="btn btn-success" onclick="fetchOrdersByDateRange()">Search</button>
+                </div>
+              </div>
               <div class="table-responsive" id="purchaseDetailsTableDiv"></div>
             </div>
             <div id="purchasePaymentsTab" class="container-fluid tab-pane">
