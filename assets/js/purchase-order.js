@@ -3,7 +3,7 @@ var order = {};
 var orderItems = {};
 
 // File that creates the purchase details search table
-purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreator.php';
+purchaseDetailsSearchTableCreatorFile = 'model/purchase/purchaseDetailsSearchTableCreatorByDates.php';
 purchasePaymentTableCreatorFile = 'model/purchase/purchasePaymentTableCreator.php';
 // File that creates the purchase reports search table
 purchaseReportsSearchTableCreatorFile = 'model/purchase/purchaseReportsSearchTableCreator.php';
@@ -95,7 +95,7 @@ function addPurchase() {
       },
       complete: function(){
         //populateLastInsertedID('model/purchase/nextPurchaseID.php', 'purchaseDetailsPurchaseID');
-        searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');  
+       // searchTableCreator('purchaseDetailsTableDiv1', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');  
        // $('#addPurchaseBtn').prop('disabled', true);
       }
     });
@@ -180,7 +180,7 @@ function updatePurchase() {
         $("#purchaseDetailsMessage").html(data);
       },
       complete: function () {
-        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+        //searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
       }
     });
   } else {
@@ -315,6 +315,7 @@ function validateAddPurchases(netAmount) {
 	$('#addPurchaseBtn').prop("disabled", netAmount===0);
 }
 
+const PO = "PO";
 
 function initPurchaseOrder(isClear) {
 	const currentDate =  new Date().toISOString().slice(0, 10);
@@ -326,7 +327,15 @@ function initPurchaseOrder(isClear) {
 		}
 	});
 
-	initPurchaseOrderList();
+  var poSearchFilter = getOrderFilter(PO);
+
+  $('#toDate').val(poSearchFilter.toDate);
+  $('#fromDate').val(poSearchFilter.fromDate);
+
+  // fetch purchase orders by date range
+  fetchOrdersByDateRange();
+
+	// initPurchaseOrderList();
 	initPurchaseOrderItems();
   $("#poPaymentsTab").prop("disabled", true);
 	$('#purchaseDetailsPurchaseDate').val(currentDate);
@@ -346,7 +355,7 @@ function initPurchaseOrder(isClear) {
     setPOItemList(isClear? null: itemList);
   
  
-  searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
+  //searchTableCreator('purchaseDetailsTableDiv', purchaseDetailsSearchTableCreatorFile, 'purchaseDetailsTable');
 	$('#addPurchaseBtn').prop("disabled", true);
   enableElements([`purchaseDetailsItem`,`purchaseDetailsQuantity`,
    'purchaseDetailsDescription', 'purchaseDetailsPurchaseID'
@@ -578,7 +587,8 @@ function updateGoodReceived() {
       $("#purchaseDetailsMessage").html(result.alertMessage);
       if(result.status === 'success'){
         populateLastInsertedID("model/purchase/nextPurchaseID.php", "purchaseDetailsPurchaseID");
-        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+        //searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+        fetchOrdersByDateRange();        
         $(`#statusPOText`).text('Goods Received');
         displayHideElements(["goodReceivedBtn"]);
         displayElements(["closePOBtn"]);
@@ -708,6 +718,23 @@ function loadPayments(data) {
   initPurchaseOrderPaymentList(purchaseOrder.purchaseID);
 }
 
+function initPurchaseOrders(fromDate, toDate) {
+var url = 'model/purchase/purchaseDetailsSearchTableCreatorByDates.php?fromDate='+ fromDate +'&toDate=' + toDate;
+
+  $("#purchaseDetailsTableDiv").load(url, function(){
+		$("#purchaseDetailsTable").DataTable({
+			"order": [[ 0, "desc" ]]
+		});
+		$("[data-toggle=tooltip]").tooltip();
+	});
+
+}
+
+function fetchOrdersByDateRange(){
+  setOrderFilter(PO, $('#fromDate').val(), $('#toDate').val());
+  initPurchaseOrders($('#fromDate').val(), $('#toDate').val());
+}
+
 function initPurchaseOrderPaymentList(orderId) {
   $.ajax({
     url: purchasePaymentTableCreatorFile,
@@ -796,9 +823,7 @@ function insertPayment() {
       complete: function () {
         showPayments(orderId);
         initPurchaseOrderPaymentList(orderId);
-        searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-        reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-        searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
+        fetchOrdersByDateRange();
       }
     });
   } else {
@@ -854,8 +879,8 @@ function deletePayment(paymentId){
     complete: function () {
       showPayments(orderId);
       initPurchaseOrderPaymentList(orderId);
-      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
+      //searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
+      let itemDetailsSearchTableCreatorFile = 'model/item/itemDetailsSearchTableCreator.php';
       searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
     }
   });
@@ -918,9 +943,7 @@ function updateChequeStatus(paymentId, status){
     complete: function () {
       showPayments(orderId);
       initPurchaseOrderPaymentList(orderId);
-      searchTableCreator("purchaseDetailsTableDiv", purchaseDetailsSearchTableCreatorFile, "purchaseDetailsTable");
-      reportsPurchaseTableCreator("purchaseReportsTableDiv", purchaseReportsSearchTableCreatorFile, "purchaseReportsTable");
-      searchTableCreator("itemDetailsTableDiv", itemDetailsSearchTableCreatorFile, "itemDetailsTable");
+      fetchOrdersByDateRange();
     }
   });
 }
@@ -1012,10 +1035,11 @@ function closeOrder(){
     },
     method: "POST",
     success: function () {
-	    initPurchaseOrderList();
+	    fetchOrdersByDateRange();
       $("#PaymentDetailsMessage").html("");
       showPaymentMessages("Successfully Closed.", "success");
       $("#closeBtn").prop("disabled",true);
+      $("#paymentStatus").html("Closed");
     },
     error: function () {
       showPaymentMessages("Error !", "error");
