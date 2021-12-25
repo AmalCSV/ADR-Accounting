@@ -124,3 +124,80 @@ function reportsTableCreator(tableContainerDiv, tableCreatorFileUrl, table){
 		});
 	});
 }
+
+var poSearchFilter = {};
+var soSearchFilter = {};
+var localSExpiryDate = 1;
+var poMaxLimit = 30;
+var soMaxLimit = 15;
+const purchseOrder = "PO";
+const salesOrder = "SO";
+var today = new Date();
+
+
+function setOrderFilter(type, fromDate, toDate){
+	let expiryDate = new Date(); 
+	expiryDate.setDate(expiryDate.getDate() + 1);
+	if(type == purchseOrder){
+		poSearchFilter.fromDate = fromDate;
+		poSearchFilter.toDate = toDate;
+		poSearchFilter.expiry =  expiryDate;
+		localStorage.setItem("poSearchFilter", JSON.stringify(poSearchFilter));
+
+	}
+	else{
+		soSearchFilter.fromDate = fromDate;
+		soSearchFilter.toDate = toDate;
+		soSearchFilter.expiry = expiryDate;
+		localStorage.setItem("soSearchFilter", JSON.stringify(soSearchFilter));
+	}
+}
+
+function getOrderFilter(type){
+	let expiryDate = new Date(); 
+	expiryDate.setDate(expiryDate.getDate() + 1);
+	if(type == purchseOrder){
+
+		poSearchFilter = JSON.parse(localStorage.getItem("poSearchFilter"));
+
+		if(!poSearchFilter || ( poSearchFilter && isLocalSExpired(poSearchFilter.expiry))){
+			let fromDate = new Date();
+			fromDate.setDate(fromDate.getDate() - poMaxLimit);
+			poSearchFilter = {};
+			poSearchFilter.fromDate = fromDate.toISOString().slice(0, 10);
+			poSearchFilter.toDate = today.toISOString().slice(0, 10);
+			poSearchFilter.expiry = expiryDate.toISOString().slice(0, 10);
+
+		}
+		return poSearchFilter;
+	}
+	else{
+		soSearchFilter = JSON.parse(localStorage.getItem("soSearchFilter"));
+
+		if(!soSearchFilter || ( soSearchFilter && isLocalSExpired(soSearchFilter.expiry)) ){
+		
+			let fromDate = new Date();
+			fromDate.setDate(fromDate.getDate() - soMaxLimit);
+			soSearchFilter = {};
+			soSearchFilter.fromDate = fromDate.toISOString().slice(0, 10);
+			soSearchFilter.toDate = today.toISOString().slice(0, 10);
+			soSearchFilter.expiry = expiryDate.toISOString().slice(0, 10);
+
+		}
+		return soSearchFilter;
+	}
+}
+
+function isLocalSExpired(expiryDate){
+
+	var date = new Date();
+	date.setDate(date.getDate() - localSExpiryDate);
+
+	if(expiryDate && date >= expiryDate){
+		return true;
+	}
+	else{
+		return false;
+	}
+
+}

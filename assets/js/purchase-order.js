@@ -315,6 +315,7 @@ function validateAddPurchases(netAmount) {
 	$('#addPurchaseBtn').prop("disabled", netAmount===0);
 }
 
+const PO = "PO";
 
 function initPurchaseOrder(isClear) {
 	const currentDate =  new Date().toISOString().slice(0, 10);
@@ -326,12 +327,11 @@ function initPurchaseOrder(isClear) {
 		}
 	});
 
-  $('#toDate').val(currentDate);
+  var poSearchFilter = getOrderFilter(PO);
 
-  var date = new Date();
-  date.setDate(date.getDate() - 30);
-  var fromDate = date.toISOString().split('T')[0]; 
-  $('#fromDate').val(fromDate);
+  $('#toDate').val(poSearchFilter.toDate);
+  $('#fromDate').val(poSearchFilter.fromDate);
+
   // fetch purchase orders by date range
   fetchOrdersByDateRange();
 
@@ -730,6 +730,7 @@ var url = 'model/purchase/purchaseDetailsSearchTableCreatorByDates.php?fromDate=
 }
 
 function fetchOrdersByDateRange(){
+  setOrderFilter(PO, $('#fromDate').val(), $('#toDate').val());
   initPurchaseOrders($('#fromDate').val(), $('#toDate').val());
 }
 

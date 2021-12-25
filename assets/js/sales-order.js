@@ -337,6 +337,7 @@ function initSalesOrderList(fromDate, toDate) {
 }
 
 function fetchSalesOrdersByDateRange() {
+  setOrderFilter(SO, $('#sfromDate').val(), $('#stoDate').val());
   initSalesOrderList($("#sfromDate").val(), $("#stoDate").val());
 }
 
@@ -357,6 +358,8 @@ function initSalesOrderItems() {
   rowCount = 0;
 }
 
+const SO = "SO";
+
 function initSalesOrder(isClear) {
   const currentDate = new Date().toISOString().slice(0, 10);
   $("#saleDetailsSaleDate").val(currentDate);
@@ -368,12 +371,10 @@ function initSalesOrder(isClear) {
     }
   });
 
-  $("#stoDate").val(currentDate);
+  var soSearchFilter = getOrderFilter(SO);
 
-  var date = new Date();
-  date.setDate(date.getDate() - 30);
-  var fromDate = date.toISOString().split("T")[0];
-  $("#sfromDate").val(fromDate);
+  $('#stoDate').val(soSearchFilter.toDate);
+  $('#sfromDate').val(soSearchFilter.fromDate);
 
   fetchSalesOrdersByDateRange();
   initSalesOrderItems();
